@@ -1,0 +1,7 @@
+{
+  "name": "minaret",
+  "private": true,
+  "workspaces": [
+    "worker"
+  ]
+}

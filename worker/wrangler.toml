@@ -1,0 +1,27 @@
+name = "minaret-worker"
+main = "worker.js"
+compatibility_date = "2025-08-16"
+compatibility_flags = ["nodejs_compat"]
+
+[[kv_namespaces]]
+binding = "SUBSCRIPTIONS"
+id = "d04323ba90f547799a8031e957183ed2"
+
+[vars]
+VAPID_SUBJECT = "mailto:adosr3@gmail.com"
+
+[triggers]
+crons = ["* * * * *"]
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false

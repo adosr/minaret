@@ -1,0 +1,23 @@
+{
+  "name": "Minaret Prayer Times",
+  "short_name": "Minaret",
+  "description": "Prayer times progressive web app.",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "./",
+  "scope": "./",
+  "background_color": "#F2F2F6",
+  "theme_color": "#F2F2F6",
+  "icons": [
+    {
+      "src": "./img/iphone-192-app-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./img/iphone-512-app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

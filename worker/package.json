@@ -1,0 +1,12 @@
+{
+  "name": "minaret-push",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "wrangler": "^4.71.0"
+  }
+}
