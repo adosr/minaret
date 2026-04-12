@@ -3,6 +3,5 @@ export const STORAGE_KEYS = {
   settings: "prayer_settings",
   notifications: "prayer_notifications_enabled",
   adminToken: "minaret_admin_token",
-  geolocationDenied: "minaret_geolocation_denied",
-  geolocationRequested: "minaret_geolocation_requested"
+  geolocationDenied: "minaret_geolocation_denied"
 };

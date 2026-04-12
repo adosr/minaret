@@ -34,14 +34,6 @@ export function persistLocation({ lat, lon, nameAr, nameEn }) {
   );
 }
 
-export function hasGeolocationBeenRequested() {
-  return localStorage.getItem(STORAGE_KEYS.geolocationRequested) === "true";
-}
-
-export function persistGeolocationRequested(value = true) {
-  localStorage.setItem(STORAGE_KEYS.geolocationRequested, value ? "true" : "false");
-}
-
 export function wasGeolocationDenied() {
   return localStorage.getItem(STORAGE_KEYS.geolocationDenied) === "true";
 }
