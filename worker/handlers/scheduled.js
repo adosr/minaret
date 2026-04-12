@@ -1,5 +1,5 @@
-import { runScheduledBucket } from "../services/bucket-service.js";
+import { runNotificationSchedule } from "../services/notification-service.js";
 
-export async function handleScheduled(env) {
-  await runScheduledBucket(env);
+export async function handleScheduled(_event, env) {
+  await runNotificationSchedule(env);
 }

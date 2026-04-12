@@ -1,4 +1,4 @@
-const CACHE_VERSION = "minaret-v1";
+const CACHE_VERSION = "minaret-v2";
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const IMAGE_CACHE = `${CACHE_VERSION}-images`;
@@ -11,6 +11,7 @@ const APP_SHELL = [
   "./js/core/app-config.js",
   "./js/core/app-state.js",
   "./js/core/bootstrap.js",
+  "./js/core/notifications.js",
   "./js/components/bottom-tabs.js",
   "./js/components/progress-dial.js",
   "./js/components/minaret-prayers-list.js",
@@ -119,41 +120,89 @@ self.addEventListener("fetch", (event) => {
 });
 
 self.addEventListener("push", (event) => {
-  let payload = {
-    title: "Minaret",
-    options: {
-      body: "Prayer notification",
-      tag: "minaret-default",
-      renotify: false,
-      icon: "./img/iphone-180-app-icon.png",
-      badge: "./img/iphone-180-app-icon.png"
-    }
-  };
-
-  try {
-    if (event.data) payload = event.data.json();
-  } catch {}
+  const payload = normalizeNotificationPayload(event);
 
   event.waitUntil(
-    self.registration.showNotification(payload.title, payload.options || {})
+    self.registration.showNotification(payload.title, {
+      body: payload.body,
+      tag: payload.tag,
+      renotify: payload.renotify,
+      requireInteraction: payload.requireInteraction,
+      lang: payload.lang,
+      icon: payload.icon,
+      badge: payload.badge,
+      data: payload.data
+    })
   );
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
+  const targetUrl = event.notification?.data?.url || "./";
+
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
       for (const client of list) {
-        if ("focus" in client) return client.focus();
+        const clientUrl = new URL(client.url);
+        const desiredUrl = new URL(targetUrl, self.location.origin);
+
+        if (clientUrl.pathname === desiredUrl.pathname && "focus" in client) {
+          return client.focus();
+        }
       }
 
       if (clients.openWindow) {
-        return clients.openWindow("./");
+        return clients.openWindow(targetUrl);
       }
     })
   );
 });
+
+function normalizeNotificationPayload(event) {
+  const fallback = {
+    title: "Minaret",
+    body: "Prayer reminder",
+    tag: "minaret-prayer-reminder",
+    renotify: false,
+    requireInteraction: false,
+    lang: "en",
+    icon: "./img/iphone-192-app-icon.png",
+    badge: "./img/iphone-180-app-icon.png",
+    data: {
+      url: "./"
+    }
+  };
+
+  try {
+    const raw = event.data ? event.data.json() : {};
+    return {
+      title: raw?.title || fallback.title,
+      body: raw?.body || raw?.options?.body || fallback.body,
+      tag: raw?.tag || raw?.options?.tag || fallback.tag,
+      renotify: raw?.renotify ?? raw?.options?.renotify ?? fallback.renotify,
+      requireInteraction:
+        raw?.requireInteraction ??
+        raw?.options?.requireInteraction ??
+        fallback.requireInteraction,
+      lang: raw?.lang || raw?.options?.lang || fallback.lang,
+      icon: raw?.icon || raw?.options?.icon || fallback.icon,
+      badge: raw?.badge || raw?.options?.badge || fallback.badge,
+      data: {
+        ...(raw?.options?.data || {}),
+        ...(raw?.data || {}),
+        url:
+          raw?.url ||
+          raw?.options?.url ||
+          raw?.options?.data?.url ||
+          raw?.data?.url ||
+          fallback.data.url
+      }
+    };
+  } catch {
+    return fallback;
+  }
+}
 
 async function networkFirst(request, cacheName, fallbackUrl = null) {
   const cache = await caches.open(cacheName);

@@ -326,49 +326,17 @@
       display: none !important;
     }
 
-    .subscribers-box {
-      display: grid;
-      gap: 10px;
-      max-height: 360px;
-      overflow: auto;
-      padding-right: 4px;
-    }
+    
 
-    .subscriber-item {
-      display: block;
-      padding: 16px 18px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.06);
-      cursor: pointer;
-    }
+    
 
-    .subscriber-item-head {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      margin-bottom: 10px;
-    }
+    
 
-    .subscriber-item input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin-top: 3px;
-      accent-color: #0a84ff;
-      flex: 0 0 18px;
-    }
+    
 
-    .subscriber-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
+    
 
-    .subscriber-meta {
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--admin-muted);
-    }
+    
 
     .status-box {
       margin: 0;
@@ -442,10 +410,9 @@
     <header class="glass admin-hero">
       <div class="admin-hero-copy">
         <div class="admin-kicker">Minaret Admin</div>
-        <h1>Notification Control Center</h1>
+        <h1>Notification Status</h1>
         <p>
-          Lightweight, on-demand control for push operations.
-          Summary loads automatically once because it is very light, while subscribers remain manual and appear only when needed.
+          Centralized visibility into the live prayer reminder system and worker health.
         </p>
       </div>
 
@@ -457,7 +424,7 @@
 
         <div class="admin-meta-chip">
           <div class="admin-meta-label">Mode</div>
-          <div class="admin-meta-value">Manual operations only</div>
+          <div class="admin-meta-value">Automated prayer reminders</div>
         </div>
       </div>
     </header>
@@ -467,7 +434,7 @@
         <div>
           <h2 class="admin-section-title">Dashboard</h2>
           <p class="admin-section-desc">
-            Essentials first: current system status, live counts, and worker time.
+            Essentials first: current notification status, live counts, and worker time.
           </p>
         </div>
 
@@ -479,17 +446,17 @@
       <div class="admin-grid">
         <div class="admin-col-3">
           <div class="admin-kpi">
-            <div class="admin-kpi-label">Subscriptions</div>
-            <div id="kpiSubscriptions" class="admin-kpi-value">--</div>
-            <div class="admin-kpi-sub">Active saved subscriptions</div>
+            <div class="admin-kpi-label">Devices</div>
+            <div id="kpiDevices" class="admin-kpi-value">--</div>
+            <div class="admin-kpi-sub">Saved browser subscriptions</div>
           </div>
         </div>
 
         <div class="admin-col-3">
           <div class="admin-kpi">
-            <div class="admin-kpi-label">Buckets</div>
-            <div id="kpiBuckets" class="admin-kpi-value">--</div>
-            <div class="admin-kpi-sub">Scheduled prayer buckets</div>
+            <div class="admin-kpi-label">Enabled</div>
+            <div id="kpiEnabled" class="admin-kpi-value">--</div>
+            <div class="admin-kpi-sub">Devices with reminders enabled</div>
           </div>
         </div>
 
@@ -518,13 +485,13 @@
               </div>
 
               <div class="admin-badge">
-                <span id="badgeSubscriptionsDot" class="admin-dot"></span>
-                <span id="badgeSubscriptionsText">Subscriptions completeness: --</span>
+                <span id="badgeDevicesDot" class="admin-dot"></span>
+                <span id="badgeDevicesText">Devices completeness: --</span>
               </div>
 
               <div class="admin-badge">
-                <span id="badgeBucketsDot" class="admin-dot"></span>
-                <span id="badgeBucketsText">Buckets completeness: --</span>
+                <span id="badgeEnabledDot" class="admin-dot"></span>
+                <span id="badgeEnabledText">Enabled completeness: --</span>
               </div>
             </div>
 
@@ -538,99 +505,6 @@
       </div>
     </section>
 
-    <section class="glass admin-section">
-      <div class="admin-section-head">
-        <div>
-          <h2 class="admin-section-title">Manual Push Composer</h2>
-          <p class="admin-section-desc">
-            Build an immediate or scheduled push request. Subscriber selection appears only if you choose selected targeting.
-          </p>
-        </div>
-      </div>
-
-      <div class="admin-form-grid">
-        <div class="admin-field field-span-6">
-          <label for="pushMode">Mode</label>
-          <select id="pushMode">
-            <option value="now">Send now</option>
-            <option value="schedule">Schedule</option>
-          </select>
-          <small>Choose immediate delivery or a future scheduled time.</small>
-        </div>
-
-        <div class="admin-field field-span-6">
-          <label for="pushLanguage">Language</label>
-          <select id="pushLanguage">
-            <option value="en">English</option>
-            <option value="ar">Arabic</option>
-          </select>
-          <small>Payload language sent to the worker.</small>
-        </div>
-
-        <div class="admin-field field-span-6">
-          <label for="pushTimezone">Timezone</label>
-          <input id="pushTimezone" type="text" />
-          <small>Used for scheduled local delivery time.</small>
-        </div>
-
-        <div class="admin-field field-span-6">
-          <label for="pushTargetMode">Target</label>
-          <select id="pushTargetMode">
-            <option value="all">All subscribers</option>
-            <option value="selected">Selected subscribers</option>
-          </select>
-          <small>Selected mode reveals the subscriber loader below.</small>
-        </div>
-
-        <div id="scheduleWrap" class="admin-field field-span-12 hidden">
-          <label for="pushScheduleAt">Local schedule time</label>
-          <input id="pushScheduleAt" type="datetime-local" />
-          <small>This field appears only in schedule mode.</small>
-        </div>
-
-        <div class="admin-field field-span-12">
-          <label for="pushTitle">Title</label>
-          <input id="pushTitle" type="text" />
-        </div>
-
-        <div class="admin-field field-span-12">
-          <label for="pushBody">Body</label>
-          <textarea id="pushBody"></textarea>
-        </div>
-
-        <div class="admin-field field-span-12">
-          <label for="pushExtraJson">Extra notification options JSON</label>
-          <textarea id="pushExtraJson" class="mono" placeholder='{"tag":"manual-test","renotify":false}'></textarea>
-          <small>Optional. Leave empty unless you need advanced options.</small>
-        </div>
-      </div>
-
-      <div id="subscribersSection" class="admin-block hidden" style="margin-top:18px;">
-        <div class="admin-section-head" style="margin-bottom:12px;">
-          <div>
-            <h2 class="admin-section-title" style="font-size:20px;">Subscribers</h2>
-            <p class="admin-section-desc" style="font-size:14px;margin-top:6px;">
-              Load subscribers only when selected targeting is needed.
-            </p>
-          </div>
-
-          <div class="admin-actions">
-            <button id="refreshSubscribersBtn" class="admin-btn ghost" type="button">Load Subscribers</button>
-          </div>
-        </div>
-
-        <div id="subscribersBox" class="subscribers-box">Press “Load Subscribers” when you need this list.</div>
-      </div>
-
-      <div class="admin-actions" style="margin-top:18px;">
-        <button id="sendManualPushBtn" class="admin-btn primary" type="button">Execute</button>
-      </div>
-
-      <div id="pushFeedback" class="admin-feedback" style="margin-top:12px;"></div>
-      <div id="pushHint" class="admin-inline-note">
-        Subscribers are not loaded unless you explicitly request them.
-      </div>
-    </section>
 
     <section class="glass admin-section">
       <div class="admin-section-head">

@@ -1,5 +1,16 @@
 import { getJson, putJson, listKeys } from "../utils/kv.js";
 
+const DEFAULT_NOTIFICATION_PREFS = {
+  enabled: false,
+  prayers: {
+    fajr: true,
+    dhuhr: true,
+    asr: true,
+    maghrib: true,
+    isha: true
+  }
+};
+
 export async function subscriptionKey(endpoint) {
   const bytes = new TextEncoder().encode(endpoint);
   const hashBuffer = await crypto.subtle.digest("SHA-256", bytes);
@@ -21,6 +32,68 @@ export function sanitizeSettings(settings) {
   };
 }
 
+export function sanitizeNotificationPreferences(value) {
+  return {
+    enabled: value?.enabled === true,
+    prayers: {
+      fajr: value?.prayers?.fajr !== false,
+      dhuhr: value?.prayers?.dhuhr !== false,
+      asr: value?.prayers?.asr !== false,
+      maghrib: value?.prayers?.maghrib !== false,
+      isha: value?.prayers?.isha !== false
+    }
+  };
+}
+
+export function getDefaultNotificationPreferences() {
+  return structuredClone(DEFAULT_NOTIFICATION_PREFS);
+}
+
+export function sanitizeLanguage(language) {
+  return language === "ar" ? "ar" : "en";
+}
+
+export function sanitizeTimeZone(timeZone) {
+  const candidate = typeof timeZone === "string" ? timeZone.trim() : "";
+
+  if (!candidate) return "UTC";
+
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: candidate });
+    return candidate;
+  } catch {
+    return "UTC";
+  }
+}
+
+export function sanitizeName(name) {
+  if (typeof name !== "string") return null;
+  const trimmed = name.trim();
+  if (!trimmed) return null;
+  return trimmed.slice(0, 180);
+}
+
+export function sanitizeUserAgent(userAgent) {
+  if (typeof userAgent !== "string") return null;
+  const trimmed = userAgent.trim();
+  if (!trimmed) return null;
+  return trimmed.slice(0, 512);
+}
+
+export function sanitizeCoordinates(lat, lon) {
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+  return { lat, lon };
+}
+
+export function isValidPushSubscription(subscription) {
+  return Boolean(
+    subscription &&
+    typeof subscription === "object" &&
+    typeof subscription.endpoint === "string" &&
+    subscription.endpoint.trim()
+  );
+}
+
 export async function getSubscriptionRecord(env, subKey) {
   return getJson(env, subKey, null);
 }
@@ -35,38 +108,4 @@ export async function deleteSubscriptionRecord(env, subKey) {
 
 export async function listSubscriptionKeys(env) {
   return listKeys(env, "sub:", 1000);
-}
-
-export async function listSubscribers(env) {
-  const list = await listSubscriptionKeys(env);
-  const subscribers = [];
-
-  for (const item of list.keys) {
-    const record = await getSubscriptionRecord(env, item.name);
-    if (!record) continue;
-    subscribers.push({
-      endpoint: record.subscription?.endpoint || null,
-      name: record.name || null,
-      language: record.language || null,
-      timezone: record.timezone || null,
-      userAgent: record.userAgent || null,
-      createdAt: record.createdAt || null,
-      lastSent: record.lastSent || null,
-      customAttributes: record.customAttributes || null
-    });
-  }
-
-  return subscribers;
-}
-
-export async function resolveRecordsByEndpoints(env, endpoints) {
-  const records = [];
-
-  for (const endpoint of endpoints || []) {
-    const subKey = await subscriptionKey(endpoint);
-    const record = await getSubscriptionRecord(env, subKey);
-    if (record?.subscription?.endpoint) records.push({ subKey, record });
-  }
-
-  return records;
 }

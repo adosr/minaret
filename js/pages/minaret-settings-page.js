@@ -5,6 +5,5 @@ export function renderMinaretSettingsPage({ state, refs, config }) {
   refs.aboutVersionLabel.textContent = state.t("about_version", "Version");
   refs.aboutVersionValue.textContent = config.appVersion;
   refs.aboutDescriptionLabel.textContent = state.t("about_description", "Description");
-  refs.aboutDescriptionValue.textContent = state.t("about_description_value", "Prayer times, monthly overview, and notifications.");
-  refs.enableNotificationsBtn.textContent = state.t("action_enable_notifications", "Enable notifications");
+  refs.aboutDescriptionValue.textContent = state.t("about_description_value", "Prayer times and monthly overview.");
 }

@@ -16,6 +16,7 @@ export const appState = {
     maghrib: 0,
     isha: 0
   },
+  notificationPrefs: null,
   refs: {},
   progressDialController: null,
   geolocationRequestInFlight: false,

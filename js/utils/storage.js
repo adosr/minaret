@@ -1,6 +1,18 @@
 import { STORAGE_KEYS } from "../../packages/shared/ids.js";
 
 const LOCATION_EXPIRY = 24 * 60 * 60 * 1000;
+const LEGACY_NOTIFICATION_KEY = "prayer_notifications_enabled";
+
+export const DEFAULT_NOTIFICATION_PREFERENCES = {
+  enabled: false,
+  prayers: {
+    fajr: true,
+    dhuhr: true,
+    asr: true,
+    maghrib: true,
+    isha: true
+  }
+};
 
 export function loadSavedLocation() {
   try {
@@ -59,8 +71,44 @@ export function loadSettings() {
   }
 }
 
-export function persistNotificationsEnabled(value) {
-  localStorage.setItem(STORAGE_KEYS.notifications, value ? "true" : "false");
+export function loadNotificationPreferences() {
+  clearLegacyNotificationStorage();
+
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEYS.notificationPreferences) || "{}");
+    return {
+      enabled: raw.enabled === true,
+      prayers: {
+        fajr: raw?.prayers?.fajr !== false,
+        dhuhr: raw?.prayers?.dhuhr !== false,
+        asr: raw?.prayers?.asr !== false,
+        maghrib: raw?.prayers?.maghrib !== false,
+        isha: raw?.prayers?.isha !== false
+      }
+    };
+  } catch {
+    return structuredClone(DEFAULT_NOTIFICATION_PREFERENCES);
+  }
+}
+
+export function persistNotificationPreferences(value) {
+  const prefs = {
+    enabled: value?.enabled === true,
+    prayers: {
+      fajr: value?.prayers?.fajr !== false,
+      dhuhr: value?.prayers?.dhuhr !== false,
+      asr: value?.prayers?.asr !== false,
+      maghrib: value?.prayers?.maghrib !== false,
+      isha: value?.prayers?.isha !== false
+    }
+  };
+
+  localStorage.setItem(STORAGE_KEYS.notificationPreferences, JSON.stringify(prefs));
+  localStorage.removeItem(LEGACY_NOTIFICATION_KEY);
+}
+
+export function clearLegacyNotificationStorage() {
+  localStorage.removeItem(LEGACY_NOTIFICATION_KEY);
 }
 
 export function loadAdminToken() {

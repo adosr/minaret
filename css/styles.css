@@ -1396,3 +1396,36 @@ body.ui-loading .tabbar-capsule {
   .prayer-focus.current::after { right: -78px; }
   .prayer-focus.next::before { left: -78px; }
 }
+
+
+.settings-row-multiline {
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.settings-value-block {
+  display: block;
+  text-align: end;
+  line-height: 1.4;
+  max-width: 62%;
+}
+
+.notification-toggle {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.notification-toggle:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.settings-action-button[hidden] {
+  display: none;
+}
+
+.settings-action-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

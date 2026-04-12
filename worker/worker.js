@@ -7,6 +7,6 @@ export default {
   },
 
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(handleScheduled(env));
+    ctx.waitUntil(handleScheduled(event, env, ctx));
   }
 };

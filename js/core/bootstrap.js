@@ -5,8 +5,7 @@ import { byId } from "../utils/dom.js";
 import {
   loadSavedLocation,
   loadSettings,
-  persistLocation,
-  persistNotificationsEnabled
+  persistLocation
 } from "../utils/storage.js";
 import { getLocation, reverseGeocode, pickCityName, formatCoords, isGeolocationPermissionDenied } from "../utils/location.js";
 import { detectLanguage, applyLanguageToDocument, loadTranslations } from "../utils/language.js";
@@ -16,10 +15,17 @@ import { createProgressDialController } from "../components/progress-dial.js";
 import { renderMinaretDailyPage } from "../pages/minaret-daily-page.js";
 import { renderMinaretMonthlyPage } from "../pages/minaret-monthly-page.js";
 import { renderMinaretSettingsPage } from "../pages/minaret-settings-page.js";
+import {
+  initializeNotificationState,
+  bindNotificationEvents,
+  renderNotificationSettings,
+  syncNotificationSubscriptionSilently
+} from "./notifications.js";
 import { enableSkeleton, disableSkeleton } from "../components/skeleton.js";
 
 export async function bootstrapApp() {
   appState.settings = loadSettings();
+  initializeNotificationState(appState);
 
   const lang = detectLanguage();
   applyLanguageToDocument(lang);
@@ -101,6 +107,7 @@ function applyInitialLocalizedUI() {
     refs: appState.refs,
     config: WEB_APP_CONFIG
   });
+  renderNotificationSettings({ state: appState, refs: appState.refs });
 }
 
 function revealPreinitializedApp() {
@@ -129,7 +136,23 @@ function cacheRefs() {
     tabMonthly: byId("tabMonthly"),
     tabSettings: byId("tabSettings"),
     pages: Array.from(document.querySelectorAll(".page")),
-    enableNotificationsBtn: byId("enableNotificationsBtn"),
+    notificationsHeaderLabel: byId("notificationsHeaderLabel"),
+    notificationsStatusLabel: byId("notificationsStatusLabel"),
+    notificationsStatusValue: byId("notificationsStatusValue"),
+    notificationsSelectionLabel: byId("notificationsSelectionLabel"),
+    notificationsSelectionValue: byId("notificationsSelectionValue"),
+    notifyFajrLabel: byId("notifyFajrLabel"),
+    notifyFajrToggle: byId("notifyFajrToggle"),
+    notifyDhuhrLabel: byId("notifyDhuhrLabel"),
+    notifyDhuhrToggle: byId("notifyDhuhrToggle"),
+    notifyAsrLabel: byId("notifyAsrLabel"),
+    notifyAsrToggle: byId("notifyAsrToggle"),
+    notifyMaghribLabel: byId("notifyMaghribLabel"),
+    notifyMaghribToggle: byId("notifyMaghribToggle"),
+    notifyIshaLabel: byId("notifyIshaLabel"),
+    notifyIshaToggle: byId("notifyIshaToggle"),
+    notificationPrimaryActionBtn: byId("notificationPrimaryActionBtn"),
+    notificationSecondaryActionBtn: byId("notificationSecondaryActionBtn"),
     monthlyTitle: byId("monthlyTitle"),
     monthlySubtitle: byId("monthlySubtitle"),
     monthlyCalendarGrid: byId("monthlyCalendarGrid"),
@@ -186,7 +209,7 @@ function initProgressDial() {
 }
 
 function bindEvents() {
-  appState.refs.enableNotificationsBtn?.addEventListener("click", enableWebPush);
+  bindNotificationEvents({ state: appState, refs: appState.refs, config: WEB_APP_CONFIG });
   appState.refs.manualLocationRequestBtn?.addEventListener("click", async () => {
     await requestCurrentLocation();
   });
@@ -206,7 +229,7 @@ function bindEvents() {
       renderApp();
     }
 
-    await updateNotificationButtonVisibility();
+    await syncNotificationSubscriptionSilently({ state: appState, refs: appState.refs, config: WEB_APP_CONFIG });
   });
 }
 
@@ -376,8 +399,8 @@ function renderLocationError() {
   applyTabLabels();
 
   renderMinaretSettingsPage({ state: appState, refs: appState.refs, config: WEB_APP_CONFIG });
-  updateNotificationButtonVisibility();
-  
+  renderNotificationSettings({ state: appState, refs: appState.refs });
+
   disableSkeleton();
 }
 
@@ -418,74 +441,10 @@ function renderApp() {
   renderMinaretDailyPage({ state: appState, refs: appState.refs, times });
   renderMinaretMonthlyPage({ state: appState, refs: appState.refs });
   renderMinaretSettingsPage({ state: appState, refs: appState.refs, config: WEB_APP_CONFIG });
+  renderNotificationSettings({ state: appState, refs: appState.refs });
 
-  updateNotificationButtonVisibility();
-  
+  syncNotificationSubscriptionSilently({ state: appState, refs: appState.refs, config: WEB_APP_CONFIG }).catch(() => {});
+
   disableSkeleton();
 }
 
-async function enableWebPush() {
-  if (!appState.coords || !("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) return;
-
-  const registration = await navigator.serviceWorker.ready;
-  const permission = await Notification.requestPermission();
-
-  if (permission !== "granted") {
-    await updateNotificationButtonVisibility();
-    return;
-  }
-
-  const vapidPublicKey = await fetch(`${WEB_APP_CONFIG.workerBaseUrl}/vapid-public-key`).then((r) => r.text());
-
-  let subscription = await registration.pushManager.getSubscription();
-  if (!subscription) {
-    subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
-    });
-  }
-
-  await fetch(`${WEB_APP_CONFIG.workerBaseUrl}/subscribe`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      subscription: subscription.toJSON(),
-      lat: appState.coords.lat,
-      lon: appState.coords.lon,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      name: appState.placeName,
-      settings: appState.settings,
-      language: appState.lang,
-      userAgent: navigator.userAgent
-    })
-  });
-
-  persistNotificationsEnabled(true);
-  await updateNotificationButtonVisibility();
-}
-
-async function updateNotificationButtonVisibility() {
-  const button = appState.refs.enableNotificationsBtn;
-  if (!button) return;
-
-  if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
-    button.hidden = true;
-    return;
-  }
-
-  try {
-    const registration = await navigator.serviceWorker.ready;
-    const subscription = await registration.pushManager.getSubscription();
-    const enabled = Notification.permission === "granted" && !!subscription;
-    button.hidden = enabled;
-  } catch {
-    button.hidden = false;
-  }
-}
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
-  const rawData = atob(base64);
-  return Uint8Array.from([...rawData].map((c) => c.charCodeAt(0)));
-}
