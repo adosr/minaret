@@ -30,11 +30,10 @@ export async function bootstrapApp() {
   appState.dict = i18n.dict;
 
   cacheRefs();
-  initTabs();
-  initProgressDial();
-
   applyInitialLocalizedUI();
   revealPreinitializedApp();
+  initTabs();
+  initProgressDial();
 
   await registerSW();
   bindEvents();
