@@ -32,6 +32,10 @@ export async function bootstrapApp() {
   cacheRefs();
   initTabs();
   initProgressDial();
+
+  applyInitialLocalizedUI();
+  revealPreinitializedApp();
+
   await registerSW();
   bindEvents();
   await hydrateLocation();
@@ -43,6 +47,64 @@ export async function bootstrapApp() {
   }
 
   disableSkeleton();
+}
+
+function applyInitialLocalizedUI() {
+  if (appState.refs.title) {
+    appState.refs.title.textContent = appState.t("app_title_short", "Prayer");
+  }
+
+  if (appState.refs.location) {
+    appState.refs.location.textContent = appState.t("loading_location", "Loading location…");
+  }
+
+  if (appState.refs.todayLabel) {
+    appState.refs.todayLabel.textContent = formatDisplayDate(new Date(), appState.lang);
+  }
+
+  if (appState.refs.currentPrayerLabel) {
+    appState.refs.currentPrayerLabel.textContent = appState.t("current_prayer", "Current Prayer");
+  }
+
+  if (appState.refs.nextPrayerLabel) {
+    appState.refs.nextPrayerLabel.textContent = appState.t("next_prayer", "Next Prayer");
+  }
+
+  if (appState.refs.labelFajr) {
+    appState.refs.labelFajr.textContent = appState.t("fajr", "Fajr");
+  }
+
+  if (appState.refs.labelSunrise) {
+    appState.refs.labelSunrise.textContent = appState.t("sunrise", "Sunrise");
+  }
+
+  if (appState.refs.labelDhuhr) {
+    appState.refs.labelDhuhr.textContent = appState.t("dhuhr", "Dhuhr");
+  }
+
+  if (appState.refs.labelAsr) {
+    appState.refs.labelAsr.textContent = appState.t("asr", "Asr");
+  }
+
+  if (appState.refs.labelMaghrib) {
+    appState.refs.labelMaghrib.textContent = appState.t("maghrib", "Maghrib");
+  }
+
+  if (appState.refs.labelIsha) {
+    appState.refs.labelIsha.textContent = appState.t("isha", "Isha");
+  }
+
+  applyTabLabels();
+
+  renderMinaretSettingsPage({
+    state: appState,
+    refs: appState.refs,
+    config: WEB_APP_CONFIG
+  });
+}
+
+function revealPreinitializedApp() {
+  document.documentElement.classList.remove("preinit");
 }
 
 function cacheRefs() {
