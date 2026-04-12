@@ -6,9 +6,7 @@ import {
   loadSavedLocation,
   loadSettings,
   persistLocation,
-  persistNotificationsEnabled,
-  persistGeolocationDenied,
-  clearGeolocationPermissionState
+  persistNotificationsEnabled
 } from "../utils/storage.js";
 import { getLocation, reverseGeocode, pickCityName, formatCoords, isGeolocationPermissionDenied } from "../utils/location.js";
 import { detectLanguage, applyLanguageToDocument, loadTranslations } from "../utils/language.js";
@@ -128,7 +126,7 @@ function initProgressDial() {
 function bindEvents() {
   appState.refs.enableNotificationsBtn?.addEventListener("click", enableWebPush);
   appState.refs.manualLocationRequestBtn?.addEventListener("click", async () => {
-    await requestCurrentLocation({ manual: true });
+    await requestCurrentLocation();
   });
 
   document.addEventListener("visibilitychange", async () => {
@@ -189,10 +187,10 @@ async function hydrateLocation() {
     appState.refs.location.textContent = appState.t("loading_location", "Loading location…");
   }
 
-  await requestCurrentLocation({ manual: false });
+  await requestCurrentLocation();
 }
 
-async function requestCurrentLocation({ manual }) {
+async function requestCurrentLocation() {
   if (appState.geolocationRequestInFlight) return;
 
   appState.geolocationRequestInFlight = true;
@@ -207,8 +205,6 @@ async function requestCurrentLocation({ manual }) {
     appState.coords = coords;
     appState.showManualLocationRequest = false;
     showManualLocationRequest(false);
-    persistGeolocationDenied(false);
-    clearGeolocationPermissionState();
 
     appState.placeNameAr = await reverseGeocode(
       coords.lat,
@@ -238,11 +234,8 @@ async function requestCurrentLocation({ manual }) {
     console.error("Location access failed:", error);
 
     if (isGeolocationPermissionDenied(error)) {
-      persistGeolocationDenied(true);
       appState.showManualLocationRequest = true;
       showManualLocationRequest(true);
-    } else {
-      persistGeolocationDenied(false);
     }
 
     renderLocationError();
@@ -334,9 +327,8 @@ function renderApp() {
   if (appState.refs.manualLocationCard) {
     appState.refs.manualLocationCard.hidden = true;
   }
+
   appState.showManualLocationRequest = false;
-  persistGeolocationDenied(false);
-  clearGeolocationPermissionState();
 
   appState.refs.location.textContent = appState.placeName;
   appState.refs.title.textContent = appState.t("app_title_short", "Prayer");
