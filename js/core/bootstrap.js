@@ -16,7 +16,7 @@ import { createProgressDialController } from "../components/progress-dial.js";
 import { renderMinaretDailyPage } from "../pages/minaret-daily-page.js";
 import { renderMinaretMonthlyPage } from "../pages/minaret-monthly-page.js";
 import { renderMinaretSettingsPage } from "../pages/minaret-settings-page.js";
-import { disableSkeleton } from "../components/skeleton.js";
+import { enableSkeleton, disableSkeleton } from "../components/skeleton.js";
 
 export async function bootstrapApp() {
   appState.settings = loadSettings();
@@ -35,8 +35,9 @@ export async function bootstrapApp() {
   initTabs();
   initProgressDial();
 
+  enableSkeleton();
   revealPreinitializedApp();
-  
+
   await registerSW();
   bindEvents();
   await hydrateLocation();
@@ -46,8 +47,6 @@ export async function bootstrapApp() {
   } else {
     renderLocationError();
   }
-
-  disableSkeleton();
 }
 
 function applyInitialLocalizedUI() {
@@ -257,6 +256,7 @@ async function requestCurrentLocation() {
   if (appState.geolocationRequestInFlight) return;
 
   appState.geolocationRequestInFlight = true;
+  enableSkeleton();
 
   if (appState.refs.location) {
     appState.refs.location.textContent = appState.t("loading_location", "Loading location…");
@@ -377,6 +377,8 @@ function renderLocationError() {
 
   renderMinaretSettingsPage({ state: appState, refs: appState.refs, config: WEB_APP_CONFIG });
   updateNotificationButtonVisibility();
+  
+  disableSkeleton();
 }
 
 function renderApp() {
@@ -418,6 +420,8 @@ function renderApp() {
   renderMinaretSettingsPage({ state: appState, refs: appState.refs, config: WEB_APP_CONFIG });
 
   updateNotificationButtonVisibility();
+  
+  disableSkeleton();
 }
 
 async function enableWebPush() {

@@ -1058,6 +1058,283 @@ main {
   cursor: pointer;
 }
 
+/* =========================
+   SAME-DOM SKELETON SYSTEM
+   ========================= */
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+body.ui-loading {
+  --skeleton-base: color-mix(in srgb, var(--text-primary) 10%, transparent);
+  --skeleton-highlight: color-mix(in srgb, #ffffff 26%, var(--skeleton-base));
+  --skeleton-sheen:
+    linear-gradient(
+      90deg,
+      var(--skeleton-base) 0%,
+      var(--skeleton-base) 30%,
+      var(--skeleton-highlight) 50%,
+      var(--skeleton-base) 70%,
+      var(--skeleton-base) 100%
+    );
+}
+
+body.ui-loading #manualLocationCard {
+  display: none !important;
+}
+
+body.ui-loading .tab-btn,
+body.ui-loading .manual-location-button,
+body.ui-loading .settings-action-button {
+  pointer-events: none;
+}
+
+body.ui-loading .tab-active-pill {
+  opacity: 0;
+}
+
+body.ui-loading #location,
+body.ui-loading #title,
+body.ui-loading #todayLabel,
+body.ui-loading #currentPrayerLabel,
+body.ui-loading #currentPrayer,
+body.ui-loading #currentPrayerHint,
+body.ui-loading #nextPrayerLabel,
+body.ui-loading #nextPrayer,
+body.ui-loading #nextPrayerTime,
+body.ui-loading #countdownValue,
+body.ui-loading .prayer-name,
+body.ui-loading .prayer-time-val,
+body.ui-loading .tab-label {
+  position: relative;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  user-select: none;
+}
+
+body.ui-loading #location::before,
+body.ui-loading #title::before,
+body.ui-loading #todayLabel::before,
+body.ui-loading #currentPrayerLabel::before,
+body.ui-loading #currentPrayer::before,
+body.ui-loading #currentPrayerHint::before,
+body.ui-loading #nextPrayerLabel::before,
+body.ui-loading #nextPrayer::before,
+body.ui-loading #nextPrayerTime::before,
+body.ui-loading #countdownValue::before,
+body.ui-loading .prayer-name::before,
+body.ui-loading .prayer-time-val::before,
+body.ui-loading .tab-label::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  width: var(--skeleton-w, 100%);
+  height: var(--skeleton-h, 1em);
+  border-radius: 999px;
+  background: var(--skeleton-sheen);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.25s linear infinite;
+  pointer-events: none;
+}
+
+/* Header */
+body.ui-loading #location {
+  display: inline-block;
+  min-width: 148px;
+  min-height: 17px;
+  --skeleton-w: 148px;
+  --skeleton-h: 14px;
+}
+
+body.ui-loading #title {
+  display: block;
+  min-width: 112px;
+  min-height: 34px;
+  --skeleton-w: 112px;
+  --skeleton-h: 28px;
+}
+
+body.ui-loading #todayLabel {
+  display: inline-block;
+  min-width: 92px;
+  min-height: 15px;
+  --skeleton-w: 92px;
+  --skeleton-h: 14px;
+}
+
+/* Prayer focus cards */
+body.ui-loading #currentPrayerLabel,
+body.ui-loading #nextPrayerLabel {
+  display: inline-block;
+  min-width: 108px;
+  min-height: 12px;
+  --skeleton-w: 108px;
+  --skeleton-h: 11px;
+}
+
+body.ui-loading #currentPrayer,
+body.ui-loading #nextPrayer {
+  display: block;
+  min-width: 132px;
+  min-height: 28px;
+  --skeleton-w: 132px;
+  --skeleton-h: 24px;
+}
+
+body.ui-loading #currentPrayerHint,
+body.ui-loading #nextPrayerTime {
+  display: inline-block;
+  min-width: 98px;
+  min-height: 17px;
+  --skeleton-w: 98px;
+  --skeleton-h: 15px;
+}
+
+/* Progress dial skeleton */
+body.ui-loading #progressDial {
+  position: relative;
+}
+
+body.ui-loading #progressDial .progress-dial-svg,
+body.ui-loading #progressDial #progressKnob {
+  opacity: 0;
+}
+
+body.ui-loading #progressDial::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, transparent 52%, var(--skeleton-base) 53%, var(--skeleton-base) 60%, transparent 61%);
+  pointer-events: none;
+}
+
+body.ui-loading #progressDial .progress-center {
+  position: relative;
+  box-shadow: none;
+  border-color: transparent;
+  overflow: hidden;
+}
+
+body.ui-loading #progressDial .progress-center::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--skeleton-sheen);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.25s linear infinite;
+  pointer-events: none;
+}
+
+body.ui-loading #countdownValue {
+  display: inline-block;
+  min-width: 76px;
+  min-height: 17px;
+  --skeleton-w: 76px;
+  --skeleton-h: 15px;
+}
+
+/* Prayer rows */
+body.ui-loading .prayer-icon-box {
+  position: relative;
+  color: transparent !important;
+}
+
+body.ui-loading .prayer-icon-box svg {
+  opacity: 0;
+}
+
+body.ui-loading .prayer-icon-box::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: var(--skeleton-sheen);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.25s linear infinite;
+  pointer-events: none;
+}
+
+body.ui-loading .prayer-name {
+  display: inline-block;
+  min-width: 86px;
+  min-height: 17px;
+  --skeleton-w: 86px;
+  --skeleton-h: 15px;
+}
+
+body.ui-loading .prayer-time-val {
+  display: inline-block;
+  min-width: 54px;
+  min-height: 17px;
+  --skeleton-w: 54px;
+  --skeleton-h: 15px;
+}
+
+/* Tab bar */
+body.ui-loading .tab-visual-accent {
+  opacity: 0;
+}
+
+body.ui-loading .tab-visual-base svg {
+  opacity: 0;
+}
+
+body.ui-loading .tab-stack {
+  position: relative;
+}
+
+body.ui-loading .tab-stack::before,
+body.ui-loading .tab-stack::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  background: var(--skeleton-sheen);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.25s linear infinite;
+  pointer-events: none;
+}
+
+body.ui-loading .tab-stack::before {
+  inset-block-start: 8px;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+}
+
+body.ui-loading .tab-stack::after {
+  inset-block-end: 8px;
+  width: 34px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+body.ui-loading .tab-label {
+  display: inline-block;
+  min-width: 34px;
+  min-height: 10px;
+  --skeleton-w: 34px;
+  --skeleton-h: 10px;
+}
+
+/* Keep cards and groups visually stable while loading */
+body.ui-loading .prayer-focus,
+body.ui-loading .grouped-prayers,
+body.ui-loading .tabbar-capsule {
+  overflow: hidden;
+}
+
 @media (max-width: 390px) {
   .hero-prayers { grid-template-columns: 1fr; }
 
