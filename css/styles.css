@@ -1318,6 +1318,12 @@ body.ui-loading .tab-stack::after {
   border-radius: 999px;
 }
 
+body.ui-loading .tab-label {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  user-select: none;
+}
+
 /* Keep cards and groups visually stable while loading */
 body.ui-loading .prayer-focus,
 body.ui-loading .grouped-prayers,
