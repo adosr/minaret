@@ -3,7 +3,6 @@ import {
   subscriptionKey,
   getSubscriptionRecord,
   putSubscriptionRecord,
-  deleteSubscriptionRecord,
   sanitizeSettings,
   sanitizeNotificationPreferences,
   sanitizeLanguage,
@@ -13,6 +12,7 @@ import {
   sanitizeCoordinates,
   isValidPushSubscription
 } from "../services/subscription-service.js";
+import { rebuildSubscriptionSchedule, removeSubscriptionCompletely } from "../services/notification-service.js";
 
 export async function handleUpsertNotificationSubscription(request, env) {
   const body = await safeJson(request);
@@ -30,6 +30,7 @@ export async function handleUpsertNotificationSubscription(request, env) {
   const subKey = await subscriptionKey(subscription.endpoint);
   const existing = await getSubscriptionRecord(env, subKey);
   const now = new Date().toISOString();
+  const notificationPrefs = sanitizeNotificationPreferences(body?.notificationPrefs);
 
   const record = {
     subscription,
@@ -39,20 +40,35 @@ export async function handleUpsertNotificationSubscription(request, env) {
     lat: coords.lat,
     lon: coords.lon,
     settings: sanitizeSettings(body?.settings),
-    notificationPrefs: sanitizeNotificationPreferences(body?.notificationPrefs),
+    notificationPrefs,
     userAgent: sanitizeUserAgent(body?.userAgent),
     createdAt: existing?.createdAt || now,
     updatedAt: now,
-    lastNotification: existing?.lastNotification || null
+    lastNotification: existing?.lastNotification || null,
+    scheduleDate: existing?.scheduleDate || null,
+    scheduledKeys: existing?.scheduledKeys || [],
+    scheduleMeta: existing?.scheduleMeta || {}
   };
 
-  await putSubscriptionRecord(env, subKey, record);
+  if (notificationPrefs.enabled) {
+    await rebuildSubscriptionSchedule(env, subKey, record, new Date());
+  } else {
+    if (existing?.scheduledKeys?.length) {
+      await removeSubscriptionCompletely(env, subKey, { ...existing, subscription });
+    }
+    record.scheduleDate = null;
+    record.scheduledKeys = [];
+    record.scheduleMeta = {};
+    await putSubscriptionRecord(env, subKey, record);
+  }
 
   return json({
     ok: true,
     key: subKey,
     status: existing ? "updated" : "created",
-    notificationPrefs: record.notificationPrefs
+    notificationPrefs: record.notificationPrefs,
+    scheduleDate: record.scheduleDate,
+    scheduledKeys: record.scheduledKeys?.length || 0
   });
 }
 
@@ -65,7 +81,8 @@ export async function handleDeleteNotificationSubscription(request, env) {
   }
 
   const subKey = await subscriptionKey(endpoint);
-  await deleteSubscriptionRecord(env, subKey);
+  const existing = await getSubscriptionRecord(env, subKey);
+  await removeSubscriptionCompletely(env, subKey, existing);
 
   return json({ ok: true, key: subKey, deleted: true });
 }

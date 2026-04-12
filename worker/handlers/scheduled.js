@@ -1,5 +1,11 @@
-import { runNotificationSchedule } from "../services/notification-service.js";
+import { runNotificationDispatch, runScheduleMaintenance } from "../services/notification-service.js";
 
-export async function handleScheduled(_event, env) {
-  await runNotificationSchedule(env);
+export async function handleScheduled(event, env) {
+  const cron = event?.cron || "* * * * *";
+
+  if (cron === "* * * * *") {
+    return runNotificationDispatch(env);
+  }
+
+  return runScheduleMaintenance(env);
 }

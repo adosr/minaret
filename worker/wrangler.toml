@@ -11,7 +11,7 @@ id = "d04323ba90f547799a8031e957183ed2"
 VAPID_SUBJECT = "mailto:adosr3@gmail.com"
 
 [triggers]
-crons = ["* * * * *"]
+crons = ["* * * * *", "5 * * * *"]
 
 [observability]
 enabled = true

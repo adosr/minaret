@@ -63,7 +63,9 @@ export async function handleSummary(env) {
           updated_at: latest.updatedAt || latest.createdAt || null,
           location_name: latest.name || null,
           language: latest.language || null,
-          notifications_enabled: latest.notificationPrefs?.enabled === true
+          notifications_enabled: latest.notificationPrefs?.enabled === true,
+          schedule_date: latest.scheduleDate || null,
+          scheduled_keys: Array.isArray(latest.scheduledKeys) ? latest.scheduledKeys.length : 0
         }
       : null
   });
