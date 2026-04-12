@@ -215,12 +215,19 @@ function getButtonMetrics(btn) {
       state.tabBarScale = 1;
 
       pill.classList.remove("dragging");
-      pill.style.transition = "";
+      pill.style.transition = "none";
       pill.style.transformOrigin = "center center";
 
       applyTabBarScale(1);
       applyPill(x, w, 1);
       clearTabOverlapFeedback();
+
+      pill.getBoundingClientRect();
+
+      requestAnimationFrame(() => {
+        pill.style.transition = "";
+      });
+
       return;
     }
 
