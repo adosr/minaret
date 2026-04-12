@@ -359,6 +359,36 @@ function buildHeaders() {
   return {};
 }
 
+
+async function resolveAdminLocation() {
+  const saved = loadSavedLocation();
+  if (Number.isFinite(saved?.lat) && Number.isFinite(saved?.lon)) {
+    return saved;
+  }
+
+  const current = await getCurrentLocation();
+  return {
+    lat: current.lat,
+    lon: current.lon,
+    nameAr: saved?.nameAr || saved?.name || null,
+    nameEn: saved?.nameEn || saved?.name || null
+  };
+}
+
+async function getCurrentLocation() {
+  if (!navigator.geolocation) {
+    throw new Error(COPY.locationRequired);
+  }
+
+  return await new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => resolve({ lat: coords.latitude, lon: coords.longitude }),
+      () => reject(new Error(COPY.locationRequired)),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+    );
+  });
+}
+
 function getPreferredLocationName(location) {
   return ((document.documentElement.lang || "en").startsWith("ar") ? location.nameAr : location.nameEn) || location.nameAr || location.nameEn || null;
 }
@@ -477,7 +507,7 @@ function getCopy() {
       activationFailed: (error) => `فشل تفعيل إشعارات هذا السياق: ${error}`,
       activationFailedGeneric: "تعذر إنشاء الاشتراك الجديد.",
       permissionNotGranted: "لم يتم منح الإذن بعد.",
-      locationRequired: "افتح التطبيق الرئيسي مرة واحدة وتأكد من السماح بالموقع، ثم ارجع إلى لوحة الإدارة.",
+      locationRequired: "تعذر الوصول إلى موقع الجهاز من صفحة الإدارة. افتح الصفحة الرئيسية مرة واحدة أو اسمح بالموقع هنا إذا طلب النظام ذلك.",
       settingsHelp: "لتفعيل إشعارات iPhone من جديد: افتح الإعدادات > الإشعارات > منارة، ثم فعّل السماح بالإشعارات وارجع إلى التطبيق.",
       sent: (fingerprint) => `تم إرسال الإشعار التجريبي إلى هذا الجهاز فقط: ${fingerprint}`,
       sendFailed: (error) => `فشل إرسال الإشعار التجريبي: ${error}`,
@@ -530,7 +560,7 @@ function getCopy() {
     activationFailed: (error) => `Failed to activate this context: ${error}`,
     activationFailedGeneric: "Could not create a new subscription.",
     permissionNotGranted: "Permission was not granted.",
-    locationRequired: "Open the main app once, allow location access there, then return to the admin page.",
+    locationRequired: "The admin page could not access this device location. Open the main app once or allow location here if the system asks.",
     settingsHelp: "To turn iPhone notifications back on: open Settings > Notifications > Minaret, allow notifications, then return to the app.",
     sent: (fingerprint) => `Test notification sent to this device only: ${fingerprint}`,
     sendFailed: (error) => `Failed to send the test notification: ${error}`,
