@@ -844,11 +844,13 @@ main {
   text-transform: uppercase;
 }
 
+/*
 @media not all and (display-mode: standalone) {
   .tabbar-fixed-wrap {
     display: none;
   }
 }
+*/
 
 .tabbar-capsule {
   display: inline-flex;
