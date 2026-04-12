@@ -873,7 +873,7 @@ main {
 
 .tab-active-pill {
   position: absolute;
-  inset-inline-start: 2px;
+  left: 2px;
   display: block;
   height: calc(100% - 8px);
   border-radius: calc(var(--radius-tab) - 4px);
