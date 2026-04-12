@@ -454,47 +454,13 @@ function getButtonMetrics(btn) {
     }
   });
 
-  function syncActiveTabPosition() {
-    const activeBtn = tabBar.querySelector(".tab-btn.active") || buttons[0];
-    if (!activeBtn) return;
-
-    commitSelection(activeBtn, true);
-    clearTabOverlapFeedback();
-  }
-
-  function finalizeInitialPosition() {
-    const run = () => {
-      syncActiveTabPosition();
-      pill.style.opacity = "1";
-    };
-
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(() => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(run);
-        });
-      });
-      return;
-    }
-
-    window.addEventListener(
-      "load",
-      () => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(run);
-        });
-      },
-      { once: true }
-    );
-
-    setTimeout(run, 120);
-  }
-
   return {
     initialize() {
-      pill.style.opacity = "0";
-      syncActiveTabPosition();
-      finalizeInitialPosition();
+      const activeBtn = tabBar.querySelector(".tab-btn.active") || buttons[0];
+      if (!activeBtn) return;
+
+      commitSelection(activeBtn, true);
+      clearTabOverlapFeedback();
     },
 
     activate(pageId) {
