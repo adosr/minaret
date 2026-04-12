@@ -19,7 +19,7 @@ export function bindNotificationEvents({ state, refs, config }) {
   listenersBound = true;
 
   refs.notificationPrimaryActionBtn?.addEventListener("click", async () => {
-    await enablePrayerNotifications({ state, refs, config });
+    await handlePrimaryNotificationAction({ state, refs, config });
   });
 
   refs.notificationSecondaryActionBtn?.addEventListener("click", async () => {
@@ -85,14 +85,15 @@ export function renderNotificationSettings({ state, refs }) {
   if (refs.notificationPrimaryActionBtn) {
     refs.notificationPrimaryActionBtn.textContent = status.primaryAction;
     refs.notificationPrimaryActionBtn.disabled = !status.canEnable;
+    refs.notificationPrimaryActionBtn.hidden = !status.showPrimaryAction;
   }
 
   if (refs.notificationSecondaryActionBtn) {
     refs.notificationSecondaryActionBtn.textContent = state.t(
       "notifications_disable_action",
-      "Turn off reminders"
+      "Turn off Minaret reminders"
     );
-    refs.notificationSecondaryActionBtn.hidden = !prefs.enabled;
+    refs.notificationSecondaryActionBtn.hidden = !status.showDisableAction;
     refs.notificationSecondaryActionBtn.disabled = !support.supported;
   }
 }
@@ -110,7 +111,7 @@ export async function syncNotificationSubscriptionSilently({ state, refs, config
   const signature = JSON.stringify(syncPayload);
 
   if (!force && signature === lastSyncSignature) {
-    return { ok: true, skipped: true };
+    return { ok: true, skipped: true, automatic: true };
   }
 
   if (syncInFlight) {
@@ -148,7 +149,7 @@ export async function syncNotificationSubscriptionSilently({ state, refs, config
 
     lastSyncSignature = signature;
     renderNotificationSettings({ state, refs });
-    return json;
+    return { ...json, automatic: true };
   } catch (error) {
     console.error("Notification sync failed:", error);
     renderNotificationSettings({ state, refs });
@@ -159,16 +160,34 @@ export async function syncNotificationSubscriptionSilently({ state, refs, config
   }
 }
 
+async function handlePrimaryNotificationAction({ state, refs, config }) {
+  const support = getNotificationSupport();
+  const enabledCount = PRAYER_KEYS.filter((prayer) => state.notificationPrefs?.prayers?.[prayer] !== false).length;
+  const status = getStatusDescriptor({ state, support, enabledCount });
+
+  if (!status.canEnable) {
+    return;
+  }
+
+  if (status.action === "show_settings_help") {
+    showSystemSettingsHelp(state);
+    return;
+  }
+
+  await enablePrayerNotifications({ state, refs, config });
+}
+
 async function enablePrayerNotifications({ state, refs, config }) {
   const support = getNotificationSupport();
   state.notificationPrefs = ensurePrefs(state.notificationPrefs);
 
-  if (!support.supported) {
+  if (!support.supported || !state.coords) {
     renderNotificationSettings({ state, refs });
     return;
   }
 
-  if (!state.coords) {
+  if (Notification.permission === "denied") {
+    showSystemSettingsHelp(state);
     renderNotificationSettings({ state, refs });
     return;
   }
@@ -177,23 +196,21 @@ async function enablePrayerNotifications({ state, refs, config }) {
     state.notificationPrefs = structuredClone(DEFAULT_NOTIFICATION_PREFERENCES);
   }
 
+  if (Notification.permission !== "granted") {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      state.notificationPrefs.enabled = false;
+      persistNotificationPreferences(state.notificationPrefs);
+      renderNotificationSettings({ state, refs });
+      return;
+    }
+  }
+
   persistNotificationPreferences({
     ...state.notificationPrefs,
     enabled: true
   });
   state.notificationPrefs.enabled = true;
-
-  const permission =
-    Notification.permission === "granted"
-      ? "granted"
-      : await Notification.requestPermission();
-
-  if (permission !== "granted") {
-    state.notificationPrefs.enabled = false;
-    persistNotificationPreferences(state.notificationPrefs);
-    renderNotificationSettings({ state, refs });
-    return;
-  }
 
   await syncNotificationSubscriptionSilently({ state, refs, config, force: true });
 }
@@ -230,52 +247,101 @@ async function disablePrayerNotifications({ state, refs, config }) {
 function getStatusDescriptor({ state, support, enabledCount }) {
   if (!support.supported) {
     return {
+      action: "unsupported",
       text: state.t("notifications_status_unsupported", "This browser does not support push notifications."),
       primaryAction: state.t("notifications_enable_unavailable", "Notifications unavailable"),
-      canEnable: false
+      canEnable: false,
+      showPrimaryAction: true,
+      showDisableAction: false
     };
   }
 
   if (!state.coords) {
     return {
+      action: "location_required",
       text: state.t("notifications_status_location_required", "Location access is required before reminders can be enabled."),
-      primaryAction: state.t("notifications_enable_action", "Enable prayer reminders"),
-      canEnable: false
-    };
-  }
-
-  if (Notification.permission === "denied") {
-    return {
-      text: state.t("notifications_status_denied", "Notifications are blocked in the browser settings."),
-      primaryAction: state.t("notifications_permission_blocked", "Notifications blocked"),
-      canEnable: false
+      primaryAction: state.t("notifications_location_required_action", "Location required first"),
+      canEnable: false,
+      showPrimaryAction: true,
+      showDisableAction: false
     };
   }
 
   if (syncInFlight) {
     return {
-      text: state.t("notifications_status_syncing", "Saving reminder settings…"),
-      primaryAction: state.t("notifications_sync_action", "Syncing reminder settings…"),
-      canEnable: false
+      action: "syncing",
+      text: state.t("notifications_status_syncing", "Saving reminder settings automatically…"),
+      primaryAction: state.t("notifications_sync_action", "Saving automatically…"),
+      canEnable: false,
+      showPrimaryAction: true,
+      showDisableAction: state.notificationPrefs?.enabled === true
+    };
+  }
+
+  if (Notification.permission === "denied") {
+    return {
+      action: "show_settings_help",
+      text: state.t(
+        "notifications_status_denied",
+        "iPhone notifications are turned off. Re-enable them from Settings, then come back to Minaret."
+      ),
+      primaryAction: state.t("notifications_open_settings_action", "How to enable in iPhone settings"),
+      canEnable: true,
+      showPrimaryAction: true,
+      showDisableAction: false
+    };
+  }
+
+  if (Notification.permission !== "granted") {
+    return {
+      action: "request_permission",
+      text: state.t(
+        "notifications_status_permission_needed",
+        "Allow iPhone notifications first, then Minaret can subscribe this device for prayer reminders."
+      ),
+      primaryAction: state.t("notifications_allow_system_action", "Allow iPhone notifications"),
+      canEnable: true,
+      showPrimaryAction: true,
+      showDisableAction: false
     };
   }
 
   if (state.notificationPrefs?.enabled) {
     return {
+      action: "enabled",
       text:
         enabledCount > 0
-          ? state.t("notifications_status_enabled", "Prayer reminders are active for the selected prayers.")
-          : state.t("notifications_status_enabled_empty", "Notifications are enabled, but no prayers are selected."),
-      primaryAction: state.t("notifications_sync_action_idle", "Sync reminder settings"),
-      canEnable: true
+          ? state.t("notifications_status_enabled", "Minaret reminders are active for the selected prayers.")
+          : state.t("notifications_status_enabled_empty", "Minaret reminders are active, but no prayers are selected."),
+      primaryAction: "",
+      canEnable: false,
+      showPrimaryAction: false,
+      showDisableAction: true
     };
   }
 
   return {
-    text: state.t("notifications_status_disabled", "Prayer reminders are currently turned off."),
-    primaryAction: state.t("notifications_enable_action", "Enable prayer reminders"),
-    canEnable: true
+    action: "enable_subscription",
+    text: state.t(
+      "notifications_status_system_allowed",
+      "iPhone notifications are already allowed. Enable Minaret reminders when you are ready."
+    ),
+    primaryAction: state.t("notifications_enable_action", "Enable Minaret reminders"),
+    canEnable: true,
+    showPrimaryAction: true,
+    showDisableAction: false
   };
+}
+
+function showSystemSettingsHelp(state) {
+  const message = state.t(
+    "notifications_settings_help_message",
+    "To turn iPhone notifications back on: open Settings > Notifications > Minaret, then allow notifications and return to the app."
+  );
+
+  if (typeof window !== "undefined" && typeof window.alert === "function") {
+    window.alert(message);
+  }
 }
 
 function buildSyncPayload({ state }) {
