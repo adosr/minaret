@@ -1321,12 +1321,16 @@ body.ui-loading .tab-stack::before {
   pointer-events: none;
 }
 
-body.ui-loading .tab-visual-base .tab-label::after {
+body.ui-loading .tab-visual-base {
+  position: absolute;
+}
+
+body.ui-loading .tab-visual-base::after {
   content: "";
   position: absolute;
   inset-inline-start: 50%;
-  inset-block-start: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 8px;
+  transform: translateX(-50%);
   width: 34px;
   height: 10px;
   border-radius: 999px;
@@ -1336,7 +1340,7 @@ body.ui-loading .tab-visual-base .tab-label::after {
   pointer-events: none;
 }
 
-body.ui-loading .tab-visual-accent .tab-label::after {
+body.ui-loading .tab-visual-accent::after {
   content: none;
 }
 
