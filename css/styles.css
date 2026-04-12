@@ -1279,49 +1279,63 @@ body.ui-loading .prayer-time-val {
   --skeleton-h: 15px;
 }
 
-/* Tab bar */
+/* Tab bar skeleton */
+body.ui-loading .tab-active-pill {
+  opacity: 0;
+}
+
 body.ui-loading .tab-visual-accent {
   opacity: 0;
 }
 
-body.ui-loading .tab-visual-base svg {
+body.ui-loading .tab-visual-base svg,
+body.ui-loading .tab-visual-accent svg {
   opacity: 0;
+}
+
+body.ui-loading .tab-label {
+  position: relative;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  user-select: none;
 }
 
 body.ui-loading .tab-stack {
   position: relative;
 }
 
-body.ui-loading .tab-stack::before,
-body.ui-loading .tab-stack::after {
+body.ui-loading .tab-stack::before {
   content: "";
   position: absolute;
   inset-inline-start: 50%;
   transform: translateX(-50%);
+  inset-block-start: 8px;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
   background: var(--skeleton-sheen);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.25s linear infinite;
   pointer-events: none;
 }
 
-body.ui-loading .tab-stack::before {
-  inset-block-start: 8px;
-  width: 21px;
-  height: 21px;
-  border-radius: 50%;
-}
-
-body.ui-loading .tab-stack::after {
-  inset-block-end: 8px;
+body.ui-loading .tab-visual-base .tab-label::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  transform: translate(-50%, -50%);
   width: 34px;
   height: 10px;
   border-radius: 999px;
+  background: var(--skeleton-sheen);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.25s linear infinite;
+  pointer-events: none;
 }
 
-body.ui-loading .tab-label {
-  color: transparent !important;
-  -webkit-text-fill-color: transparent;
-  user-select: none;
+body.ui-loading .tab-visual-accent .tab-label::after {
+  content: none;
 }
 
 /* Keep cards and groups visually stable while loading */
