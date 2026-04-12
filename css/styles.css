@@ -1311,7 +1311,7 @@ body.ui-loading .tab-stack::before {
   position: absolute;
   left: 0;
   right: 0;
-  top: 8px;
+  top: 6px;
   width: 21px;
   height: 21px;
   margin-inline: auto;
@@ -1331,9 +1331,9 @@ body.ui-loading .tab-visual-base::after {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 8px;
+  bottom: 3px;
   width: 34px;
-  height: 10px;
+  height: 8px;
   margin-inline: auto;
   border-radius: 999px;
   background: var(--skeleton-sheen);
