@@ -1110,8 +1110,7 @@ body.ui-loading #nextPrayer,
 body.ui-loading #nextPrayerTime,
 body.ui-loading #countdownValue,
 body.ui-loading .prayer-name,
-body.ui-loading .prayer-time-val,
-body.ui-loading .tab-label {
+body.ui-loading .prayer-time-val {
   position: relative;
   color: transparent !important;
   -webkit-text-fill-color: transparent;
@@ -1129,8 +1128,7 @@ body.ui-loading #nextPrayer::before,
 body.ui-loading #nextPrayerTime::before,
 body.ui-loading #countdownValue::before,
 body.ui-loading .prayer-name::before,
-body.ui-loading .prayer-time-val::before,
-body.ui-loading .tab-label::before {
+body.ui-loading .prayer-time-val::before {
   content: "";
   position: absolute;
   inset-inline-start: 0;
@@ -1318,14 +1316,6 @@ body.ui-loading .tab-stack::after {
   width: 34px;
   height: 10px;
   border-radius: 999px;
-}
-
-body.ui-loading .tab-label {
-  display: inline-block;
-  min-width: 34px;
-  min-height: 10px;
-  --skeleton-w: 34px;
-  --skeleton-h: 10px;
 }
 
 /* Keep cards and groups visually stable while loading */
