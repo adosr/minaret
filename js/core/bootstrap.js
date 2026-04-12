@@ -31,10 +31,12 @@ export async function bootstrapApp() {
 
   cacheRefs();
   applyInitialLocalizedUI();
-  revealPreinitializedApp();
+
   initTabs();
   initProgressDial();
 
+  revealPreinitializedApp();
+  
   await registerSW();
   bindEvents();
   await hydrateLocation();
