@@ -7,8 +7,6 @@ import {
   loadSettings,
   persistLocation,
   persistNotificationsEnabled,
-  hasGeolocationBeenRequested,
-  persistGeolocationRequested,
   wasGeolocationDenied,
   persistGeolocationDenied,
   clearGeolocationPermissionState
@@ -22,6 +20,28 @@ import { renderMinaretDailyPage } from "../pages/minaret-daily-page.js";
 import { renderMinaretMonthlyPage } from "../pages/minaret-monthly-page.js";
 import { renderMinaretSettingsPage } from "../pages/minaret-settings-page.js";
 import { disableSkeleton } from "../components/skeleton.js";
+
+let locationRequestSequence = 0;
+let manualFallbackTimer = null;
+
+function clearManualFallbackTimer() {
+  if (manualFallbackTimer) {
+    clearTimeout(manualFallbackTimer);
+    manualFallbackTimer = null;
+  }
+}
+
+function scheduleManualFallback(sequence) {
+  clearManualFallbackTimer();
+
+  manualFallbackTimer = setTimeout(() => {
+    if (sequence !== locationRequestSequence) return;
+    if (appState.coords) return;
+
+    appState.geolocationRequestInFlight = false;
+    showManualLocationRequest(true);
+  }, 6000);
+}
 
 export async function bootstrapApp() {
   appState.settings = loadSettings();
@@ -138,11 +158,7 @@ function bindEvents() {
     if (document.hidden) return;
 
     if (!appState.coords && !appState.geolocationRequestInFlight) {
-      if (wasGeolocationDenied()) {
-        showManualLocationRequest(true);
-      } else if (!hasGeolocationBeenRequested()) {
-        await requestCurrentLocation({ manual: false });
-      }
+      await hydrateLocation();
 
       if (appState.coords) {
         renderApp();
@@ -201,21 +217,19 @@ async function hydrateLocation() {
     return;
   }
 
-  if (!hasGeolocationBeenRequested()) {
-    await requestCurrentLocation({ manual: false });
-    return;
-  }
-
-  showManualLocationRequest(true);
+  await requestCurrentLocation({ manual: false });
 }
 
 async function requestCurrentLocation({ manual }) {
   if (appState.geolocationRequestInFlight) return;
 
   appState.geolocationRequestInFlight = true;
+  const requestSequence = ++locationRequestSequence;
 
   if (!manual) {
-    persistGeolocationRequested(true);
+    scheduleManualFallback(requestSequence);
+  } else {
+    clearManualFallbackTimer();
   }
 
   if (appState.refs.location) {
@@ -224,6 +238,10 @@ async function requestCurrentLocation({ manual }) {
 
   try {
     const coords = await getLocation();
+
+    if (requestSequence !== locationRequestSequence) return;
+
+    clearManualFallbackTimer();
 
     appState.coords = coords;
     appState.showManualLocationRequest = false;
@@ -256,6 +274,9 @@ async function requestCurrentLocation({ manual }) {
 
     renderApp();
   } catch (error) {
+    if (requestSequence !== locationRequestSequence) return;
+
+    clearManualFallbackTimer();
     console.error("Location access failed:", error);
 
     if (isGeolocationPermissionDenied(error)) {
@@ -266,7 +287,9 @@ async function requestCurrentLocation({ manual }) {
 
     renderLocationError();
   } finally {
-    appState.geolocationRequestInFlight = false;
+    if (requestSequence === locationRequestSequence) {
+      appState.geolocationRequestInFlight = false;
+    }
   }
 }
 
