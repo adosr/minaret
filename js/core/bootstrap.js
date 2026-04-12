@@ -7,7 +7,6 @@ import {
   loadSettings,
   persistLocation,
   persistNotificationsEnabled,
-  wasGeolocationDenied,
   persistGeolocationDenied,
   clearGeolocationPermissionState
 } from "../utils/storage.js";
@@ -190,11 +189,6 @@ async function hydrateLocation() {
     appState.refs.location.textContent = appState.t("loading_location", "Loading location…");
   }
 
-  if (wasGeolocationDenied()) {
-    showManualLocationRequest(true);
-    return;
-  }
-
   await requestCurrentLocation({ manual: false });
 }
 
@@ -247,6 +241,8 @@ async function requestCurrentLocation({ manual }) {
       persistGeolocationDenied(true);
       appState.showManualLocationRequest = true;
       showManualLocationRequest(true);
+    } else {
+      persistGeolocationDenied(false);
     }
 
     renderLocationError();
@@ -338,6 +334,9 @@ function renderApp() {
   if (appState.refs.manualLocationCard) {
     appState.refs.manualLocationCard.hidden = true;
   }
+  appState.showManualLocationRequest = false;
+  persistGeolocationDenied(false);
+  clearGeolocationPermissionState();
 
   appState.refs.location.textContent = appState.placeName;
   appState.refs.title.textContent = appState.t("app_title_short", "Prayer");
