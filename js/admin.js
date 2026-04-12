@@ -1,7 +1,5 @@
 import { WEB_APP_CONFIG } from "./core/app-config.js";
 import {
-  loadAdminToken,
-  persistAdminToken,
   loadSavedLocation,
   loadSettings,
   loadNotificationPreferences,
@@ -42,7 +40,6 @@ const els = {
   tabAdminLabelAccent: document.getElementById("tabAdminLabelAccent")
 };
 
-let adminToken = loadAdminToken();
 let currentSubscription = null;
 let summaryState = null;
 let currentPermissionState = "unsupported";
@@ -61,7 +58,6 @@ async function init() {
     onSelectPage: () => {}
   });
 
-  maybeLoadToken();
   els.workerHostValue.textContent = simplifyWorkerUrl(WORKER_BASE_URL);
   els.refreshAdminBtn?.addEventListener("click", () => refreshDiagnostics(true));
   els.sendTestPushBtn?.addEventListener("click", sendTestPush);
@@ -94,14 +90,6 @@ function applyCopy() {
   els.adminDateLabel.textContent = formatNow();
 }
 
-function maybeLoadToken() {
-  if (adminToken) return;
-  const token = window.prompt(COPY.adminTokenPrompt, "");
-  if (token) {
-    adminToken = token.trim();
-    persistAdminToken(adminToken);
-  }
-}
 
 async function ensureServiceWorkerReady() {
   if (!("serviceWorker" in navigator)) return;
@@ -155,11 +143,6 @@ async function fetchSummary() {
       headers: buildHeaders()
     });
 
-    if (response.status === 401) {
-      persistAdminToken("");
-      adminToken = "";
-      throw new Error(COPY.unauthorized);
-    }
 
     const json = await response.json();
     if (!response.ok) {
@@ -238,7 +221,7 @@ function updateHeroState(permissionState, subscription, summary) {
 
 function updateActionStates() {
   const hasSubscription = Boolean(currentSubscription?.endpoint);
-  const canActivate = !activationInFlight && currentPermissionState !== "unsupported" && currentPermissionState !== "denied" && !hasSubscription;
+  const canActivate = !activationInFlight && currentPermissionState !== "unsupported" && !hasSubscription;
   els.enableAdminNotificationsBtn.hidden = hasSubscription;
   els.enableAdminNotificationsBtn.disabled = !canActivate;
   els.sendTestPushBtn.disabled = !hasSubscription || activationInFlight;
@@ -247,6 +230,13 @@ function updateActionStates() {
     els.enableAdminNotificationsBtn.hidden = false;
     els.enableAdminNotificationsBtn.disabled = false;
     els.enableAdminNotificationsBtn.textContent = COPY.openSettings;
+    return;
+  }
+
+  if (currentPermissionState === "unsupported") {
+    els.enableAdminNotificationsBtn.hidden = false;
+    els.enableAdminNotificationsBtn.disabled = true;
+    els.enableAdminNotificationsBtn.textContent = COPY.notSupported;
     return;
   }
 
@@ -345,11 +335,6 @@ async function sendTestPush() {
       })
     });
 
-    if (response.status === 401) {
-      persistAdminToken("");
-      adminToken = "";
-      throw new Error(COPY.unauthorized);
-    }
 
     const json = await response.json();
 
@@ -371,9 +356,7 @@ function setFeedback(message, isError = false) {
 }
 
 function buildHeaders() {
-  const headers = {};
-  if (adminToken) headers.Authorization = `Bearer ${adminToken}`;
-  return headers;
+  return {};
 }
 
 function getPreferredLocationName(location) {
@@ -473,7 +456,6 @@ function getCopy() {
       refresh: "تحديث التشخيص",
       resultLabel: "النتيجة",
       tabLabel: "الإشعارات",
-      adminTokenPrompt: "أدخل Admin token",
       refreshing: "جارٍ تحديث التشخيص...",
       activating: "جارٍ تفعيل إشعارات هذا السياق...",
       sending: "جارٍ إرسال الإشعار التجريبي...",
@@ -501,7 +483,7 @@ function getCopy() {
       sendFailed: (error) => `فشل إرسال الإشعار التجريبي: ${error}`,
       initFailed: (error) => `تعذر تهيئة صفحة الإدارة: ${error}`,
       noSubscriptionForTest: "لا يوجد اشتراك نشط لهذا الجهاز لإرسال الاختبار إليه.",
-      unauthorized: "رمز الإدارة غير صحيح أو مفقود.",
+      notSupported: "Web Push غير مدعوم هنا",
       lastRefresh: (time) => `آخر تحديث: ${time}`,
       unknownError: "خطأ غير معروف"
     };
@@ -527,7 +509,6 @@ function getCopy() {
     refresh: "Refresh diagnostics",
     resultLabel: "Result",
     tabLabel: "Notifications",
-    adminTokenPrompt: "Enter admin token",
     refreshing: "Refreshing diagnostics…",
     activating: "Activating notifications for this context…",
     sending: "Sending test notification…",
