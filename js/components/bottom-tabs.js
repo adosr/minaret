@@ -462,17 +462,39 @@ function getButtonMetrics(btn) {
     clearTabOverlapFeedback();
   }
 
-  return {
-    initialize() {
+  function finalizeInitialPosition() {
+    const run = () => {
       syncActiveTabPosition();
+      pill.style.opacity = "1";
+    };
 
-      requestAnimationFrame(() => {
-        syncActiveTabPosition();
-
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() => {
         requestAnimationFrame(() => {
-          syncActiveTabPosition();
+          requestAnimationFrame(run);
         });
       });
+      return;
+    }
+
+    window.addEventListener(
+      "load",
+      () => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(run);
+        });
+      },
+      { once: true }
+    );
+
+    setTimeout(run, 120);
+  }
+
+  return {
+    initialize() {
+      pill.style.opacity = "0";
+      syncActiveTabPosition();
+      finalizeInitialPosition();
     },
 
     activate(pageId) {
