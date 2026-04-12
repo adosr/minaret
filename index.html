@@ -19,7 +19,26 @@
   <link rel="apple-touch-icon" sizes="256x256" href="./img/iphone-256-app-icon.png" />
   <link rel="apple-touch-startup-image"
         href="./img/iphone-plus-startup-image-light.png"
-        media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)">
+        media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)">		
+  <script>
+    (function () {
+	  const preferredLang =
+	    (navigator.languages && navigator.languages[0]) ||
+	    navigator.language ||
+	    "en";
+
+	  const isArabic = preferredLang.toLowerCase().startsWith("ar");
+
+	  document.documentElement.lang = isArabic ? "ar" : "en";
+	  document.documentElement.dir = isArabic ? "rtl" : "ltr";
+	  document.documentElement.classList.add("preinit");
+    })();
+  </script>
+  <style>
+    html.preinit body {
+	  visibility: hidden;
+    }
+  </style>	
   <link rel="stylesheet" href="./css/styles.css" />  
 </head>
 <body>
