@@ -36,7 +36,7 @@ export async function routeRequest(request, env) {
     }
 
     if (request.method === "POST" && url.pathname === "/admin/test-push") {
-      return handleTestPush(request, env);
+      return handleTestPush(env);
     }
   }
 
