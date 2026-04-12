@@ -1429,3 +1429,74 @@ body.ui-loading .tabbar-capsule {
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+.admin-shell {
+  min-height: 100svh;
+}
+
+.admin-hero-card {
+  padding-bottom: 0;
+}
+
+.admin-hero-layout {
+  width: 100%;
+}
+
+.admin-focus-card {
+  min-height: 190px;
+}
+
+.admin-focus-title {
+  font-size: clamp(28px, 6vw, 38px);
+}
+
+.admin-focus-subtitle {
+  max-width: 34ch;
+  line-height: 1.5;
+}
+
+.admin-metric-card {
+  align-items: stretch;
+}
+
+.admin-metric-value {
+  font-size: clamp(24px, 5vw, 34px);
+  word-break: break-word;
+}
+
+.admin-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.admin-actions-card {
+  gap: 12px;
+}
+
+.admin-actions-card .settings-action-button + .settings-action-button {
+  margin-top: 12px;
+}
+
+.settings-action-button-secondary {
+  background: var(--small-button-bg);
+  color: var(--small-button-text);
+}
+
+.admin-feedback-card .settings-value {
+  transition: color 160ms ease;
+}
+
+.admin-feedback-error {
+  color: #ff453a !important;
+}
+
+.tab-btn-single {
+  min-width: 176px;
+}
+
+html[dir="rtl"] .admin-mono {
+  direction: ltr;
+  text-align: left;
+}

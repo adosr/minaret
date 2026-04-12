@@ -1,522 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Minaret Admin</title>
-  <link rel="stylesheet" href="../css/styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#F2F2F6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Minaret Admin" />
+  <meta name="apple-touch-fullscreen" content="yes" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="apple-touch-icon" href="../img/iphone-180-app-icon.png">
+  <script>
+    (function () {
+      const preferredLang =
+        (navigator.languages && navigator.languages[0]) ||
+        navigator.language ||
+        "en";
 
+      const isArabic = preferredLang.toLowerCase().startsWith("ar");
+
+      document.documentElement.lang = isArabic ? "ar" : "en";
+      document.documentElement.dir = isArabic ? "rtl" : "ltr";
+      document.documentElement.classList.add("preinit");
+    })();
+  </script>
   <style>
-    :root {
-      --admin-max-width: 1180px;
-      --admin-gap: 18px;
-      --admin-card-pad: 22px;
-      --admin-radius: 28px;
-      --admin-text: var(--text-primary, #fff);
-      --admin-muted: var(--text-secondary, rgba(255,255,255,.68));
-      --admin-soft: rgba(255,255,255,.08);
-      --admin-border: rgba(255,255,255,.10);
-      --admin-success: #34c759;
-      --admin-error: #ff453a;
-      --admin-info: #0a84ff;
-      --admin-warning: #ff9f0a;
-    }
-
-    html, body {
-      min-height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-
-    body {
-      overflow-y: auto !important;
-      padding: 24px 16px 48px;
-    }
-
-    .admin-page {
-      width: min(100%, var(--admin-max-width));
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: var(--admin-gap);
-    }
-
-    .admin-hero {
-      padding: 28px;
-      border-radius: 34px;
-      display: flex;
-      gap: 20px;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
-
-    .admin-hero-copy {
-      flex: 1 1 540px;
-      min-width: 280px;
-    }
-
-    .admin-kicker {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--admin-muted);
-      margin-bottom: 10px;
-    }
-
-    .admin-hero h1 {
-      margin: 0 0 10px;
-      font-size: clamp(28px, 4vw, 40px);
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
-
-    .admin-hero p {
-      margin: 0;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--admin-muted);
-      max-width: 780px;
-    }
-
-    .admin-hero-meta {
-      min-width: 250px;
-      flex: 0 0 280px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .admin-meta-chip {
-      padding: 14px 16px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--admin-border);
-    }
-
-    .admin-meta-label {
-      font-size: 12px;
-      color: var(--admin-muted);
-      margin-bottom: 6px;
-    }
-
-    .admin-meta-value {
-      font-size: 16px;
-      font-weight: 600;
-      word-break: break-word;
-    }
-
-    .admin-section {
-      padding: var(--admin-card-pad);
-      border-radius: var(--admin-radius);
-    }
-
-    .admin-section-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .admin-section-title {
-      margin: 0;
-      font-size: 24px;
-      letter-spacing: -0.03em;
-    }
-
-    .admin-section-desc {
-      margin: 8px 0 0;
-      color: var(--admin-muted);
-      font-size: 15px;
-      line-height: 1.55;
-      max-width: 760px;
-    }
-
-    .admin-grid {
-      display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .admin-col-12 { grid-column: span 12; }
-    .admin-col-6  { grid-column: span 6; }
-    .admin-col-4  { grid-column: span 4; }
-    .admin-col-3  { grid-column: span 3; }
-
-    .admin-kpi {
-      padding: 18px;
-      border-radius: 24px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--admin-border);
-      min-height: 112px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .admin-kpi-label {
-      font-size: 13px;
-      color: var(--admin-muted);
-      margin-bottom: 8px;
-    }
-
-    .admin-kpi-value {
-      font-size: clamp(24px, 4vw, 34px);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1;
-    }
-
-    .admin-kpi-sub {
-      margin-top: 8px;
-      font-size: 13px;
-      color: var(--admin-muted);
-    }
-
-    .admin-status-panel {
-      padding: 18px;
-      border-radius: 24px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--admin-border);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .admin-badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .admin-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 40px;
-      padding: 0 14px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--admin-border);
-    }
-
-    .admin-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--admin-info);
-      flex: 0 0 9px;
-    }
-
-    .admin-dot.success { background: var(--admin-success); }
-    .admin-dot.error { background: var(--admin-error); }
-    .admin-dot.warning { background: var(--admin-warning); }
-
-    .admin-form-grid {
-      display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .field-span-12 { grid-column: span 12; }
-    .field-span-6  { grid-column: span 6; }
-
-    .admin-field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .admin-field label {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--admin-text);
-    }
-
-    .admin-field small {
-      color: var(--admin-muted);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .admin-field input,
-    .admin-field select,
-    .admin-field textarea {
-      width: 100%;
-      min-height: 54px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      border: 1px solid var(--admin-border);
-      background: rgba(255,255,255,.06);
-      color: var(--admin-text);
-      font: inherit;
-      outline: none;
-      box-sizing: border-box;
-    }
-
-    .admin-field textarea {
-      min-height: 122px;
-      resize: vertical;
-    }
-
-    .admin-field input:focus,
-    .admin-field select:focus,
-    .admin-field textarea:focus {
-      border-color: rgba(10,132,255,.65);
-      box-shadow: 0 0 0 3px rgba(10,132,255,.18);
-    }
-
-    .admin-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .admin-btn {
-      min-height: 48px;
-      padding: 0 18px;
-      border-radius: 16px;
-      border: 1px solid var(--admin-border);
-      background: rgba(255,255,255,.06);
-      color: var(--admin-text);
-      font: inherit;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform .15s ease, background .2s ease, border-color .2s ease;
-    }
-
-    .admin-btn:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,.1);
-    }
-
-    .admin-btn.primary {
-      background: linear-gradient(135deg, #0a84ff, #5ac8fa);
-      border-color: transparent;
-      color: #fff;
-    }
-
-    .admin-btn.ghost {
-      background: rgba(255,255,255,.04);
-    }
-
-    .admin-feedback {
-      min-height: 24px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .admin-feedback.ok { color: var(--admin-success); }
-    .admin-feedback.error { color: var(--admin-error); }
-    .admin-feedback.info { color: var(--admin-info); }
-
-    .admin-block {
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.06);
-    }
-
-    .admin-block.hidden {
-      display: none !important;
-    }
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    .status-box {
-      margin: 0;
-      white-space: pre-wrap;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-      padding: 18px;
-      border-radius: 22px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.06);
-      font-size: 14px;
-      line-height: 1.6;
-      min-height: 82px;
-      max-height: 420px;
-      overflow: auto;
-    }
-
-    .admin-inline-note {
-      font-size: 13px;
-      color: var(--admin-muted);
-      line-height: 1.55;
-    }
-
-    @media (max-width: 960px) {
-      .admin-col-6,
-      .admin-col-4,
-      .admin-col-3,
-      .field-span-6 {
-        grid-column: span 12;
-      }
-
-      .admin-hero {
-        padding: 22px;
-      }
-
-      .admin-section {
-        padding: 18px;
-        border-radius: 24px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      body {
-        padding: 14px 10px 34px;
-      }
-
-      .admin-hero h1 {
-        font-size: 30px;
-      }
-
-      .admin-section-title {
-        font-size: 21px;
-      }
-
-      .admin-btn {
-        width: 100%;
-      }
-
-      .admin-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
+    html.preinit body {
+      visibility: hidden;
     }
   </style>
+  <link rel="stylesheet" href="../css/styles.css" />
 </head>
 <body>
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
-
-  <main class="admin-page">
-    <header class="glass admin-hero">
-      <div class="admin-hero-copy">
-        <div class="admin-kicker">Minaret Admin</div>
-        <h1>Notification Status</h1>
-        <p>
-          Centralized visibility into the live prayer reminder system and worker health.
-        </p>
+  <div class="app-bg" aria-hidden="true"></div>
+  <div class="app-shell admin-shell">
+    <header>
+      <div class="header-left">
+        <p id="adminLocationLabel">Minaret Admin</p>
+        <h1 id="adminTitle">Notification Lab</h1>
       </div>
-
-      <div class="admin-hero-meta">
-        <div class="admin-meta-chip">
-          <div class="admin-meta-label">Worker</div>
-          <div id="workerUrlValue" class="admin-meta-value">Configured</div>
-        </div>
-
-        <div class="admin-meta-chip">
-          <div class="admin-meta-label">Mode</div>
-          <div class="admin-meta-value">Automated prayer reminders</div>
-        </div>
+      <div class="header-right">
+        <div class="date" id="adminDateLabel">—</div>
       </div>
     </header>
 
-    <section class="glass admin-section">
-      <div class="admin-section-head">
-        <div>
-          <h2 class="admin-section-title">Dashboard</h2>
-          <p class="admin-section-desc">
-            Essentials first: current notification status, live counts, and worker time.
-          </p>
-        </div>
+    <main>
+      <section id="admin-notifications" class="page active" data-page-target="admin-notifications" aria-labelledby="adminTitle">
+        <div class="hero-card admin-hero-card">
+          <div class="hero-prayers admin-hero-layout">
+            <article class="ios-soft prayer-focus current admin-focus-card">
+              <div class="prayer-focus-label" id="heroStatusLabel">Current device</div>
+              <div class="prayer-focus-name admin-focus-title" id="heroStatusValue">Checking subscription…</div>
+              <div class="prayer-focus-time admin-focus-subtitle" id="heroStatusHint">This page uses the current browser subscription only.</div>
+            </article>
 
-        <div class="admin-actions">
-          <button id="refreshSummaryBtn" class="admin-btn primary" type="button">Refresh Summary</button>
-        </div>
-      </div>
-
-      <div class="admin-grid">
-        <div class="admin-col-3">
-          <div class="admin-kpi">
-            <div class="admin-kpi-label">Devices</div>
-            <div id="kpiDevices" class="admin-kpi-value">--</div>
-            <div class="admin-kpi-sub">Saved browser subscriptions</div>
-          </div>
-        </div>
-
-        <div class="admin-col-3">
-          <div class="admin-kpi">
-            <div class="admin-kpi-label">Enabled</div>
-            <div id="kpiEnabled" class="admin-kpi-value">--</div>
-            <div class="admin-kpi-sub">Devices with reminders enabled</div>
-          </div>
-        </div>
-
-        <div class="admin-col-3">
-          <div class="admin-kpi">
-            <div class="admin-kpi-label">Current UTC</div>
-            <div id="kpiNowUtc" class="admin-kpi-value" style="font-size:18px;line-height:1.35">--</div>
-            <div class="admin-kpi-sub">Worker-reported time</div>
-          </div>
-        </div>
-
-        <div class="admin-col-3">
-          <div class="admin-kpi">
-            <div class="admin-kpi-label">Last Refresh</div>
-            <div id="kpiLastRefresh" class="admin-kpi-value" style="font-size:18px;line-height:1.35">--</div>
-            <div class="admin-kpi-sub">Local dashboard refresh time</div>
-          </div>
-        </div>
-
-        <div class="admin-col-12">
-          <div class="admin-status-panel">
-            <div class="admin-badge-row">
-              <div class="admin-badge">
-                <span id="badgeConnectionDot" class="admin-dot"></span>
-                <span id="badgeConnectionText">Checking connection…</span>
+            <article class="ios-soft prayer-focus next admin-focus-card admin-metric-card">
+              <div class="prayer-focus-main">
+                <div class="prayer-focus-label" id="workerHostLabel">Worker</div>
+                <div class="prayer-focus-name admin-focus-title admin-metric-value" id="workerHostValue">—</div>
+                <div class="prayer-focus-time admin-focus-subtitle" id="lastRefreshValue">Last refresh: —</div>
               </div>
+            </article>
+          </div>
+        </div>
 
-              <div class="admin-badge">
-                <span id="badgeDevicesDot" class="admin-dot"></span>
-                <span id="badgeDevicesText">Devices completeness: --</span>
-              </div>
+        <div class="settings-section">
+          <div class="settings-header" id="adminSectionHeader">Notification testing</div>
+          <div class="settings-list liquid-glass">
+            <div class="settings-row settings-row-multiline">
+              <span id="permissionLabel">iPhone notification permission</span>
+              <div class="settings-value settings-value-block" id="permissionValue">—</div>
+            </div>
+            <div class="settings-row settings-row-multiline">
+              <span id="subscriptionLabel">Current device subscription</span>
+              <div class="settings-value settings-value-block" id="subscriptionValue">—</div>
+            </div>
+            <div class="settings-row settings-row-multiline">
+              <span id="endpointLabel">Endpoint fingerprint</span>
+              <div class="settings-value settings-value-block admin-mono" id="endpointValue">—</div>
+            </div>
+            <div class="settings-row settings-row-multiline">
+              <span id="summaryLabel">Worker summary</span>
+              <div class="settings-value settings-value-block" id="summaryValue">—</div>
+            </div>
+          </div>
+        </div>
 
-              <div class="admin-badge">
-                <span id="badgeEnabledDot" class="admin-dot"></span>
-                <span id="badgeEnabledText">Enabled completeness: --</span>
-              </div>
+        <div class="settings-section">
+          <div class="settings-header" id="actionsHeader">Actions</div>
+          <div class="settings-list liquid-glass admin-actions-card">
+            <button class="settings-action-button" id="sendTestPushBtn" type="button">Send test notification to this device</button>
+            <button class="settings-action-button settings-action-button-secondary" id="refreshAdminBtn" type="button">Refresh diagnostics</button>
+          </div>
+          <div class="settings-list liquid-glass admin-feedback-card" style="margin-top:12px;">
+            <div class="settings-row settings-row-multiline">
+              <span id="feedbackLabel">Result</span>
+              <div class="settings-value settings-value-block" id="feedbackValue">Ready.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="tabbar-fixed-wrap">
+      <nav class="ios-soft tabbar-capsule" id="tabBar">
+        <div class="tab-active-pill" id="tabActivePill"></div>
+
+        <button id="tabAdminNotifications" class="tab-btn active tab-btn-single" data-option="1" data-page-target="admin-notifications" type="button">
+          <div class="tab-stack">
+            <div class="tab-visual tab-visual-base">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.17V11a6 6 0 1 0-12 0v3.17c0 .53-.21 1.04-.59 1.43L4 17h5"/>
+                <path d="M9 17a3 3 0 0 0 6 0"/>
+              </svg>
+              <span class="tab-label" id="tabAdminLabel">Notifications</span>
             </div>
 
-            <div id="summaryFeedback" class="admin-feedback"></div>
+            <div class="tab-visual tab-visual-accent" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.17V11a6 6 0 1 0-12 0v3.17c0 .53-.21 1.04-.59 1.43L4 17h5"/>
+                <path d="M9 17a3 3 0 0 0 6 0"/>
+              </svg>
+              <span class="tab-label" id="tabAdminLabelAccent">Notifications</span>
+            </div>
           </div>
-        </div>
-
-        <div class="admin-col-12">
-          <pre id="summaryBox" class="status-box">Loading summary…</pre>
-        </div>
-      </div>
-    </section>
-
-
-    <section class="glass admin-section">
-      <div class="admin-section-head">
-        <div>
-          <h2 class="admin-section-title">Result</h2>
-          <p class="admin-section-desc">Latest worker response.</p>
-        </div>
-      </div>
-
-      <pre id="resultBox" class="status-box">--</pre>
-    </section>
-  </main>
+        </button>
+      </nav>
+    </div>
+  </div>
 
   <script type="module" src="../js/admin.js"></script>
 </body>

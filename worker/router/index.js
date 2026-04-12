@@ -1,6 +1,6 @@
 import { corsHeaders, json } from "../utils/response.js";
 import { requireAdminAuth } from "../utils/auth.js";
-import { handleSummary } from "../handlers/admin.js";
+import { handleSummary, handleTestPush } from "../handlers/admin.js";
 import {
   handleUpsertNotificationSubscription,
   handleDeleteNotificationSubscription
@@ -33,6 +33,10 @@ export async function routeRequest(request, env) {
 
     if (request.method === "GET" && url.pathname === "/admin/summary") {
       return handleSummary(env);
+    }
+
+    if (request.method === "POST" && url.pathname === "/admin/test-push") {
+      return handleTestPush(request, env);
     }
   }
 
