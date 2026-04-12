@@ -17,5 +17,7 @@ export const appState = {
     isha: 0
   },
   refs: {},
-  progressDialController: null
+  progressDialController: null,
+  geolocationRequestInFlight: false,
+  showManualLocationRequest: false
 };

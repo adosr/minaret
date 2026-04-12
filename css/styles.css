@@ -1019,6 +1019,45 @@ main {
   -webkit-touch-callout: none;
 }
 
+.manual-location-card {
+  margin: 16px 20px;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-main)) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(var(--blur-main)) saturate(var(--saturation));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-1);
+}
+
+.manual-location-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.manual-location-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.manual-location-card p {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.manual-location-button {
+  margin-top: 8px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 @media (max-width: 390px) {
   .hero-prayers { grid-template-columns: 1fr; }
 

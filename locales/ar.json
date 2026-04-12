@@ -40,5 +40,9 @@
   "monthly_highlights": "أهم التواريخ",
   "monthly_overview": "نظرة شهرية",
   "app_title_short": "الصلاة",
-  "monthly_subtitle": "نظرة عامة على الشهر الحالي"
+  "monthly_subtitle": "نظرة عامة على الشهر الحالي",
+  "location_unavailable": "تعذر تحديد الموقع",
+  "manual_location_title": "نحتاج إلى الوصول للموقع",
+  "manual_location_message": "يرجى السماح بالوصول إلى الموقع لتحميل مواقيت الصلاة لمنطقتك الحالية.",
+  "manual_location_button": "طلب الموقع"
 }

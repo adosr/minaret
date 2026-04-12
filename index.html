@@ -25,15 +25,25 @@
 <body>
 <div class="app-bg" aria-hidden="true"></div>
 <div class="app-shell">
-  <header>
-    <div class="header-left">
-      <p id="location">Loading location…</p>
-      <h1 id="title">Prayer</h1>
-    </div>
-    <div class="header-right">
-      <div class="date" id="todayLabel">—</div>
-    </div>
-  </header>
+<header>
+  <div class="header-left">
+    <p id="location">Loading location…</p>
+    <h1 id="title">Prayer</h1>
+  </div>
+  <div class="header-right">
+    <div class="date" id="todayLabel">—</div>
+  </div>
+</header>
+
+<section id="manualLocationCard" class="manual-location-card" hidden>
+  <div class="manual-location-content">
+    <h2 id="manualLocationTitle">Location access needed</h2>
+    <p id="manualLocationMessage">Please allow location access to load prayer times for your current area.</p>
+    <button id="manualLocationRequestBtn" class="manual-location-button" type="button">
+      Request location
+    </button>
+  </div>
+</section>
   
   <main>
     <section id="daily" class="page active" data-page-target="daily" aria-labelledby="pageTitleDaily">

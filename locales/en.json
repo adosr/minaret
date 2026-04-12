@@ -40,5 +40,9 @@
   "monthly_highlights": "Upcoming Highlights",
   "monthly_overview": "Monthly Overview",
   "app_title_short": "Prayer",
-  "monthly_subtitle": "Current month overview"
+  "monthly_subtitle": "Current month overview",
+  "location_unavailable": "Unable to determine location",
+  "manual_location_title": "Location access needed",
+  "manual_location_message": "Please allow location access to load prayer times for your current area.",
+  "manual_location_button": "Request location"
 }

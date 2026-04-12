@@ -5,11 +5,14 @@ export function getLocation() {
       (error) => reject(error),
       {
         enableHighAccuracy: true,
-        timeout: 10000,
         maximumAge: 0
       }
     );
   });
+}
+
+export function isGeolocationPermissionDenied(error) {
+  return !!error && error.code === 1;
 }
 
 export async function reverseGeocode(lat, lon, lang, fallback) {

@@ -2,8 +2,18 @@ import { prayerTimes } from "../../packages/shared/minaret-prayer-engine.js";
 import { WEB_APP_CONFIG } from "./app-config.js";
 import { appState } from "./app-state.js";
 import { byId } from "../utils/dom.js";
-import { loadSavedLocation, loadSettings, persistLocation, persistNotificationsEnabled } from "../utils/storage.js";
-import { getLocation, reverseGeocode, pickCityName, formatCoords } from "../utils/location.js";
+import {
+  loadSavedLocation,
+  loadSettings,
+  persistLocation,
+  persistNotificationsEnabled,
+  hasGeolocationBeenRequested,
+  persistGeolocationRequested,
+  wasGeolocationDenied,
+  persistGeolocationDenied,
+  clearGeolocationPermissionState
+} from "../utils/storage.js";
+import { getLocation, reverseGeocode, pickCityName, formatCoords, isGeolocationPermissionDenied } from "../utils/location.js";
 import { detectLanguage, applyLanguageToDocument, loadTranslations } from "../utils/language.js";
 import { formatDisplayDate } from "../utils/format.js";
 import { initBottomTabs } from "../components/bottom-tabs.js";
@@ -86,7 +96,11 @@ function cacheRefs() {
     labelDhuhr: byId("label-dhuhr"),
     labelAsr: byId("label-asr"),
     labelMaghrib: byId("label-maghrib"),
-    labelIsha: byId("label-isha")
+    labelIsha: byId("label-isha"),
+    manualLocationCard: byId("manualLocationCard"),
+    manualLocationTitle: byId("manualLocationTitle"),
+    manualLocationMessage: byId("manualLocationMessage"),
+    manualLocationRequestBtn: byId("manualLocationRequestBtn")
   };
 
   appState.refs.onCountdownComplete = () => renderApp();
@@ -116,18 +130,29 @@ function initProgressDial() {
 
 function bindEvents() {
   appState.refs.enableNotificationsBtn?.addEventListener("click", enableWebPush);
+  appState.refs.manualLocationRequestBtn?.addEventListener("click", async () => {
+    await requestCurrentLocation({ manual: true });
+  });
 
   document.addEventListener("visibilitychange", async () => {
     if (document.hidden) return;
-	
 
-	if (!appState.coords && !appState.locationAttempted) {
-		appState.locationAttempted = true;
-		await hydrateLocation();
-		if (appState.coords) renderApp();
-	} else {
-		renderApp();
-	}
+    if (!appState.coords && !appState.geolocationRequestInFlight) {
+      if (wasGeolocationDenied()) {
+        showManualLocationRequest(true);
+      } else if (!hasGeolocationBeenRequested()) {
+        await requestCurrentLocation({ manual: false });
+      }
+
+      if (appState.coords) {
+        renderApp();
+      } else {
+        renderLocationError();
+      }
+    } else {
+      renderApp();
+    }
+
     await updateNotificationButtonVisibility();
   });
 }
@@ -163,6 +188,7 @@ async function hydrateLocation() {
     appState.placeNameAr = saved.nameAr || null;
     appState.placeNameEn = saved.nameEn || null;
     appState.placeName = pickCityName(appState) || formatCoords(saved.lat, saved.lon);
+    showManualLocationRequest(false);
     return;
   }
 
@@ -170,35 +196,109 @@ async function hydrateLocation() {
     appState.refs.location.textContent = appState.t("loading_location", "Loading location…");
   }
 
-  let coords;
-  try {
-    coords = await getLocation();
-  } catch (error) {
-    console.error("Location access failed:", error);
+  if (wasGeolocationDenied()) {
+    showManualLocationRequest(true);
     return;
   }
 
-  appState.coords = coords;
-  appState.placeNameAr = await reverseGeocode(
-    coords.lat,
-    coords.lon,
-    "ar",
-    appState.t("unknown_location", "Unknown location")
-  );
-  appState.placeNameEn = await reverseGeocode(
-    coords.lat,
-    coords.lon,
-    "en",
-    appState.t("unknown_location", "Unknown location")
-  );
-  appState.placeName = pickCityName(appState) || formatCoords(coords.lat, coords.lon);
+  if (!hasGeolocationBeenRequested()) {
+    await requestCurrentLocation({ manual: false });
+    return;
+  }
 
-  persistLocation({
-    lat: coords.lat,
-    lon: coords.lon,
-    nameAr: appState.placeNameAr,
-    nameEn: appState.placeNameEn
-  });
+  showManualLocationRequest(true);
+}
+
+async function requestCurrentLocation({ manual }) {
+  if (appState.geolocationRequestInFlight) return;
+
+  appState.geolocationRequestInFlight = true;
+
+  if (!manual) {
+    persistGeolocationRequested(true);
+  }
+
+  if (appState.refs.location) {
+    appState.refs.location.textContent = appState.t("loading_location", "Loading location…");
+  }
+
+  try {
+    const coords = await getLocation();
+
+    appState.coords = coords;
+    appState.showManualLocationRequest = false;
+    showManualLocationRequest(false);
+    persistGeolocationDenied(false);
+    clearGeolocationPermissionState();
+
+    appState.placeNameAr = await reverseGeocode(
+      coords.lat,
+      coords.lon,
+      "ar",
+      appState.t("unknown_location", "Unknown location")
+    );
+
+    appState.placeNameEn = await reverseGeocode(
+      coords.lat,
+      coords.lon,
+      "en",
+      appState.t("unknown_location", "Unknown location")
+    );
+
+    appState.placeName = pickCityName(appState) || formatCoords(coords.lat, coords.lon);
+
+    persistLocation({
+      lat: coords.lat,
+      lon: coords.lon,
+      nameAr: appState.placeNameAr,
+      nameEn: appState.placeNameEn
+    });
+
+    renderApp();
+  } catch (error) {
+    console.error("Location access failed:", error);
+
+    if (isGeolocationPermissionDenied(error)) {
+      persistGeolocationDenied(true);
+      appState.showManualLocationRequest = true;
+      showManualLocationRequest(true);
+    }
+
+    renderLocationError();
+  } finally {
+    appState.geolocationRequestInFlight = false;
+  }
+}
+
+function showManualLocationRequest(show) {
+  appState.showManualLocationRequest = show;
+
+  if (!appState.refs.manualLocationCard) return;
+
+  appState.refs.manualLocationCard.hidden = !show;
+
+  if (!show) return;
+
+  if (appState.refs.manualLocationTitle) {
+    appState.refs.manualLocationTitle.textContent = appState.t(
+      "manual_location_title",
+      "Location access needed"
+    );
+  }
+
+  if (appState.refs.manualLocationMessage) {
+    appState.refs.manualLocationMessage.textContent = appState.t(
+      "manual_location_message",
+      "Please allow location access to load prayer times for your current area."
+    );
+  }
+
+  if (appState.refs.manualLocationRequestBtn) {
+    appState.refs.manualLocationRequestBtn.textContent = appState.t(
+      "manual_location_button",
+      "Request location"
+    );
+  }
 }
 
 function applyTabLabels() {
@@ -249,6 +349,10 @@ function renderApp() {
   }
 
   appState.placeName = pickCityName(appState) || formatCoords(appState.coords.lat, appState.coords.lon);
+
+  if (appState.refs.manualLocationCard) {
+    appState.refs.manualLocationCard.hidden = true;
+  }
 
   appState.refs.location.textContent = appState.placeName;
   appState.refs.title.textContent = appState.t("app_title_short", "Prayer");
