@@ -19,7 +19,8 @@ import {
   initializeNotificationState,
   bindNotificationEvents,
   renderNotificationSettings,
-  syncNotificationSubscriptionSilently
+  syncNotificationSubscriptionSilently,
+  scheduleBackgroundNotificationSync
 } from "./notifications.js";
 import { enableSkeleton, disableSkeleton } from "../components/skeleton.js";
 
@@ -229,7 +230,7 @@ function bindEvents() {
       renderApp();
     }
 
-    await syncNotificationSubscriptionSilently({ state: appState, refs: appState.refs, config: WEB_APP_CONFIG });
+    scheduleBackgroundNotificationSync({ state: appState, refs: appState.refs, config: WEB_APP_CONFIG, force: false, delay: 180 });
   });
 }
 

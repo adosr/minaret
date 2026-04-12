@@ -9,6 +9,7 @@ const PRAYER_KEYS = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
 let listenersBound = false;
 let syncInFlight = false;
 let lastSyncSignature = "";
+let backgroundSyncTimer = null;
 
 export function initializeNotificationState(state) {
   state.notificationPrefs = loadNotificationPreferences();
@@ -34,7 +35,7 @@ export function bindNotificationEvents({ state, refs, config }) {
       renderNotificationSettings({ state, refs });
 
       if (state.notificationPrefs.enabled) {
-        await syncNotificationSubscriptionSilently({ state, refs, config, force: true });
+        scheduleBackgroundNotificationSync({ state, refs, config, force: true });
       }
     });
   });
@@ -98,7 +99,20 @@ export function renderNotificationSettings({ state, refs }) {
   }
 }
 
-export async function syncNotificationSubscriptionSilently({ state, refs, config, force = false }) {
+export function scheduleBackgroundNotificationSync({ state, refs, config, force = false, delay = 120 }) {
+  if (backgroundSyncTimer) {
+    clearTimeout(backgroundSyncTimer);
+  }
+
+  backgroundSyncTimer = window.setTimeout(() => {
+    backgroundSyncTimer = null;
+    syncNotificationSubscriptionSilently({ state, refs, config, force, visual: false }).catch((error) => {
+      console.error("Background notification sync failed:", error);
+    });
+  }, delay);
+}
+
+export async function syncNotificationSubscriptionSilently({ state, refs, config, force = false, visual = false }) {
   const prefs = ensurePrefs(state.notificationPrefs);
   const support = getNotificationSupport();
 
@@ -119,7 +133,9 @@ export async function syncNotificationSubscriptionSilently({ state, refs, config
   }
 
   syncInFlight = true;
-  renderNotificationSettings({ state, refs });
+  if (visual) {
+    renderNotificationSettings({ state, refs });
+  }
 
   try {
     const registration = await navigator.serviceWorker.ready;
@@ -148,11 +164,9 @@ export async function syncNotificationSubscriptionSilently({ state, refs, config
     }
 
     lastSyncSignature = signature;
-    renderNotificationSettings({ state, refs });
     return { ...json, automatic: true };
   } catch (error) {
     console.error("Notification sync failed:", error);
-    renderNotificationSettings({ state, refs });
     return { ok: false, error: String(error?.message || error) };
   } finally {
     syncInFlight = false;
@@ -212,7 +226,7 @@ async function enablePrayerNotifications({ state, refs, config }) {
   });
   state.notificationPrefs.enabled = true;
 
-  await syncNotificationSubscriptionSilently({ state, refs, config, force: true });
+  await syncNotificationSubscriptionSilently({ state, refs, config, force: true, visual: false });
 }
 
 async function disablePrayerNotifications({ state, refs, config }) {

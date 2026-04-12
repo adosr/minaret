@@ -1,10 +1,16 @@
 import { WEB_APP_CONFIG } from "./core/app-config.js";
-import { loadAdminToken, persistAdminToken } from "./utils/storage.js";
+import {
+  loadAdminToken,
+  persistAdminToken,
+  loadSavedLocation,
+  loadSettings,
+  loadNotificationPreferences,
+  persistNotificationPreferences
+} from "./utils/storage.js";
 import { initBottomTabs } from "./components/bottom-tabs.js";
 
 const WORKER_BASE_URL = WEB_APP_CONFIG.workerBaseUrl;
 const COPY = getCopy();
-
 const els = {
   adminLocationLabel: document.getElementById("adminLocationLabel"),
   adminTitle: document.getElementById("adminTitle"),
@@ -25,6 +31,7 @@ const els = {
   summaryLabel: document.getElementById("summaryLabel"),
   summaryValue: document.getElementById("summaryValue"),
   actionsHeader: document.getElementById("actionsHeader"),
+  enableAdminNotificationsBtn: document.getElementById("enableAdminNotificationsBtn"),
   sendTestPushBtn: document.getElementById("sendTestPushBtn"),
   refreshAdminBtn: document.getElementById("refreshAdminBtn"),
   feedbackLabel: document.getElementById("feedbackLabel"),
@@ -38,10 +45,12 @@ const els = {
 let adminToken = loadAdminToken();
 let currentSubscription = null;
 let summaryState = null;
+let currentPermissionState = "unsupported";
+let activationInFlight = false;
 
 init().catch((error) => {
   console.error(error);
-  setFeedback(COPY.errors.initFailed(error?.message || String(error)), true);
+  setFeedback(COPY.initFailed(error?.message || String(error)), true);
 });
 
 async function init() {
@@ -56,6 +65,7 @@ async function init() {
   els.workerHostValue.textContent = simplifyWorkerUrl(WORKER_BASE_URL);
   els.refreshAdminBtn?.addEventListener("click", () => refreshDiagnostics(true));
   els.sendTestPushBtn?.addEventListener("click", sendTestPush);
+  els.enableAdminNotificationsBtn?.addEventListener("click", enableNotificationsForAdminContext);
 
   await ensureServiceWorkerReady();
   await refreshDiagnostics(false);
@@ -75,6 +85,7 @@ function applyCopy() {
   els.endpointLabel.textContent = COPY.endpointLabel;
   els.summaryLabel.textContent = COPY.summaryLabel;
   els.actionsHeader.textContent = COPY.actionsTitle;
+  els.enableAdminNotificationsBtn.textContent = COPY.enableHere;
   els.sendTestPushBtn.textContent = COPY.sendTestPush;
   els.refreshAdminBtn.textContent = COPY.refresh;
   els.feedbackLabel.textContent = COPY.resultLabel;
@@ -94,7 +105,7 @@ function maybeLoadToken() {
 
 async function ensureServiceWorkerReady() {
   if (!("serviceWorker" in navigator)) return;
-  await navigator.serviceWorker.register("../service-worker.js");
+  await navigator.serviceWorker.register("../service-worker.js", { updateViaCache: "none" });
   await navigator.serviceWorker.ready;
 }
 
@@ -112,6 +123,7 @@ async function refreshDiagnostics(showFeedback = true) {
     fetchSummary()
   ]);
 
+  currentPermissionState = permissionState;
   currentSubscription = subscription;
   summaryState = summary;
 
@@ -119,6 +131,7 @@ async function refreshDiagnostics(showFeedback = true) {
   renderSubscription(subscription);
   renderSummary(summary);
   updateHeroState(permissionState, subscription, summary);
+  updateActionStates();
 
   if (showFeedback) {
     setFeedback(COPY.readyState);
@@ -189,7 +202,6 @@ function renderSubscription(subscription) {
   els.endpointValue.textContent = hasSubscription
     ? fingerprintEndpoint(subscription.endpoint)
     : COPY.noEndpoint;
-  els.sendTestPushBtn.disabled = !hasSubscription;
 }
 
 function renderSummary(summary) {
@@ -222,6 +234,96 @@ function updateHeroState(permissionState, subscription, summary) {
   }
 
   els.heroStatusValue.textContent = COPY.heroPartial;
+}
+
+function updateActionStates() {
+  const hasSubscription = Boolean(currentSubscription?.endpoint);
+  const canActivate = !activationInFlight && currentPermissionState !== "unsupported" && currentPermissionState !== "denied" && !hasSubscription;
+  els.enableAdminNotificationsBtn.hidden = hasSubscription;
+  els.enableAdminNotificationsBtn.disabled = !canActivate;
+  els.sendTestPushBtn.disabled = !hasSubscription || activationInFlight;
+
+  if (currentPermissionState === "denied") {
+    els.enableAdminNotificationsBtn.hidden = false;
+    els.enableAdminNotificationsBtn.disabled = false;
+    els.enableAdminNotificationsBtn.textContent = COPY.openSettings;
+    return;
+  }
+
+  els.enableAdminNotificationsBtn.textContent = currentPermissionState === "default"
+    ? COPY.allowHere
+    : COPY.enableHere;
+}
+
+async function enableNotificationsForAdminContext() {
+  try {
+    if (currentPermissionState === "denied") {
+      window.alert(COPY.settingsHelp);
+      return;
+    }
+
+    activationInFlight = true;
+    updateActionStates();
+    setFeedback(COPY.activating);
+
+    const location = loadSavedLocation();
+    if (!location?.lat || !location?.lon) {
+      throw new Error(COPY.locationRequired);
+    }
+
+    if (currentPermissionState !== "granted") {
+      const permission = await Notification.requestPermission();
+      currentPermissionState = permission;
+      if (permission !== "granted") {
+        throw new Error(COPY.permissionNotGranted);
+      }
+    }
+
+    const registration = await navigator.serviceWorker.ready;
+    const vapidPublicKey = await fetch(`${WORKER_BASE_URL}/notifications/public-key`).then(assertTextResponse);
+
+    let subscription = await registration.pushManager.getSubscription();
+    if (!subscription) {
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+      });
+    }
+
+    const prefs = normalizePrefs(loadNotificationPreferences());
+    prefs.enabled = true;
+    persistNotificationPreferences(prefs);
+
+    const response = await fetch(`${WORKER_BASE_URL}/notifications/subscription`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subscription: subscription.toJSON(),
+        lat: location.lat,
+        lon: location.lon,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        name: getPreferredLocationName(location),
+        settings: loadSettings(),
+        language: (document.documentElement.lang || "en").startsWith("ar") ? "ar" : "en",
+        userAgent: navigator.userAgent,
+        notificationPrefs: prefs
+      })
+    });
+
+    const json = await assertJsonResponse(response);
+    if (!json?.ok) {
+      throw new Error(json?.error || COPY.activationFailedGeneric);
+    }
+
+    setFeedback(COPY.activated(fingerprintEndpoint(subscription.endpoint)));
+    await refreshDiagnostics(false);
+  } catch (error) {
+    console.error(error);
+    setFeedback(COPY.activationFailed(error?.message || String(error)), true);
+  } finally {
+    activationInFlight = false;
+    updateActionStates();
+  }
 }
 
 async function sendTestPush() {
@@ -274,6 +376,45 @@ function buildHeaders() {
   return headers;
 }
 
+function getPreferredLocationName(location) {
+  return ((document.documentElement.lang || "en").startsWith("ar") ? location.nameAr : location.nameEn) || location.nameAr || location.nameEn || null;
+}
+
+function normalizePrefs(value) {
+  return {
+    enabled: value?.enabled === true,
+    prayers: {
+      fajr: value?.prayers?.fajr !== false,
+      dhuhr: value?.prayers?.dhuhr !== false,
+      asr: value?.prayers?.asr !== false,
+      maghrib: value?.prayers?.maghrib !== false,
+      isha: value?.prayers?.isha !== false
+    }
+  };
+}
+
+function assertTextResponse(response) {
+  return response.text().then((text) => {
+    if (!response.ok) throw new Error(text || `HTTP ${response.status}`);
+    return text;
+  });
+}
+
+async function assertJsonResponse(response) {
+  const json = await response.json();
+  if (!response.ok) {
+    throw new Error(json?.error || `HTTP ${response.status}`);
+  }
+  return json;
+}
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = atob(base64);
+  return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
+}
+
 function fingerprintEndpoint(endpoint) {
   try {
     const url = new URL(endpoint);
@@ -317,7 +458,7 @@ function getCopy() {
       kicker: "لوحة منارة",
       title: "مختبر الإشعارات",
       currentDeviceLabel: "الجهاز الحالي",
-      currentDeviceHint: "هذه الصفحة تختبر اشتراك هذا المتصفح فقط.",
+      currentDeviceHint: "هذه الصفحة تختبر اشتراك هذا السياق الحالي فقط.",
       workerLabel: "الووركر",
       sectionTitle: "اختبار الإشعارات",
       permissionLabel: "إذن إشعارات iPhone",
@@ -325,12 +466,16 @@ function getCopy() {
       endpointLabel: "بصمة الـ endpoint",
       summaryLabel: "ملخص الووركر",
       actionsTitle: "الإجراءات",
+      enableHere: "تفعيل إشعارات هذا الجهاز للإدارة",
+      allowHere: "السماح بإشعارات iPhone هنا",
+      openSettings: "طريقة التفعيل من إعدادات iPhone",
       sendTestPush: "إرسال إشعار تجريبي لهذا الجهاز",
       refresh: "تحديث التشخيص",
       resultLabel: "النتيجة",
       tabLabel: "الإشعارات",
       adminTokenPrompt: "أدخل Admin token",
       refreshing: "جارٍ تحديث التشخيص...",
+      activating: "جارٍ تفعيل إشعارات هذا السياق...",
       sending: "جارٍ إرسال الإشعار التجريبي...",
       readyState: "تم تحديث التشخيص.",
       permissionGranted: "مفعّل ومسموح من النظام.",
@@ -343,9 +488,15 @@ function getCopy() {
       summaryUnavailable: (error) => `تعذر قراءة الملخص: ${error}`,
       summaryTemplate: ({ subscriptions, enabled, disabled }) => `إجمالي الاشتراكات: ${subscriptions} • المفعّل: ${enabled} • المعطّل: ${disabled}`,
       heroNeedsPermission: "الإذن غير مكتمل بعد",
-      heroNeedsSubscription: "الإذن موجود لكن لا يوجد اشتراك لهذا الجهاز",
+      heroNeedsSubscription: "الإذن موجود لكن لا يوجد اشتراك لهذا السياق",
       heroReady: "هذا الجهاز جاهز لاختبار الإشعارات",
       heroPartial: "الاشتراك موجود لكن فحص الووركر يحتاج مراجعة",
+      activated: (fingerprint) => `تم تفعيل اشتراك هذا السياق: ${fingerprint}`,
+      activationFailed: (error) => `فشل تفعيل إشعارات هذا السياق: ${error}`,
+      activationFailedGeneric: "تعذر إنشاء الاشتراك الجديد.",
+      permissionNotGranted: "لم يتم منح الإذن بعد.",
+      locationRequired: "افتح التطبيق الرئيسي مرة واحدة وتأكد من السماح بالموقع، ثم ارجع إلى لوحة الإدارة.",
+      settingsHelp: "لتفعيل إشعارات iPhone من جديد: افتح الإعدادات > الإشعارات > منارة، ثم فعّل السماح بالإشعارات وارجع إلى التطبيق.",
       sent: (fingerprint) => `تم إرسال الإشعار التجريبي إلى هذا الجهاز فقط: ${fingerprint}`,
       sendFailed: (error) => `فشل إرسال الإشعار التجريبي: ${error}`,
       initFailed: (error) => `تعذر تهيئة صفحة الإدارة: ${error}`,
@@ -361,7 +512,7 @@ function getCopy() {
     kicker: "Minaret Admin",
     title: "Notification Lab",
     currentDeviceLabel: "Current device",
-    currentDeviceHint: "This page tests the current browser subscription only.",
+    currentDeviceHint: "This page tests the current context subscription only.",
     workerLabel: "Worker",
     sectionTitle: "Notification testing",
     permissionLabel: "iPhone notification permission",
@@ -369,12 +520,16 @@ function getCopy() {
     endpointLabel: "Endpoint fingerprint",
     summaryLabel: "Worker summary",
     actionsTitle: "Actions",
+    enableHere: "Enable notifications for this admin context",
+    allowHere: "Allow iPhone notifications here",
+    openSettings: "How to enable in iPhone settings",
     sendTestPush: "Send test notification to this device",
     refresh: "Refresh diagnostics",
     resultLabel: "Result",
     tabLabel: "Notifications",
     adminTokenPrompt: "Enter admin token",
     refreshing: "Refreshing diagnostics…",
+    activating: "Activating notifications for this context…",
     sending: "Sending test notification…",
     readyState: "Diagnostics refreshed.",
     permissionGranted: "Granted and available.",
@@ -387,9 +542,15 @@ function getCopy() {
     summaryUnavailable: (error) => `Summary unavailable: ${error}`,
     summaryTemplate: ({ subscriptions, enabled, disabled }) => `Subscriptions: ${subscriptions} • Enabled: ${enabled} • Disabled: ${disabled}`,
     heroNeedsPermission: "Permission is not fully available yet",
-    heroNeedsSubscription: "Permission is granted, but this device has no subscription",
+    heroNeedsSubscription: "Permission is granted, but this context has no subscription",
     heroReady: "This device is ready for notification testing",
     heroPartial: "Subscription exists, but the worker still needs review",
+    activated: (fingerprint) => `This context is now subscribed: ${fingerprint}`,
+    activationFailed: (error) => `Failed to activate this context: ${error}`,
+    activationFailedGeneric: "Could not create a new subscription.",
+    permissionNotGranted: "Permission was not granted.",
+    locationRequired: "Open the main app once, allow location access there, then return to the admin page.",
+    settingsHelp: "To turn iPhone notifications back on: open Settings > Notifications > Minaret, allow notifications, then return to the app.",
     sent: (fingerprint) => `Test notification sent to this device only: ${fingerprint}`,
     sendFailed: (error) => `Failed to send the test notification: ${error}`,
     initFailed: (error) => `Failed to initialize the admin page: ${error}`,
