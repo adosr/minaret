@@ -1021,6 +1021,18 @@ main {
   -webkit-touch-callout: none;
 }
 
+button,
+button * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus,
+button:focus-visible,
+button:active {
+  outline: none;
+  background: transparent;
+}
+
 .manual-location-card {
   margin: 16px 20px;
   padding: 20px;
