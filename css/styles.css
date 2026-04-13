@@ -329,7 +329,9 @@ body {
 
 .app-shell {
   position: relative;
+  width: 100%;
   max-width: 480px;
+  margin: 0 auto;
   z-index: 1;
 }
 
@@ -854,6 +856,10 @@ main {
 */
 
 .tabbar-capsule {
+  width: 100%;
+  max-width: 480px;
+  height: 63px;
+  margin: 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: space-evenly;
@@ -865,7 +871,6 @@ main {
   left: 20px;
   right: 20px;
   isolation: isolate;
-  height: 63px;
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
   touch-action: pan-y;
   user-select: none;
