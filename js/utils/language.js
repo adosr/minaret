@@ -19,23 +19,38 @@ async function loadTranslationFile(language) {
   if (!res.ok) {
     throw new Error(`Failed to load ${language} translations (HTTP ${res.status})`);
   }
-  return await res.json();
+
+  const dict = await res.json();
+  return dict && typeof dict === "object" ? dict : {};
 }
 
 export async function loadTranslations(language) {
-  let resolvedLanguage = language === "ar" ? "ar" : "en";
-  let dict = null;
+  const primaryLanguage = language === "ar" ? "ar" : "en";
+  const fallbackLanguage = primaryLanguage === "ar" ? "en" : "ar";
+
+  let resolvedLanguage = primaryLanguage;
+  let dict = {};
 
   try {
-    dict = await loadTranslationFile(resolvedLanguage);
+    dict = await loadTranslationFile(primaryLanguage);
   } catch (primaryError) {
-    if (resolvedLanguage !== "en") {
-      dict = await loadTranslationFile("en");
-      resolvedLanguage = "en";
-    } else {
-      throw primaryError;
+    try {
+      dict = await loadTranslationFile(fallbackLanguage);
+      resolvedLanguage = fallbackLanguage;
+    } catch (fallbackError) {
+      console.error("Failed to load both translation files.", {
+        primaryLanguage,
+        fallbackLanguage,
+        primaryError,
+        fallbackError
+      });
+
+      dict = {};
+      resolvedLanguage = primaryLanguage;
     }
   }
+
+  applyLanguageToDocument(resolvedLanguage);
 
   return {
     language: resolvedLanguage,
