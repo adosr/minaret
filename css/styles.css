@@ -857,7 +857,7 @@ main {
 
 .tabbar-capsule {
   width: 100%;
-  max-width: 480px;
+  max-width: 430px;
   height: 63px;
   margin: 0 auto;
   display: inline-flex;
