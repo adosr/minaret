@@ -1,17 +1,31 @@
 export function detectLanguage() {
-  const candidates = [
-    ...(Array.isArray(navigator.languages) ? navigator.languages : []),
-    navigator.language,
-    document.documentElement.lang
-  ].filter(Boolean);
+  const documentLang = String(document.documentElement.lang || "").toLowerCase();
 
-  const normalized = candidates.map((value) => String(value).toLowerCase());
-  return normalized.some((value) => value === "ar" || value.startsWith("ar-")) ? "ar" : "en";
+  const explicitDocumentLang =
+    documentLang === "ar" || documentLang.startsWith("ar-")
+      ? "ar"
+      : documentLang === "en" || documentLang.startsWith("en-")
+        ? "en"
+        : null;
+
+  const firstBrowserLang = String(
+    (Array.isArray(navigator.languages) && navigator.languages.length
+      ? navigator.languages[0]
+      : navigator.language || "")
+  ).toLowerCase();
+
+  const browserLang =
+    firstBrowserLang === "ar" || firstBrowserLang.startsWith("ar-")
+      ? "ar"
+      : "en";
+
+  return explicitDocumentLang || browserLang;
 }
 
 export function applyLanguageToDocument(language) {
-  document.documentElement.lang = language;
-  document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+  const resolvedLanguage = language === "ar" ? "ar" : "en";
+  document.documentElement.lang = resolvedLanguage;
+  document.documentElement.dir = resolvedLanguage === "ar" ? "rtl" : "ltr";
 }
 
 async function loadTranslationFile(language) {
@@ -25,36 +39,48 @@ async function loadTranslationFile(language) {
 }
 
 export async function loadTranslations(language) {
-  const primaryLanguage = language === "ar" ? "ar" : "en";
-  const fallbackLanguage = primaryLanguage === "ar" ? "en" : "ar";
-
-  let resolvedLanguage = primaryLanguage;
-  let dict = {};
+  const requestedLanguage = language === "ar" ? "ar" : "en";
+  const fallbackLanguage = requestedLanguage === "ar" ? "en" : "ar";
 
   try {
-    dict = await loadTranslationFile(primaryLanguage);
+    const dict = await loadTranslationFile(requestedLanguage);
+    applyLanguageToDocument(requestedLanguage);
+
+    return {
+      language: requestedLanguage,
+      dict,
+      t: (key, fallback = "") => dict[key] ?? fallback
+    };
   } catch (primaryError) {
+    console.warn(
+      `Failed to load ${requestedLanguage} translations. Trying ${fallbackLanguage}.`,
+      primaryError
+    );
+
     try {
-      dict = await loadTranslationFile(fallbackLanguage);
-      resolvedLanguage = fallbackLanguage;
+      const dict = await loadTranslationFile(fallbackLanguage);
+      applyLanguageToDocument(fallbackLanguage);
+
+      return {
+        language: fallbackLanguage,
+        dict,
+        t: (key, fallback = "") => dict[key] ?? fallback
+      };
     } catch (fallbackError) {
       console.error("Failed to load both translation files.", {
-        primaryLanguage,
+        requestedLanguage,
         fallbackLanguage,
         primaryError,
         fallbackError
       });
 
-      dict = {};
-      resolvedLanguage = primaryLanguage;
+      applyLanguageToDocument(requestedLanguage);
+
+      return {
+        language: requestedLanguage,
+        dict: {},
+        t: (key, fallback = "") => fallback
+      };
     }
   }
-
-  applyLanguageToDocument(resolvedLanguage);
-
-  return {
-    language: resolvedLanguage,
-    dict,
-    t: (key, fallback = "") => dict[key] ?? fallback
-  };
 }
