@@ -472,13 +472,6 @@ header {
   gap: 16px;
 }
 
-.header-left h1 {
-  font-size: 34px;
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: -0.7px;
-}
-
 .header-left p {
   color: var(--text-secondary);
   font-size: 17px;
@@ -552,10 +545,6 @@ main {
 }
 
 .prayer-focus-name {
-  font-size: 28px;
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: -0.8px;
   margin-bottom: 8px;
 }
 
@@ -664,7 +653,7 @@ main {
 }
 
 .hero-countdown {
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 130;
   color: var(--accent);
   letter-spacing: -0.3px;
