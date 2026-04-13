@@ -329,6 +329,7 @@ body {
 
 .app-shell {
   position: relative;
+  max-width: 480px;
   z-index: 1;
 }
 
