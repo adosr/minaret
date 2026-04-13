@@ -221,6 +221,28 @@
 	--soft-after-1: var(--light-soft-after-1);
 	--soft-after-2: var(--light-soft-after-2);
 	--soft-after-3: var(--light-soft-after-3);
+	
+	--font-ui:
+		-apple-system,
+		BlinkMacSystemFont,
+		"SF Pro Text",
+		"SF Pro Display",
+		"Segoe UI",
+		Roboto,
+		"Helvetica Neue",
+		Arial,
+		sans-serif;
+
+	--font-ui-ar:
+		-apple-system,
+		BlinkMacSystemFont,
+		"SF Arabic",
+		"Segoe UI",
+		Roboto,
+		"Noto Sans Arabic",
+		"Helvetica Neue",
+		Arial,
+		sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -315,6 +337,27 @@ body {
   overscroll-behavior-y: none;
   color: var(--text-primary);
   background: transparent;
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-ui);
+}
+
+html[lang="ar"],
+html[dir="rtl"],
+html:lang(ar),
+html[lang="ar"] body,
+html[dir="rtl"] body,
+:lang(ar) {
+  font-family: var(--font-ui-ar);
 }
 
 .app-bg {
