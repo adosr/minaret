@@ -25,16 +25,38 @@
 	--header-pad-x: 24px;
 	--header-top-pad: 20px;
 	--header-bottom-pad: 18px;
+	
+	--font-ui:
+		-apple-system,
+		BlinkMacSystemFont,
+		"SF Pro Text",
+		"SF Pro Display",
+		"Segoe UI",
+		Roboto,
+		"Helvetica Neue",
+		Arial,
+		sans-serif;
+
+	--font-ui-ar:
+		-apple-system,
+		BlinkMacSystemFont,
+		"SF Arabic",
+		"Segoe UI",
+		Roboto,
+		"Noto Sans Arabic",
+		"Helvetica Neue",
+		Arial,
+		sans-serif;
 
 	--light-bg-gradient-start: #F2F2F6;
 	--light-bg-gradient-end: #E1E1EA;
 	--light-text-primary: #000000;
 	--light-text-secondary: #8A8A8E;
-	--light-surface-start: rgba(247, 246, 248, 0.3);
-    --light-surface-end: rgba(244, 243, 246, 0.5);
+	--light-surface-start: #ffffff;
+    --light-surface-end: #ffffff;
 	--light-nav-inactive: #000000;
 	--light-nav-active: #0088FE;
-	--light-tabbar-bg: #FDFDFD;
+	--light-tabbar-bg: #FBFBFF;
 	--light-tabbar-text-inactive: #191919;
 	--light-tabbar-pill-bg: #EBEBEB;
 	--light-tabbar-text-active: #007EF5;
@@ -48,6 +70,7 @@
 	--light-small-button-text: #0088FE;
 	--light-large-button-bg: #0088FE;
 	--light-large-button-text: #FFFFFF;
+    --light-prayer-row-border-bottom-bg: #e7e7e7;
 	--light-glass-border: color-mix(in srgb, var(--light-text-primary) 8%, transparent);
 	--light-glass-highlight: color-mix(in srgb, #FFFFFF 65%, transparent);
 	--light-shadow-1: 0 10px 30px rgba(76, 92, 122, 0.10);
@@ -96,11 +119,11 @@
 	--dark-bg-gradient-end: #000000;
 	--dark-text-primary: #FFFFFF;
 	--dark-text-secondary: #8D8D93;
-	--dark-surface-start: rgba(23, 24, 26, 0.3); 
-    --dark-surface-end: rgba(16, 17, 19, 0.5); 
+	--dark-surface-start: #1c1c1e; 
+    --dark-surface-end: #1c1c1e; 
 	--dark-nav-inactive: #FFFFFF;
 	--dark-nav-active: #0091FF;
-	--dark-tabbar-bg: #121212;
+	--dark-tabbar-bg: #181818;
 	--dark-tabbar-text-inactive: #F3F3F2;
 	--dark-tabbar-pill-bg: #343434;
 	--dark-tabbar-text-active: #1AABFF;
@@ -114,6 +137,7 @@
 	--dark-small-button-text: #0091FF;
 	--dark-large-button-bg: #0091FF;
 	--dark-large-button-text: #FFFFFF;
+    --dark-prayer-row-border-bottom-bg: #383838;
 	--dark-glass-border: color-mix(in srgb, var(--dark-text-primary) 10%, transparent);
 	--dark-glass-highlight: color-mix(in srgb, #FFFFFF 18%, transparent);
     --dark-shadow-1: 0 10px 30px rgba(0,0,0,0.36);
@@ -182,6 +206,8 @@
 	--large-button-bg: var(--light-large-button-bg);
 	--large-button-text: var(--light-large-button-text);
 	
+	--prayer-row-border-bottom-bg: var(--light-prayer-row-border-bottom-bg);
+	
 	--glass-bg: var(--light-glass-bg);
 	--glass-bg-strong: var(--light-glass-bg-strong);
 	--glass-border: var(--light-glass-border);
@@ -221,28 +247,6 @@
 	--soft-after-1: var(--light-soft-after-1);
 	--soft-after-2: var(--light-soft-after-2);
 	--soft-after-3: var(--light-soft-after-3);
-	
-	--font-ui:
-		-apple-system,
-		BlinkMacSystemFont,
-		"SF Pro Text",
-		"SF Pro Display",
-		"Segoe UI",
-		Roboto,
-		"Helvetica Neue",
-		Arial,
-		sans-serif;
-
-	--font-ui-ar:
-		-apple-system,
-		BlinkMacSystemFont,
-		"SF Arabic",
-		"Segoe UI",
-		Roboto,
-		"Noto Sans Arabic",
-		"Helvetica Neue",
-		Arial,
-		sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -269,6 +273,8 @@
     --small-button-text: var(--dark-small-button-text);
     --large-button-bg: var(--dark-large-button-bg);
     --large-button-text: var(--dark-large-button-text);
+	
+	--prayer-row-border-bottom-bg: var(--dark-prayer-row-border-bottom-bg);
 
 	--glass-bg: var(--dark-glass-bg);
 	--glass-bg-strong: var(--dark-glass-bg-strong);
@@ -724,7 +730,7 @@ main {
   right: 16px;
   bottom: 0;
   height: 0.5px;
-  background: rgba(255, 255, 255, 0.14);
+  background: var(--prayer-row-border-bottom-bg);
   pointer-events: none;
 }
 
