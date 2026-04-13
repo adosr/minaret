@@ -868,8 +868,6 @@ main {
   border-radius: var(--radius-tab);
   position: fixed;
   bottom: 20px;
-  left: 20px;
-  right: 20px;
   isolation: isolate;
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
   touch-action: pan-y;
