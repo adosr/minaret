@@ -546,6 +546,8 @@ main {
 
 .prayer-focus-name {
   margin-bottom: 8px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .prayer-focus-time {
