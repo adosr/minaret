@@ -51,9 +51,16 @@ export async function runNotificationDispatch(env, now = new Date()) {
       if (!record?.subscription?.endpoint) continue;
       if (record?.notificationPrefs?.enabled !== true) continue;
       if (record?.notificationPrefs?.prayers?.[prayer] === false) continue;
+	  
+		const localDateKey = getCurrentLocalDateKey(now, record.timezone);
+
+		if (record.scheduleDate !== localDateKey) {
+		  await rebuildSubscriptionSchedule(env, subKey, record, now);
+		  continue;
+		}
 
       const scheduleMeta = record?.scheduleMeta?.[prayer] || null;
-      const notificationDateKey = scheduleMeta?.dateKey || getCurrentLocalDateKey(now, record.timezone);
+	  const notificationDateKey = scheduleMeta?.dateKey || localDateKey;
 
       try {
         await sendPush(env, record.subscription, buildNotificationPayload(record, prayer, notificationDateKey, scheduleMeta?.localTime || null));
