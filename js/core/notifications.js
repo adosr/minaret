@@ -220,13 +220,29 @@ async function enablePrayerNotifications({ state, refs, config }) {
     }
   }
 
-  persistNotificationPreferences({
+  const nextPrefs = {
     ...state.notificationPrefs,
     enabled: true
-  });
-  state.notificationPrefs.enabled = true;
+  };
 
-  await syncNotificationSubscriptionSilently({ state, refs, config, force: true, visual: false });
+  const previousEnabled = state.notificationPrefs.enabled === true;
+  state.notificationPrefs.enabled = true;
+  renderNotificationSettings({ state, refs });
+
+  const syncResult = await syncNotificationSubscriptionSilently({ state, refs, config, force: true, visual: false });
+  if (syncResult?.ok) {
+    persistNotificationPreferences(nextPrefs);
+    state.notificationPrefs = nextPrefs;
+    renderNotificationSettings({ state, refs });
+    return;
+  }
+
+  state.notificationPrefs.enabled = previousEnabled;
+  persistNotificationPreferences({
+    ...state.notificationPrefs,
+    enabled: previousEnabled
+  });
+  renderNotificationSettings({ state, refs });
 }
 
 async function disablePrayerNotifications({ state, refs, config }) {

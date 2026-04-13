@@ -25,3 +25,6 @@ invocation_logs = true
 
 [observability.traces]
 enabled = false
+
+# Configure ADMIN_TOKEN as a Wrangler secret before deploying:
+# npx wrangler secret put ADMIN_TOKEN

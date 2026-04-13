@@ -1,5 +1,6 @@
 import { WEB_APP_CONFIG } from "./core/app-config.js";
 import { initBottomTabs } from "./components/bottom-tabs.js";
+import { loadAdminToken, persistAdminToken } from "./utils/storage.js";
 
 const WORKER_BASE_URL = WEB_APP_CONFIG.workerBaseUrl;
 const COPY = getCopy();
@@ -22,6 +23,11 @@ const els = {
   endpointValue: document.getElementById("endpointValue"),
   summaryLabel: document.getElementById("summaryLabel"),
   summaryValue: document.getElementById("summaryValue"),
+  adminAuthHeader: document.getElementById("adminAuthHeader"),
+  adminTokenLabel: document.getElementById("adminTokenLabel"),
+  adminTokenInput: document.getElementById("adminTokenInput"),
+  adminTokenHintLabel: document.getElementById("adminTokenHintLabel"),
+  adminTokenHint: document.getElementById("adminTokenHint"),
   actionsHeader: document.getElementById("actionsHeader"),
   sendTestPushBtn: document.getElementById("sendTestPushBtn"),
   refreshAdminBtn: document.getElementById("refreshAdminBtn"),
@@ -35,10 +41,12 @@ const els = {
 
 let summaryState = null;
 let actionInFlight = false;
+let adminToken = "";
 
 init().catch((error) => {
   console.error(error);
   setFeedback(COPY.initFailed(error?.message || String(error)), true);
+  document.documentElement.classList.remove("preinit");
 });
 
 async function init() {
@@ -48,6 +56,13 @@ async function init() {
     activePill: els.tabActivePill,
     onSelectPage: () => {}
   });
+
+  adminToken = loadAdminToken().trim();
+  if (els.adminTokenInput) {
+    els.adminTokenInput.value = adminToken;
+    els.adminTokenInput.addEventListener("input", handleAdminTokenInput);
+    els.adminTokenInput.addEventListener("change", handleAdminTokenInput);
+  }
 
   els.workerHostValue.textContent = simplifyWorkerUrl(WORKER_BASE_URL);
   els.refreshAdminBtn?.addEventListener("click", () => refreshDiagnostics(true));
@@ -69,6 +84,11 @@ function applyCopy() {
   els.subscriptionLabel.textContent = COPY.latestLocationLabel;
   els.endpointLabel.textContent = COPY.endpointLabel;
   els.summaryLabel.textContent = COPY.summaryLabel;
+  els.adminAuthHeader.textContent = COPY.authTitle;
+  els.adminTokenLabel.textContent = COPY.adminTokenLabel;
+  els.adminTokenHintLabel.textContent = COPY.authenticationLabel;
+  els.adminTokenHint.textContent = COPY.adminTokenHint;
+  els.adminTokenInput.placeholder = COPY.adminTokenPlaceholder;
   els.actionsHeader.textContent = COPY.actionsTitle;
   els.sendTestPushBtn.textContent = COPY.sendTestPush;
   els.refreshAdminBtn.textContent = COPY.refresh;
@@ -76,6 +96,12 @@ function applyCopy() {
   els.tabAdminLabel.textContent = COPY.tabLabel;
   els.tabAdminLabelAccent.textContent = COPY.tabLabel;
   els.adminDateLabel.textContent = formatNow();
+}
+
+function handleAdminTokenInput(event) {
+  adminToken = String(event?.target?.value || "").trim();
+  persistAdminToken(adminToken);
+  updateActionStates();
 }
 
 async function refreshDiagnostics(showFeedback = true) {
@@ -90,13 +116,18 @@ async function refreshDiagnostics(showFeedback = true) {
   updateHeroState(summaryState);
   updateActionStates();
 
-  if (showFeedback) setFeedback(COPY.readyState);
+  if (showFeedback) {
+    setFeedback(summaryState?.ok ? COPY.readyState : COPY.summaryUnavailable(summaryState?.error || COPY.unknownError), !summaryState?.ok);
+  }
 }
 
 async function fetchSummary() {
   try {
-    const response = await fetch(`${WORKER_BASE_URL}/admin/summary`);
-    const json = await response.json();
+    const response = await fetch(`${WORKER_BASE_URL}/admin/summary`, {
+      headers: buildAdminHeaders()
+    });
+
+    const json = await safeReadJson(response);
     if (!response.ok) throw new Error(json?.error || `HTTP ${response.status}`);
     return json;
   } catch (error) {
@@ -127,6 +158,11 @@ function renderSummary(summary) {
 }
 
 function updateHeroState(summary) {
+  if (!adminToken) {
+    els.heroStatusValue.textContent = COPY.heroMissingToken;
+    return;
+  }
+
   if (!summary?.ok) {
     els.heroStatusValue.textContent = COPY.heroUnavailable;
     return;
@@ -142,11 +178,15 @@ function updateHeroState(summary) {
 
 function updateActionStates() {
   const hasLatest = Boolean(summaryState?.latest_subscription?.endpoint_fingerprint);
-  els.sendTestPushBtn.disabled = !hasLatest || actionInFlight;
+  els.sendTestPushBtn.disabled = !adminToken || !hasLatest || actionInFlight;
 }
 
 async function sendTestPush() {
   try {
+    if (!adminToken) {
+      throw new Error(COPY.adminTokenRequired);
+    }
+
     if (!summaryState?.latest_subscription) {
       throw new Error(COPY.noSubscriptionForTest);
     }
@@ -157,10 +197,13 @@ async function sendTestPush() {
 
     const response = await fetch(`${WORKER_BASE_URL}/admin/test-push`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" }
+      headers: {
+        "Content-Type": "application/json",
+        ...buildAdminHeaders()
+      }
     });
 
-    const json = await response.json();
+    const json = await safeReadJson(response);
     if (!response.ok || !json?.ok) {
       throw new Error(json?.error || `HTTP ${response.status}`);
     }
@@ -173,6 +216,18 @@ async function sendTestPush() {
   } finally {
     actionInFlight = false;
     updateActionStates();
+  }
+}
+
+function buildAdminHeaders() {
+  return adminToken ? { Authorization: `Bearer ${adminToken}` } : {};
+}
+
+async function safeReadJson(response) {
+  try {
+    return await response.json();
+  } catch {
+    return null;
   }
 }
 
@@ -233,6 +288,11 @@ function getCopy() {
       latestLocationLabel: "اسم الموقع",
       endpointLabel: "بصمة الـ endpoint",
       summaryLabel: "ملخص الووركر",
+      authTitle: "وصول الإدارة",
+      adminTokenLabel: "رمز إدارة الووركر",
+      authenticationLabel: "المصادقة",
+      adminTokenHint: "يُحفَظ هذا الرمز داخل هذا المتصفح فقط ويُرسل إلى الووركر كترويسة Bearer.",
+      adminTokenPlaceholder: "أدخل رمز إدارة الووركر",
       actionsTitle: "الإجراءات",
       sendTestPush: "إرسال إشعار تجريبي لآخر مشترك",
       refresh: "تحديث التشخيص",
@@ -244,12 +304,14 @@ function getCopy() {
       summaryUnavailable: (error) => `تعذر قراءة الملخص: ${error}`,
       summaryTemplate: ({ subscriptions, enabled, disabled }) => `إجمالي الاشتراكات: ${subscriptions} • المفعّل: ${enabled} • المعطّل: ${disabled}`,
       heroUnavailable: "تعذر قراءة حالة الووركر",
+      heroMissingToken: "أدخل رمز الإدارة لقراءة حالة الووركر",
       heroNoSubscribers: "لا يوجد أي مشترك محفوظ حتى الآن",
       heroReady: "جاهز لإرسال اختبار إلى آخر مشترك",
       sent: (fingerprint) => `تم إرسال الإشعار التجريبي إلى آخر مشترك محفوظ: ${fingerprint}`,
       sendFailed: (error) => `فشل إرسال الإشعار التجريبي: ${error}`,
       initFailed: (error) => `تعذر تهيئة صفحة الإدارة: ${error}`,
       noSubscriptionForTest: "لا يوجد أي مشترك محفوظ لإرسال الاختبار إليه.",
+      adminTokenRequired: "أدخل رمز الإدارة أولًا.",
       lastRefresh: (time) => `آخر تحديث: ${time}`,
       unknownError: "خطأ غير معروف",
       none: "—"
@@ -268,6 +330,11 @@ function getCopy() {
     latestLocationLabel: "Location name",
     endpointLabel: "Endpoint fingerprint",
     summaryLabel: "Worker summary",
+    authTitle: "Admin access",
+    adminTokenLabel: "Worker admin token",
+    authenticationLabel: "Authentication",
+    adminTokenHint: "Stored only in this browser and sent to the worker as a Bearer token.",
+    adminTokenPlaceholder: "Enter worker admin token",
     actionsTitle: "Actions",
     sendTestPush: "Send test notification to latest subscriber",
     refresh: "Refresh diagnostics",
@@ -279,12 +346,14 @@ function getCopy() {
     summaryUnavailable: (error) => `Summary unavailable: ${error}`,
     summaryTemplate: ({ subscriptions, enabled, disabled }) => `Subscriptions: ${subscriptions} • Enabled: ${enabled} • Disabled: ${disabled}`,
     heroUnavailable: "Worker status is unavailable",
+    heroMissingToken: "Enter the admin token to read worker status",
     heroNoSubscribers: "No saved subscriber exists yet",
     heroReady: "Ready to send a test to the latest subscriber",
     sent: (fingerprint) => `Test notification sent to the latest saved subscriber: ${fingerprint}`,
     sendFailed: (error) => `Failed to send the test notification: ${error}`,
     initFailed: (error) => `Failed to initialize the admin page: ${error}`,
     noSubscriptionForTest: "No saved subscriber exists for testing.",
+    adminTokenRequired: "Enter the admin token first.",
     lastRefresh: (time) => `Last refresh: ${time}`,
     unknownError: "Unknown error",
     none: "—"

@@ -35,6 +35,7 @@ export async function bootstrapApp() {
   appState.lang = i18n.language;
   appState.t = i18n.t;
   appState.dict = i18n.dict;
+  applyLanguageToDocument(appState.lang);
 
   cacheRefs();
   applyInitialLocalizedUI();

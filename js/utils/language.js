@@ -14,12 +14,31 @@ export function applyLanguageToDocument(language) {
   document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
 }
 
+async function loadTranslationFile(language) {
+  const res = await fetch(`./locales/${language}.json`, { cache: "no-cache" });
+  if (!res.ok) {
+    throw new Error(`Failed to load ${language} translations (HTTP ${res.status})`);
+  }
+  return await res.json();
+}
+
 export async function loadTranslations(language) {
-  const res = await fetch(`./locales/${language}.json`);
-  const dict = await res.json();
+  let resolvedLanguage = language === "ar" ? "ar" : "en";
+  let dict = null;
+
+  try {
+    dict = await loadTranslationFile(resolvedLanguage);
+  } catch (primaryError) {
+    if (resolvedLanguage !== "en") {
+      dict = await loadTranslationFile("en");
+      resolvedLanguage = "en";
+    } else {
+      throw primaryError;
+    }
+  }
 
   return {
-    language,
+    language: resolvedLanguage,
     dict,
     t: (key, fallback = "") => dict[key] ?? fallback
   };

@@ -79,15 +79,22 @@ export async function handleTestPush(env) {
     return json({ ok: false, error: "No saved subscriptions were found." }, 404);
   }
 
-  await sendPush(env, latest.subscription, {
-    type: "test",
-    prayer: "test",
-    title: latest.language === "ar" ? "اختبار من منارة 🔔" : "Minaret test 🔔",
-    body: latest.language === "ar"
-      ? "هذا إشعار تجريبي تم إرساله إلى آخر مشترك محفوظ."
-      : "This is a test notification sent to the latest saved subscriber.",
-    sent_at: new Date().toISOString()
-  });
+  try {
+    await sendPush(env, latest.subscription, {
+      type: "test",
+      prayer: "test",
+      title: latest.language === "ar" ? "اختبار من منارة 🔔" : "Minaret test 🔔",
+      body: latest.language === "ar"
+        ? "هذا إشعار تجريبي تم إرساله إلى آخر مشترك محفوظ."
+        : "This is a test notification sent to the latest saved subscriber.",
+      sent_at: new Date().toISOString()
+    });
+  } catch (error) {
+    return json({
+      ok: false,
+      error: error?.message || "Failed to send the test notification."
+    }, 502);
+  }
 
   return json({
     ok: true,

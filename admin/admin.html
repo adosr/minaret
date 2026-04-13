@@ -91,6 +91,22 @@
         </div>
 
         <div class="settings-section">
+          <div class="settings-header" id="adminAuthHeader">Admin access</div>
+          <div class="settings-list liquid-glass">
+            <div class="settings-row settings-row-multiline">
+              <span id="adminTokenLabel">Admin token</span>
+              <div class="settings-value settings-value-block">
+                <input id="adminTokenInput" type="password" autocomplete="off" spellcheck="false" placeholder="Enter worker admin token" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(120,120,128,.24);background:transparent;color:inherit;font:inherit;" />
+              </div>
+            </div>
+            <div class="settings-row settings-row-multiline">
+              <span id="adminTokenHintLabel">Authentication</span>
+              <div class="settings-value settings-value-block" id="adminTokenHint">Stored only in this browser and sent as a Bearer token to the worker.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
           <div class="settings-header" id="actionsHeader">Actions</div>
           <div class="settings-list liquid-glass admin-actions-card">
             <button class="settings-action-button" id="sendTestPushBtn" type="button">Send test notification to latest subscriber</button>
