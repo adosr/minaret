@@ -20,11 +20,17 @@
   --card-dark: #1e293b;
   --text-light: #0f172a;
   --text-dark: #f8fafc;
-
+  
+  --statusbar-light: rgba(253, 253, 253, 0.8);
+  --statusbar-dark: rgba(0, 0, 0, 0.8);
+  
 
   --bg: var(--bg-light);
   --card: var(--card-light);
   --text: var(--text-light);
+  
+  --statusbar: var(--statusbar-light);
+  
 }
 /* الوضع التلقائي */
 @media (prefers-color-scheme: dark) {
@@ -32,6 +38,7 @@
     --bg: var(--bg-dark);
     --card: var(--card-dark);
     --text: var(--text-dark);
+	--statusbar: var(--statusbar-dark);
   }
 }
 
@@ -57,6 +64,7 @@ html, body {
   z-index: 9999;
   pointer-events: none;
 
+  background: var(--statusbar);
 
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
@@ -76,6 +84,7 @@ html, body {
   font-size: 18px;
   font-weight: 600;
 
+  background: var(--statusbar);
 
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
@@ -112,9 +121,11 @@ html, body {
 
 <div class="statusbar-overlay"></div>
 
+<!--
 <header class="header">
   Sticky Header Test
 </header>
+-->
 
 <main class="content">
 
