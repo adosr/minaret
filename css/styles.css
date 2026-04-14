@@ -607,6 +607,7 @@ header {
   justify-content: space-between;
   align-items: flex-end;
   gap: 16px;
+  z-index: 400;
 }
 
 .header-left p {
@@ -624,12 +625,12 @@ header {
   text-transform: uppercase;
 }
 
-.page-fades {
+html {
   position: relative;
   isolation: isolate;
 }
 
-.page-fades::before {
+html::before {
   content: "";
   position: fixed;
   left: 50%;
@@ -648,7 +649,7 @@ header {
   -webkit-backdrop-filter: blur(8px);
 }
 
-.page-fades::after {
+html::after {
   content: "";
   position: fixed;
   left: 50%;
