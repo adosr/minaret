@@ -462,6 +462,7 @@ html[dir="rtl"] body,
 .statusbar-fade::before {
   content: "";
   position: absolute;
+  inset: 0;
   height: 150%;
   /* background: var(--statusbar-fade-bg); */
   background: #ffff00;
