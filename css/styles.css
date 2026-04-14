@@ -443,9 +443,9 @@ html[dir="rtl"] body,
 .ios-soft::after {
   content: "";
   position: absolute;
-  left: 8%;
-  right: 8%;
-  top: 5%;
+  left: 4%;
+  right: 4%;
+  top: 1%;
   height: 42%;
   border-radius: inherit;
   pointer-events: none;
@@ -483,31 +483,43 @@ html[dir="rtl"] body,
   border-radius: inherit;
   pointer-events: none;
 
-  background: rgba(255,255,255,0.62);
+  background:
+    linear-gradient(
+      180deg,
+      var(--soft-before-1) 0%,
+      var(--soft-before-2) 18%,
+      var(--soft-before-3) 42%,
+      var(--soft-before-4) 70%
+    );
+
+  box-shadow:
+    inset 0 1px 1px var(--soft-before-shadow-top),
+    inset 1px 0 0 var(--soft-before-shadow-left),
+    inset 0 -1px 0 var(--soft-before-shadow-bottom);
+	
   mix-blend-mode: lighten;
 }
 
 .ios-soft-tabbar::after {
   content: "";
   position: absolute;
-  inset: 0;
+  left: 4%;
+  right: 4%;
+  top: 1%;
+  height: 42%;
   border-radius: inherit;
   pointer-events: none;
 
-  background: rgba(255,255,255,0.18);
+  background: linear-gradient(
+    180deg,
+    var(--soft-after-1) 0%,
+    var(--soft-after-2) 55%,
+    var(--soft-after-3) 100%
+  );
+
+  filter: blur(1px);
+  
   mix-blend-mode: soft-light;
-}
-
-@media (prefers-color-scheme: dark) {
-  .ios-soft-tabbar::before {
-    background: rgba(255,255,255,0.14);
-    mix-blend-mode: lighten;
-  }
-
-  .ios-soft-tabbar::after {
-    background: rgba(255,255,255,0.06);
-    mix-blend-mode: soft-light;
-  }
 }
 
 .ios-soft,
