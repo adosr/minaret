@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-touch-fullscreen" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Safari / PWA Status Bar Blur Lab</title>
+
+  <style>
+    :root {
+      color-scheme: light dark;
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+
+      --bg-light: #f5f7fa;
+      --bg-dark: #000000;
+
+      --card-light: rgba(255,255,255,0.78);
+      --card-dark: rgba(20,24,35,0.72);
+
+      --text-light: #111827;
+      --text-dark: #f8fafc;
+
+      --header-light: rgba(245,247,250,0.60);
+      --header-dark: rgba(0,0,0,0.52);
+
+      --status-light: rgba(245,247,250,0.54);
+      --status-dark: rgba(0,0,0,0.42);
+
+      --border-light: rgba(15, 23, 42, 0.08);
+      --border-dark: rgba(255, 255, 255, 0.10);
+
+      --safe-line-light: rgba(0, 119, 255, 0.90);
+      --safe-line-dark: rgba(0, 210, 255, 0.95);
+
+      --bg: var(--bg-light);
+      --card: var(--card-light);
+      --text: var(--text-light);
+      --header-bg: var(--header-light);
+      --statusbar-bg: var(--status-light);
+      --border: var(--border-light);
+      --safe-line: var(--safe-line-light);
+
+      --blur-status: 18px;
+      --blur-header: 18px;
+      --blur-safari-fallback: 14px;
+
+      --content-max: 560px;
+      --page-side-pad: 16px;
+      --header-height: 56px;
+      --show-safe-guide: 1;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --card: var(--card-dark);
+        --text: var(--text-dark);
+        --header-bg: var(--header-dark);
+        --statusbar-bg: var(--status-dark);
+        --border: var(--border-dark);
+        --safe-line: var(--safe-line-dark);
+      }
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at top right, rgba(0,119,255,0.10), transparent 32%),
+        radial-gradient(circle at top left, rgba(0,210,255,0.10), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+      background-attachment: fixed;
+    }
+
+    .statusbar-overlay,
+    .header,
+    .header::before,
+    .frost-probe {
+      -webkit-backdrop-filter: saturate(180%) blur(var(--blur-status));
+      backdrop-filter: saturate(180%) blur(var(--blur-status));
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .statusbar-overlay {
+      position: fixed;
+      top: 0;
+      inset-inline: 0;
+      height: var(--sat);
+      z-index: 9999;
+      pointer-events: none;
+      background: var(--statusbar-bg);
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    }
+
+    /* طبقة مساعدة لاختبار هل Safari سيعطي blur فوق الشريط بشكل مستقل أم لا */
+    .frost-probe {
+      position: fixed;
+      top: 0;
+      inset-inline: 0;
+      height: calc(var(--sat) + 1px);
+      z-index: 9997;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.00));
+      mix-blend-mode: normal;
+      opacity: .85;
+    }
+
+    .safe-guide {
+      position: fixed;
+      inset-inline: 0;
+      top: var(--sat);
+      height: 0;
+      border-top: 2px dashed var(--safe-line);
+      z-index: 10000;
+      pointer-events: none;
+      opacity: calc(var(--show-safe-guide) * 0.9);
+    }
+
+    .app {
+      position: relative;
+      min-height: 100dvh;
+    }
+
+    .top-space {
+      height: calc(var(--sat) + 12px);
+    }
+
+    .header {
+      position: sticky;
+      top: var(--sat);
+      z-index: 9998;
+      display: none;
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--border);
+      min-height: var(--header-height);
+      box-sizing: border-box;
+    }
+
+    body.sticky-on .header {
+      display: block;
+    }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      top: calc(var(--sat) * -1);
+      height: var(--sat);
+      background: var(--statusbar-bg);
+      pointer-events: none;
+    }
+
+    .header-inner,
+    .controls,
+    .content {
+      width: min(calc(100% - (var(--page-side-pad) * 2)), var(--content-max));
+      margin-inline: auto;
+      box-sizing: border-box;
+    }
+
+    .header-inner {
+      min-height: var(--header-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 4px;
+    }
+
+    .title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(0,119,255,0.12);
+      border: 1px solid rgba(0,119,255,0.16);
+      white-space: nowrap;
+    }
+
+    .controls {
+      position: relative;
+      z-index: 2;
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+      -webkit-backdrop-filter: saturate(180%) blur(18px);
+      backdrop-filter: saturate(180%) blur(18px);
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .panel p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      opacity: .84;
+    }
+
+    .toggle-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: inherit;
+      border-radius: 14px;
+      min-height: 44px;
+      padding: 10px 12px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button.active {
+      background: rgba(0,119,255,0.14);
+      border-color: rgba(0,119,255,0.22);
+    }
+
+    .metrics {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(127,146,255,0.08);
+    }
+
+    .hero {
+      width: min(calc(100% - (var(--page-side-pad) * 2)), var(--content-max));
+      margin: 18px auto 0;
+      border-radius: 24px;
+      padding: 22px 18px;
+      box-sizing: border-box;
+      color: white;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(0, 210, 255, 0.45), transparent 35%),
+        radial-gradient(circle at 90% 20%, rgba(94, 26, 213, 0.40), transparent 28%),
+        linear-gradient(180deg, rgba(0, 0, 98, 0.95), rgba(8, 0, 255, 0.85));
+      box-shadow: 0 20px 40px rgba(8,0,255,0.15);
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      margin: 0;
+      line-height: 1.65;
+      font-size: 14px;
+      opacity: .95;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      padding: 16px 0 calc(20px + var(--sab));
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      -webkit-backdrop-filter: saturate(160%) blur(18px);
+      backdrop-filter: saturate(160%) blur(18px);
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+      opacity: .82;
+    }
+
+    .strip {
+      margin-top: 10px;
+      height: 44px;
+      border-radius: 12px;
+      background:
+        linear-gradient(90deg, rgba(0,119,255,0.9), rgba(0,210,255,0.8), rgba(94,26,213,0.75));
+      opacity: .92;
+    }
+
+    body.force-light {
+      --bg: var(--bg-light);
+      --card: var(--card-light);
+      --text: var(--text-light);
+      --header-bg: var(--header-light);
+      --statusbar-bg: var(--status-light);
+      --border: var(--border-light);
+      --safe-line: var(--safe-line-light);
+      color-scheme: light;
+    }
+
+    body.force-dark {
+      --bg: var(--bg-dark);
+      --card: var(--card-dark);
+      --text: var(--text-dark);
+      --header-bg: var(--header-dark);
+      --statusbar-bg: var(--status-dark);
+      --border: var(--border-dark);
+      --safe-line: var(--safe-line-dark);
+      color-scheme: dark;
+    }
+
+    body.sticky-off .header {
+      display: none !important;
+    }
+
+    body.guides-off {
+      --show-safe-guide: 0;
+    }
+
+    .safari-note {
+      font-size: 12px;
+      margin-top: 10px;
+      opacity: .8;
+    }
+  </style>
+</head>
+<body class="sticky-on">
+  <div class="statusbar-overlay"></div>
+  <div class="frost-probe"></div>
+  <div class="safe-guide"></div>
+
+  <div class="app">
+    <header class="header">
+      <div class="header-inner">
+        <div>
+          <div class="title">مختبر شريط الحالة</div>
+          <div class="subtitle">Safari / PWA comparison</div>
+        </div>
+        <div class="badge" id="envBadge">Loading…</div>
+      </div>
+    </header>
+
+    <div class="top-space"></div>
+
+    <section class="controls">
+      <div class="panel">
+        <h2>عناصر الاختبار</h2>
+        <p>
+          الصفحة مبنية على <code>black-translucent</code> مع طبقة منفصلة لشريط الحالة،
+          هيدر اختياري، ومؤشر يوضح حد <code>safe-area</code>.
+        </p>
+        <div class="toggle-grid">
+          <button id="stickyBtn" class="active" type="button">Sticky: ON</button>
+          <button id="themeBtn" type="button">Theme: Auto</button>
+          <button id="guideBtn" class="active" type="button">Safe guide: ON</button>
+          <button id="blurBtn" class="active" type="button">Blur: Strong</button>
+        </div>
+        <div class="metrics" id="metrics"></div>
+        <div class="safari-note">
+          لاحظ بصريًا هل الضبابية داخل Safari فوق شريط الحالة تماثل PWA، أو أنها مجرد طبقة شبه شفافة بدون سحب حقيقي لما خلفها.
+        </div>
+      </div>
+    </section>
+
+    <section class="hero">
+      <h1>اختبار واضح للفروقات بين Safari و PWA</h1>
+      <p>
+        مرر الصفحة ببطء، ثم بدّل بين تشغيل وإيقاف الـ sticky.
+        إذا ظهر المحتوى خلف الشريط في Safari لكن بدون نفس ضبابية PWA، فهذا غالبًا قيد من بيئة العرض نفسها وليس من CSS فقط.
+      </p>
+    </section>
+
+    <main class="content" id="content"></main>
+  </div>
+
+  <script>
+    const body = document.body;
+    const envBadge = document.getElementById('envBadge');
+    const metrics = document.getElementById('metrics');
+    const content = document.getElementById('content');
+
+    const stickyBtn = document.getElementById('stickyBtn');
+    const themeBtn = document.getElementById('themeBtn');
+    const guideBtn = document.getElementById('guideBtn');
+    const blurBtn = document.getElementById('blurBtn');
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    envBadge.textContent = isStandalone ? 'PWA / Standalone' : (isSafari ? 'Safari Browser' : 'Browser');
+
+    function renderMetrics() {
+      const sat = getComputedStyle(document.documentElement).getPropertyValue('--sat').trim();
+      const theme = body.classList.contains('force-light')
+        ? 'Light'
+        : body.classList.contains('force-dark')
+          ? 'Dark'
+          : 'Auto';
+      const sticky = body.classList.contains('sticky-off') ? 'OFF' : 'ON';
+      const guides = body.classList.contains('guides-off') ? 'OFF' : 'ON';
+      const blur = document.documentElement.style.getPropertyValue('--blur-status') || '18px';
+
+      metrics.innerHTML = `
+        <div class="metric"><span>display-mode</span><strong>${isStandalone ? 'standalone' : 'browser'}</strong></div>
+        <div class="metric"><span>navigator.standalone</span><strong>${String(window.navigator.standalone === true)}</strong></div>
+        <div class="metric"><span>safe-area-inset-top</span><strong>${sat || '0px'}</strong></div>
+        <div class="metric"><span>sticky header</span><strong>${sticky}</strong></div>
+        <div class="metric"><span>theme</span><strong>${theme}</strong></div>
+        <div class="metric"><span>safe guide</span><strong>${guides}</strong></div>
+        <div class="metric"><span>status blur</span><strong>${blur}</strong></div>
+      `;
+    }
+
+    function populateContent() {
+      const paragraphs = [
+        'هذا الكرت يحتوي على نص طويل ليعطيك حركة واضحة خلف منطقة شريط الحالة أثناء السحب.',
+        'الأشرطة اللونية والمربعات الزجاجية هنا هدفها إبراز الفرق بين طبقة شبه شفافة فقط وبين blur فعلي للخلفية.',
+        'جرّب أولًا في Safari ثم أضف الصفحة إلى الشاشة الرئيسية وقارن الموضع نفسه والسرعة نفسها في السحب.',
+        'إذا كان PWA يموّه الخلفية داخل الشريط بينما Safari لا يفعل إلا تلوينًا خفيفًا، فهذا فرق منصة لا فرق CSS فقط.',
+      ];
+
+      const cards = [];
+      for (let i = 1; i <= 20; i++) {
+        const p = paragraphs[(i - 1) % paragraphs.length];
+        cards.push(`
+          <article class="card">
+            <h3>عنصر تجريبي ${i}</h3>
+            <p>${p}</p>
+            <div class="strip"></div>
+          </article>
+        `);
+      }
+      content.innerHTML = cards.join('');
+    }
+
+    stickyBtn.addEventListener('click', () => {
+      const off = body.classList.toggle('sticky-off');
+      body.classList.toggle('sticky-on', !off);
+      stickyBtn.textContent = off ? 'Sticky: OFF' : 'Sticky: ON';
+      stickyBtn.classList.toggle('active', !off);
+      renderMetrics();
+    });
+
+    const themeStates = ['auto', 'light', 'dark'];
+    let themeIndex = 0;
+    themeBtn.addEventListener('click', () => {
+      themeIndex = (themeIndex + 1) % themeStates.length;
+      const state = themeStates[themeIndex];
+      body.classList.remove('force-light', 'force-dark');
+      if (state === 'light') body.classList.add('force-light');
+      if (state === 'dark') body.classList.add('force-dark');
+      themeBtn.textContent = `Theme: ${state[0].toUpperCase() + state.slice(1)}`;
+      themeBtn.classList.toggle('active', state !== 'auto');
+      renderMetrics();
+    });
+
+    guideBtn.addEventListener('click', () => {
+      const off = body.classList.toggle('guides-off');
+      guideBtn.textContent = off ? 'Safe guide: OFF' : 'Safe guide: ON';
+      guideBtn.classList.toggle('active', !off);
+      renderMetrics();
+    });
+
+    let blurStrong = true;
+    blurBtn.addEventListener('click', () => {
+      blurStrong = !blurStrong;
+      document.documentElement.style.setProperty('--blur-status', blurStrong ? '18px' : '8px');
+      document.documentElement.style.setProperty('--blur-header', blurStrong ? '18px' : '8px');
+      blurBtn.textContent = blurStrong ? 'Blur: Strong' : 'Blur: Soft';
+      blurBtn.classList.toggle('active', blurStrong);
+      renderMetrics();
+    });
+
+    populateContent();
+    renderMetrics();
+  </script>
+</body>
+</html>
