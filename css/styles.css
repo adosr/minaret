@@ -447,6 +447,29 @@ html[dir="rtl"] body,
   font-family: var(--font-ui-ar);
 }
 
+.top-blur-sticky {
+  position: sticky;
+  isolation: isolate;
+  overflow: hidden;
+
+  /* 🔥 هذا السر */
+  top: 0;
+
+  /* يغطي حتى شريط الحالة */
+  height: calc(92px + env(safe-area-inset-top));
+  margin-top: calc(env(safe-area-inset-top) * -1);
+
+  pointer-events: none;
+  z-index: 100;
+
+  /* fade */
+  background-color: rgba(137,137,137,0.5);
+
+  /* blur */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
 .statusbar-fade {
   position: relative;
   inset: 0;
