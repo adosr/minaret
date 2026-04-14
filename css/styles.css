@@ -635,7 +635,7 @@ header {
   left: 50%;
   width: min(100%, 480px);
   transform: translateX(-50%);
-  top: calc(0 - env(safe-area-inset-top));
+  top: calc(0px - env(safe-area-inset-top));
 
   height: calc(var(--page-top-fade-height) + env(safe-area-inset-top));
 
@@ -654,7 +654,7 @@ header {
   left: 50%;
   width: min(100%, 480px);
   transform: translateX(-50%);
-  bottom: calc(0 - env(safe-area-inset-bottom));;
+  bottom: calc(0px - env(safe-area-inset-bottom));;
 
   height: calc(var(--page-bottom-fade-height) + env(safe-area-inset-bottom));
 
