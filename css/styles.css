@@ -518,6 +518,11 @@ html[dir="rtl"] body,
   filter: blur(1px);
 }
 
+.ios-soft,
+.ios-soft-tabbar {
+  isolation: isolate;
+}
+
 .liquid-glass {
   background: var(--glass-bg);
   backdrop-filter: blur(var(--blur-main)) saturate(var(--saturation));
