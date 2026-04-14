@@ -12,7 +12,7 @@
 	--radius-circle: 50%; 
 	
 	--blur-main: 36px;
-	--blur-tab: 1.5px;
+	--blur-tab: 1.4px;
 	
 	--saturation: 150%;
 	--saturation-tab: 180%;
@@ -57,8 +57,8 @@
     --light-surface-end: #ffffff;
 	--light-nav-inactive: #000000;
 	--light-nav-active: #0088FE;
-	--light-tabbar-bg: rgba(255, 255, 255, 0.58);
-	--light-tabbar-soft-border: rgba(255, 255, 255, 0.25);
+	--light-tabbar-bg: rgba(255, 255, 255, 0.63);
+	--light-tabbar-soft-border: rgba(255, 255, 255, 0.43);
 	--light-tabbar-text-inactive: #191919;
 	--light-tabbar-pill-bg: #EBEBEB;
 	--light-tabbar-text-active: #007EF5;
@@ -127,7 +127,7 @@
     --dark-surface-end: #1c1c1e; 
 	--dark-nav-inactive: #FFFFFF;
 	--dark-nav-active: #0091FF;
-	--dark-tabbar-bg: rgba(28, 28, 30, 0.75);
+	--dark-tabbar-bg: rgba(28, 28, 30, 0.78);
 	--dark-tabbar-soft-border: rgba(255, 255, 255, 0.06);
 	--dark-tabbar-text-inactive: #F3F3F2;
 	--dark-tabbar-pill-bg: #343434;
