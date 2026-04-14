@@ -636,7 +636,7 @@ header {
   left: 50%;
   width: min(100%, 480px);
   transform: translateX(-50%);
-  top: -50px;
+  top: -60px;
   padding-top: env(safe-area-inset-top);
 
   height: calc(var(--page-top-fade-height) + env(safe-area-inset-top));
