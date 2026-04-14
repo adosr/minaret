@@ -345,24 +345,7 @@ html[dir="rtl"] body,
   font-family: var(--font-ui-ar);
 }
 
-
-
-
-
-
-
-
-
 /* ========== APP SHELL ========== */
-.app-bg {
-  position: absolute;
-  inset: 0 0 calc(env(safe-area-inset-bottom) * -1) 0;
-  pointer-events: none;
-  background: var(--bg-gradient-start);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-}
-
 .app-shell {
   position: relative;
   width: 100%;
@@ -494,14 +477,6 @@ html[dir="rtl"] body,
 .ios-soft,
 .ios-soft-tabbar {
   isolation: isolate;
-}
-
-.liquid-glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--blur-main)) saturate(var(--saturation));
-  -webkit-backdrop-filter: blur(var(--blur-main)) saturate(var(--saturation));
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-3), var(--shadow-1);
 }
 
 .action-button {
