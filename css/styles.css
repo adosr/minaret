@@ -449,11 +449,10 @@ html[dir="rtl"] body,
 
 .statusbar-fade {
   position: fixed;
-  right: 0;
-  left: 0;
+  inset: 0;
   width: min(100%, 480px);
   transform: translateX(-50%);
-  top: calc(var(--statusbar-fade-height) * -1);
+  /* top: calc(var(--statusbar-fade-height) * -1); */
   height: var(--statusbar-fade-height);
   overflow: hidden;
   pointer-events: none;
@@ -463,11 +462,9 @@ html[dir="rtl"] body,
 .statusbar-fade::before {
   content: "";
   position: absolute;
-  right: 0;
-  left: 0;
-  top: 0;
   height: 150%;
-  background: var(--statusbar-fade-bg);
+  /* background: var(--statusbar-fade-bg); */
+  background: #ffff00;
   backdrop-filter: blur(var(--blur-tab));
   -webkit-backdrop-filter: blur(var(--blur-tab));
 }
