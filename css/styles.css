@@ -22,8 +22,8 @@
 	--accent-right-inset: 100%;
 	--accent-left: 0px;
 	
-    --page-top-fade-height: 80px;
-    --page-bottom-fade-height: 110px;
+    --statusbar-fade-height: calc(env(safe-area-inset-top) + 80px);
+    --tabbar-fade-height: calc(env(safe-area-inset-bottom) + 80px);
 	
 	--fade-height: 28px;
 	--header-pad-x: 24px;
@@ -52,7 +52,7 @@
 		Arial,
 		sans-serif;
 		
-	--light-top-fade:
+	--light-statusbar-fade-bg-gradient:
 	linear-gradient(
 	  to bottom,
 	  rgba(242,242,246,0.96) 0%,
@@ -62,7 +62,7 @@
 	  rgba(242,242,246,0.00) 100%
 	);
 
-	--light-bottom-fade:
+	--light-tabbar-fade-bg-gradient:
 	linear-gradient(
 	  to top,
 	  rgba(242,242,246,1.00) 0%,
@@ -71,6 +71,9 @@
 	  rgba(242,242,246,0.25) 80%,
 	  rgba(242,242,246,0.00) 100%
 	);
+	
+	--light-statusbar-fade-bg: rgba(242, 242, 246, 0.60);
+	--light-tabbar-fade-bg: rgba(242, 242, 246, 0.60);
 
 	--light-bg-gradient-start: #F2F2F6;
 	--light-bg-gradient-end: #E1E1EA;
@@ -144,7 +147,7 @@
 	--light-soft-after-2: rgba(255,255,255,0.18);
 	--light-soft-after-3: rgba(255,255,255,0.00);
 	
-	--dark-top-fade:
+	--dark-statusbar-fade-bg-gradient:
 	linear-gradient(
 	  to bottom,
 	  rgba(0,0,0,0.94) 0%,
@@ -154,7 +157,7 @@
 	  rgba(0,0,0,0.00) 100%
 	);
 
-	--dark-bottom-fade:
+	--dark-tabbar-fade-bg-gradient:
 	linear-gradient(
 	  to top,
 	  rgba(0,0,0,1.00) 0%,
@@ -163,6 +166,9 @@
 	  rgba(0,0,0,0.25) 80%,
 	  rgba(0,0,0,0.00) 100%
 	);
+
+	--dark-statusbar-fade-bg: rgba(0, 0, 0, 0.60);
+	--dark-tabbar-fade-bg: rgba(0, 0, 0, 0.60);
 
 	--dark-bg-gradient-start: #000000;
 	--dark-bg-gradient-end: #000000;
@@ -238,8 +244,10 @@
 		
 	/* END OF COLOR SCHEME SETTINGS */\
 	
-	--page-top-fade: var(--light-top-fade);
-	--page-bottom-fade: var(--light-bottom-fade);
+	--statusbar-fade-bg: var(--light-statusbar-fade-bg);
+	--tabbar-fade-bg: var(--light-tabbar-fade-bg);
+	--statusbar-fade-bg-gradient: var(--light-statusbar-fade-bg-gradient);
+	--tabbar-fade-bg-gradient: var(--light-tabbar-fade-bg-gradient);
 	--bg-gradient-start: var(--light-bg-gradient-start);
 	--bg-gradient-end: var(--light-bg-gradient-end);
 	--text-primary: var(--light-text-primary);
@@ -314,8 +322,10 @@
 
 @media (prefers-color-scheme: dark) {
 :root {
-    --page-top-fade: var(--dark-top-fade);
-    --page-bottom-fade: var(--dark-bottom-fade);
+	--statusbar-fade-bg: var(--dark-statusbar-fade--bg);
+	--tabbar-fade-bg: var(--dark-tabbar-fade-bg);
+	--statusbar-fade-bg-gradient: var(--dark-statusbar-fade-bg-gradient);
+	--tabbar-fade-bg-gradient: var(--dark-tabbar-fade-bg-gradient);
 	--bg-gradient-start: var(--dark-bg-gradient-start);
 	--bg-gradient-end: var(--dark-bg-gradient-end);
     --text-primary: var(--dark-text-primary);
@@ -435,6 +445,40 @@ html[lang="ar"] body,
 html[dir="rtl"] body,
 :lang(ar) {
   font-family: var(--font-ui-ar);
+}
+
+.statusbar-fade {
+  position: fixed;
+  left: 50%;
+  width: min(100%, 480px);
+  transform: translateX(-50%);
+  top: calc(var(--statusbar-fade-height) * -1);
+  height: var(--statusbar-fade-height);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.statusbar-fade::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  height: 150%;
+  background: var(--statusbar-fade-bg);
+  backdrop-filter: blur(var(--blur-tab));
+  -webkit-backdrop-filter: blur(var(--blur-tab));
+}
+
+.tabbar-fade {
+  position: fixed;
+  left: 50%;
+  width: min(100%, 480px);
+  transform: translateX(-50%);
+  bottom: 0;
+  height: var(--tabbar-fade-height);
+  pointer-events: none;
+  z-index: 100;
+  background: var(--tabbar-fade-bg);
 }
 
 .app-bg {
@@ -623,48 +667,6 @@ header {
   color: var(--accent);
   letter-spacing: 0.3px;
   text-transform: uppercase;
-}
-
-.page-fades {
-  position: relative;
-  isolation: isolate;
-}
-
-.page-fades::before {
-  content: "";
-  position: fixed;
-  left: 50%;
-  width: min(100%, 480px);
-  transform: translateX(-50%);
-  top: -70px;
-  padding-top: env(safe-area-inset-top);
-
-  height: calc(var(--page-top-fade-height) + env(safe-area-inset-top));
-
-  pointer-events: none;
-  z-index: 100;
-
-  background: var(--page-top-fade);
-
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.page-fades::after {
-  content: "";
-  position: fixed;
-  left: 50%;
-  width: min(100%, 480px);
-  transform: translateX(-50%);
-  bottom: 0;
-  padding-bottom: env(safe-area-inset-bottom);
-
-  height: calc(var(--page-bottom-fade-height) + env(safe-area-inset-bottom));
-
-  pointer-events: none;
-  z-index: 100;
-
-  background: var(--page-bottom-fade);
 }
 
 main {
