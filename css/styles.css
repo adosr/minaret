@@ -625,18 +625,19 @@ header {
   text-transform: uppercase;
 }
 
-html {
+.page-fades {
   position: relative;
   isolation: isolate;
 }
 
-html::before {
+.page-fades::before {
   content: "";
   position: fixed;
   left: 50%;
   width: min(100%, 480px);
   transform: translateX(-50%);
-  top: calc(0px - env(safe-area-inset-top));
+  top: 0;
+  padding-top: env(safe-area-inset-top);
 
   height: calc(var(--page-top-fade-height) + env(safe-area-inset-top));
 
@@ -649,13 +650,14 @@ html::before {
   -webkit-backdrop-filter: blur(8px);
 }
 
-html::after {
+.page-fades::after {
   content: "";
   position: fixed;
   left: 50%;
   width: min(100%, 480px);
   transform: translateX(-50%);
-  bottom: calc(0px - env(safe-area-inset-bottom));;
+  bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom);
 
   height: calc(var(--page-bottom-fade-height) + env(safe-area-inset-bottom));
 
