@@ -22,6 +22,9 @@
 	--accent-right-inset: 100%;
 	--accent-left: 0px;
 	
+    --page-top-fade-height: 92px;
+    --page-bottom-fade-height: 110px;
+	
 	--fade-height: 28px;
 	--header-pad-x: 24px;
 	--header-top-pad: 20px;
@@ -48,6 +51,26 @@
 		"Helvetica Neue",
 		Arial,
 		sans-serif;
+		
+	--light-top-fade:
+	linear-gradient(
+	  to bottom,
+	  rgba(242,242,246,0.96) 0%,
+	  rgba(242,242,246,0.82) 20%,
+	  rgba(242,242,246,0.55) 45%,
+	  rgba(242,242,246,0.18) 75%,
+	  rgba(242,242,246,0.00) 100%
+	);
+
+	--light-bottom-fade:
+	linear-gradient(
+	  to top,
+	  rgba(242,242,246,1.00) 0%,
+	  rgba(242,242,246,0.92) 25%,
+	  rgba(242,242,246,0.65) 55%,
+	  rgba(242,242,246,0.25) 80%,
+	  rgba(242,242,246,0.00) 100%
+	);
 
 	--light-bg-gradient-start: #F2F2F6;
 	--light-bg-gradient-end: #E1E1EA;
@@ -120,7 +143,26 @@
 	--light-soft-after-1: rgba(255,255,255,0.50);
 	--light-soft-after-2: rgba(255,255,255,0.18);
 	--light-soft-after-3: rgba(255,255,255,0.00);
+	
+	--dark-top-fade:
+	linear-gradient(
+	  to bottom,
+	  rgba(0,0,0,0.94) 0%,
+	  rgba(0,0,0,0.78) 20%,
+	  rgba(0,0,0,0.50) 45%,
+	  rgba(0,0,0,0.20) 75%,
+	  rgba(0,0,0,0.00) 100%
+	);
 
+	--dark-bottom-fade:
+	linear-gradient(
+	  to top,
+	  rgba(0,0,0,1.00) 0%,
+	  rgba(0,0,0,0.92) 25%,
+	  rgba(0,0,0,0.65) 55%,
+	  rgba(0,0,0,0.25) 80%,
+	  rgba(0,0,0,0.00) 100%
+	);
 
 	--dark-bg-gradient-start: #000000;
 	--dark-bg-gradient-end: #000000;
@@ -194,8 +236,10 @@
 	--dark-soft-after-2: rgba(255,255,255,0.012);
 	--dark-soft-after-3: rgba(255,255,255,0.00);
 		
-	/* END OF COLOR SCHEME SETTINGS */
+	/* END OF COLOR SCHEME SETTINGS */\
 	
+	--page-top-fade: var(--light-top-fade);
+	--page-bottom-fade: var(--light-bottom-fade);
 	--bg-gradient-start: var(--light-bg-gradient-start);
 	--bg-gradient-end: var(--light-bg-gradient-end);
 	--text-primary: var(--light-text-primary);
@@ -270,6 +314,8 @@
 
 @media (prefers-color-scheme: dark) {
 :root {
+    --page-top-fade: var(--dark-top-fade);
+    --page-bottom-fade: var(--dark-bottom-fade);
 	--bg-gradient-start: var(--dark-bg-gradient-start);
 	--bg-gradient-end: var(--dark-bg-gradient-end);
     --text-primary: var(--dark-text-primary);
@@ -580,6 +626,46 @@ header {
   color: var(--accent);
   letter-spacing: 0.3px;
   text-transform: uppercase;
+}
+
+.page-fades {
+  position: relative;
+  isolation: isolate;
+}
+
+.page-fades::before {
+  content: "";
+  position: fixed;
+  left: 50%;
+  width: min(100%, 480px);
+  transform: translateX(-50%);
+  top: 0;
+
+  height: calc(var(--page-top-fade-height) + env(safe-area-inset-top));
+
+  pointer-events: none;
+  z-index: 250;
+
+  background: var(--page-top-fade);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.page-fades::after {
+  content: "";
+  position: fixed;
+  left: 50%;
+  width: min(100%, 480px);
+  transform: translateX(-50%);
+  bottom: 0;
+
+  height: calc(var(--page-bottom-fade-height) + env(safe-area-inset-bottom));
+
+  pointer-events: none;
+  z-index: 250;
+
+  background: var(--page-bottom-fade);
 }
 
 main {
