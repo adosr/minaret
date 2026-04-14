@@ -58,7 +58,7 @@
 	--light-nav-inactive: #000000;
 	--light-nav-active: #0088FE;
 	--light-tabbar-bg: rgba(255, 255, 255, 0.63);
-	--light-tabbar-soft-border: rgba(255, 255, 255, 0.43);
+	--light-tabbar-soft-border: rgba(0, 0, 0, 0.12);
 	--light-tabbar-text-inactive: #191919;
 	--light-tabbar-pill-bg: #EBEBEB;
 	--light-tabbar-text-active: #007EF5;
@@ -104,6 +104,9 @@
 	
 	--light-inner-top: rgba(255,255,255,0.05);
 	--light-inner-bottom: rgba(255,255,255,0.015);
+	
+	--light-tabbar-shadow-inset-1: rgba(255,255,255,0.22);
+	--light-tabbar-shadow-inset-2: rgba(0,0,0,0.04);
 
 	--light-soft-before-1: rgba(255,255,255,0.80);
 	--light-soft-before-2: rgba(255,255,255,0.38);
@@ -128,7 +131,7 @@
 	--dark-nav-inactive: #FFFFFF;
 	--dark-nav-active: #0091FF;
 	--dark-tabbar-bg: rgba(28, 28, 30, 0.78);
-	--dark-tabbar-soft-border: rgba(255, 255, 255, 0.06);
+	--dark-tabbar-soft-border: rgba(255, 255, 255, 0.10);
 	--dark-tabbar-text-inactive: #F3F3F2;
 	--dark-tabbar-pill-bg: #343434;
 	--dark-tabbar-text-active: #1AABFF;
@@ -174,6 +177,9 @@
 	
 	--dark-inner-top: rgba(255,255,255,0.035);
 	--dark-inner-bottom: rgba(255,255,255,0.01);
+	
+	--dark-tabbar-shadow-inset-1: rgba(255,255,255,0.06);
+	--dark-tabbar-shadow-inset-2: rgba(0,0,0,0.32);
 
 	--dark-soft-before-1: rgba(255,255,255,0.10);
 	--dark-soft-before-2: rgba(255,255,255,0.055);
@@ -244,6 +250,9 @@
 	
 	--inner-top: var(--light-inner-top);
 	--inner-bottom: var(--light-inner-top);
+	
+	--tabbar-shadow-inset-1: var(--light-tabbar-shadow-inset-1);
+	--tabbar-shadow-inset-2: var(--light-tabbar-shadow-inset-2);
 
 	--soft-before-1: var(--light-soft-before-1);
 	--soft-before-2: var(--light-soft-before-2);
@@ -315,6 +324,9 @@
 	
 	--inner-top: var(--dark-inner-top);
 	--inner-bottom: var(--dark-inner-top);
+	
+	--tabbar-shadow-inset-1: var(--dark-tabbar-shadow-inset-1);
+	--tabbar-shadow-inset-2: var(--dark-tabbar-shadow-inset-2);
 
 	--soft-before-1: var(--dark-soft-before-1);
 	--soft-before-2: var(--dark-soft-before-2);
@@ -467,10 +479,10 @@ html[dir="rtl"] body,
   box-shadow:
     inset 0 1px 0 var(--inner-top),
     inset 0 -1px 0 var(--inner-bottom),
-    0 1px 2px var(--soft-shadow-1),
-    0 8px 24px var(--soft-shadow-2);
+    0 2px 6px var(--soft-shadow-1),
+    0 6px 16px var(--soft-shadow-2);
 
-  border: 1px solid var(--tabbar-soft-border);
+  border: none;
   
   backdrop-filter: blur(var(--blur-tab)) saturate(var(--saturation-tab));
   -webkit-backdrop-filter: blur(var(--blur-tab)) saturate(var(--saturation-tab));
@@ -503,10 +515,7 @@ html[dir="rtl"] body,
 .ios-soft-tabbar::after {
   content: "";
   position: absolute;
-  left: 4%;
-  right: 4%;
-  top: 1%;
-  height: 42%;
+  inset: 0;
   border-radius: inherit;
   pointer-events: none;
 
@@ -976,26 +985,40 @@ main {
 */
 
 .tabbar-capsule {
+  position: fixed;
+  isolation: isolate;
   max-width: 427px;
   height: 63px;
   right:22px;
   left: 22px;
+  bottom: 20px;
   margin: 0 auto;
+  padding: 10px 4px;
   display: inline-flex;
   align-items: center;
   justify-content: space-evenly;
   gap: 10px;
-  padding: 10px 4px;
   border-radius: var(--radius-tab);
-  position: fixed;
-  bottom: 20px;
-  isolation: isolate;
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
   touch-action: pan-y;
   user-select: none;
   transform-origin: center center;
   will-change: transform;
   z-index: 300;
+}
+
+.tabbar-capsule::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 500;
+  border: 0.5px solid var(--tabbar-soft-border);
+  box-shadow:
+    inset 0 1px 0 rgba(--tabbar-shadow-inset-1),
+    inset 0 -1px 0 rgba(--tabbar-shadow-inset-2);
+  transform: translateZ(0);
 }
 
 .tab-active-pill {
