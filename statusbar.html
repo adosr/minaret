@@ -19,21 +19,19 @@
   --text-dark: #f8fafc;
 }
 
+  --bg: var(--bg-light);
+  --card: var(--card-light);
+  --text: var(--text-light);
+
 /* الوضع التلقائي */
 @media (prefers-color-scheme: dark) {
-  body {
+  :root {
     --bg: var(--bg-dark);
     --card: var(--card-dark);
     --text: var(--text-dark);
   }
 }
-@media (prefers-color-scheme: light) {
-  body {
-    --bg: var(--bg-light);
-    --card: var(--card-light);
-    --text: var(--text-light);
-  }
-}
+
 
 html, body {
   margin: 0;
