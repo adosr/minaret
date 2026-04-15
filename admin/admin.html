@@ -38,7 +38,7 @@
 <body>
   <div class="app-bg" aria-hidden="true"></div>
   <div class="app-shell admin-shell">
-    <header class="app-header">
+    <header>
       <div class="header-left">
         <p id="adminLocationLabel">Minaret Admin</p>
         <h1 id="adminTitle">Notification Lab</h1>
@@ -48,10 +48,10 @@
       </div>
     </header>
 
-    <main class="app-main">
+    <main>
       <section id="admin-notifications" class="page active" data-page-target="admin-notifications" aria-labelledby="adminTitle">
-        <div class="page-hero admin-hero-card">
-          <div class="page-hero-grid admin-hero-layout">
+        <div class="hero-card admin-hero-card">
+          <div class="hero-prayers admin-hero-layout">
             <article class="ios-soft prayer-focus current admin-focus-card">
               <div class="prayer-focus-label" id="heroStatusLabel">Latest saved subscriber</div>
               <div class="prayer-focus-name admin-focus-title" id="heroStatusValue">Checking worker…</div>
@@ -68,54 +68,54 @@
           </div>
         </div>
 
-        <div class="settings-group">
-          <div class="settings-group-title" id="adminSectionHeader">Notification testing</div>
-          <div class="settings-card liquid-glass">
-            <div class="settings-item settings-item--multiline">
+        <div class="settings-section">
+          <div class="settings-header" id="adminSectionHeader">Notification testing</div>
+          <div class="settings-list liquid-glass">
+            <div class="settings-row settings-row-multiline">
               <span id="permissionLabel">Latest subscription update</span>
-              <div class="settings-item-value settings-item-value--block" id="permissionValue">—</div>
+              <div class="settings-value settings-value-block" id="permissionValue">—</div>
             </div>
-            <div class="settings-item settings-item--multiline">
+            <div class="settings-row settings-row-multiline">
               <span id="subscriptionLabel">Location name</span>
-              <div class="settings-item-value settings-item-value--block" id="subscriptionValue">—</div>
+              <div class="settings-value settings-value-block" id="subscriptionValue">—</div>
             </div>
-            <div class="settings-item settings-item--multiline">
+            <div class="settings-row settings-row-multiline">
               <span id="endpointLabel">Endpoint fingerprint</span>
-              <div class="settings-item-value settings-item-value--block admin-mono" id="endpointValue">—</div>
+              <div class="settings-value settings-value-block admin-mono" id="endpointValue">—</div>
             </div>
-            <div class="settings-item settings-item--multiline">
+            <div class="settings-row settings-row-multiline">
               <span id="summaryLabel">Worker summary</span>
-              <div class="settings-item-value settings-item-value--block" id="summaryValue">—</div>
+              <div class="settings-value settings-value-block" id="summaryValue">—</div>
             </div>
           </div>
         </div>
 
-        <div class="settings-group">
-          <div class="settings-group-title" id="adminAuthHeader">Admin access</div>
-          <div class="settings-card liquid-glass">
-            <div class="settings-item settings-item--multiline">
+        <div class="settings-section">
+          <div class="settings-header" id="adminAuthHeader">Admin access</div>
+          <div class="settings-list liquid-glass">
+            <div class="settings-row settings-row-multiline">
               <span id="adminTokenLabel">Admin token</span>
-              <div class="settings-item-value settings-item-value--block">
-                <input id="adminTokenInput" type="password" autocomplete="off" spellcheck="false" placeholder="Enter worker admin token" class="admin-input" />
+              <div class="settings-value settings-value-block">
+                <input id="adminTokenInput" type="password" autocomplete="off" spellcheck="false" placeholder="Enter worker admin token" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(120,120,128,.24);background:transparent;color:inherit;font:inherit;" />
               </div>
             </div>
-            <div class="settings-item settings-item--multiline">
+            <div class="settings-row settings-row-multiline">
               <span id="adminTokenHintLabel">Authentication</span>
-              <div class="settings-item-value settings-item-value--block" id="adminTokenHint">Stored only in this browser and sent as a Bearer token to the worker.</div>
+              <div class="settings-value settings-value-block" id="adminTokenHint">Stored only in this browser and sent as a Bearer token to the worker.</div>
             </div>
           </div>
         </div>
 
-        <div class="settings-group">
-          <div class="settings-group-title" id="actionsHeader">Actions</div>
-          <div class="settings-card liquid-glass admin-actions-card">
-            <button class="action-button" id="sendTestPushBtn" type="button">Send test notification to latest subscriber</button>
-            <button class="action-button action-button-secondary" id="refreshAdminBtn" type="button">Refresh diagnostics</button>
+        <div class="settings-section">
+          <div class="settings-header" id="actionsHeader">Actions</div>
+          <div class="settings-list liquid-glass admin-actions-card">
+            <button class="settings-action-button" id="sendTestPushBtn" type="button">Send test notification to latest subscriber</button>
+            <button class="settings-action-button settings-action-button-secondary" id="refreshAdminBtn" type="button">Refresh diagnostics</button>
           </div>
-          <div class="settings-card settings-card-spaced liquid-glass admin-feedback-card">
-            <div class="settings-item settings-item--multiline">
+          <div class="settings-list liquid-glass admin-feedback-card" style="margin-top:12px;">
+            <div class="settings-row settings-row-multiline">
               <span id="feedbackLabel">Result</span>
-              <div class="settings-item-value settings-item-value--block" id="feedbackValue">Ready.</div>
+              <div class="settings-value settings-value-block" id="feedbackValue">Ready.</div>
             </div>
           </div>
         </div>

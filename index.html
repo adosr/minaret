@@ -41,7 +41,7 @@
 <body>
 
 <div class="app-shell">
-<header class="app-header">
+<header>
   <div class="header-left">
     <p id="location">Loading location…</p>
     <h1 id="title">Prayer</h1>
@@ -61,10 +61,10 @@
   </div>
 </section>
   
-  <main class="app-main">
+  <main>
     <section id="daily" class="page active" data-page-target="daily" aria-labelledby="pageTitleDaily">
-      <div class="page-hero">
-        <div class="page-hero-grid">
+      <div class="hero-card">
+        <div class="hero-prayers">
           <article class="ios-soft prayer-focus current" id="currentPrayerCard">
             <div class="prayer-focus-label" id="currentPrayerLabel">Current Prayer</div>
             <div class="prayer-focus-name" id="currentPrayer"><h2>—</h2></div>
@@ -103,7 +103,7 @@
       </div>
 
       <div class="prayer-list" id="prayerList">
-        <div class="ios-soft prayer-card">
+        <div class="ios-soft grouped-prayers">
           <div class="prayer-row" data-key="fajr">
             <div class="prayer-info">
               <div class="prayer-icon-box">
@@ -181,73 +181,73 @@
     </section>
 	
 	<section id="monthly" class="page" data-page-target="monthly" aria-labelledby="pageTitleMonthly">
-      <div class="page-hero liquid-glass monthly-card">
+      <div class="hero-card liquid-glass monthly-card">
         <h2 class="monthly-title" id="monthlyTitle">—</h2>
         <p class="monthly-subtitle" id="monthlySubtitle">—</p>
 
         <div class="calendar-grid" id="monthlyCalendarGrid"></div>
       </div>
 
-      <div class="settings-group">
-        <div class="settings-group-title" id="monthlyHighlightsLabel">Upcoming Highlights</div>
-        <div class="settings-card liquid-glass" id="monthlyHighlights"></div>
+      <div class="settings-section">
+        <div class="settings-header" id="monthlyHighlightsLabel">Upcoming Highlights</div>
+        <div class="settings-list liquid-glass" id="monthlyHighlights"></div>
       </div>
     </section>
 
 	<section id="settings" class="page" data-page-target="settings" aria-labelledby="pageTitleSettings">
-      <div class="settings-group">
-        <div class="settings-group-title" id="settingsHeaderLabel">About</div>
-        <div class="settings-card liquid-glass">
-          <div class="settings-item">
+      <div class="settings-section">
+        <div class="settings-header" id="settingsHeaderLabel">About</div>
+        <div class="settings-list liquid-glass">
+          <div class="settings-row">
             <span id="aboutAppNameLabel">App</span>
-            <div class="settings-item-value" id="aboutAppNameValue">Minaret</div>
+            <div class="settings-value" id="aboutAppNameValue">Minaret</div>
           </div>
-          <div class="settings-item">
+          <div class="settings-row">
             <span id="aboutVersionLabel">Version</span>
-            <div class="settings-item-value" id="aboutVersionValue">1.0.0</div>
+            <div class="settings-value" id="aboutVersionValue">1.0.0</div>
           </div>
-          <div class="settings-item settings-item--multiline">
+          <div class="settings-row settings-row-multiline">
             <span id="aboutDescriptionLabel">Description</span>
-            <div class="settings-item-value settings-item-value--block" id="aboutDescriptionValue">Prayer times and monthly overview.</div>
+            <div class="settings-value settings-value-block" id="aboutDescriptionValue">Prayer times and monthly overview.</div>
           </div>
         </div>
       </div>
 
-      <div class="settings-group">
-        <div class="settings-group-title" id="notificationsHeaderLabel">Prayer reminders</div>
-        <div class="settings-card liquid-glass">
-          <div class="settings-item settings-item--multiline">
+      <div class="settings-section">
+        <div class="settings-header" id="notificationsHeaderLabel">Prayer reminders</div>
+        <div class="settings-list liquid-glass">
+          <div class="settings-row settings-row-multiline">
             <span id="notificationsStatusLabel">Status</span>
-            <div class="settings-item-value settings-item-value--block" id="notificationsStatusValue">Prayer reminders are currently turned off.</div>
+            <div class="settings-value settings-value-block" id="notificationsStatusValue">Prayer reminders are currently turned off.</div>
           </div>
-          <div class="settings-item">
+          <div class="settings-row">
             <span id="notificationsSelectionLabel">Active reminders</span>
-            <div class="settings-item-value" id="notificationsSelectionValue">5/5</div>
+            <div class="settings-value" id="notificationsSelectionValue">5/5</div>
           </div>
-          <div class="settings-item">
+          <div class="settings-row">
             <span id="notifyFajrLabel">Fajr</span>
-            <button class="app-switch app-switch--notification" id="notifyFajrToggle" type="button" aria-pressed="true"></button>
+            <button class="toggle notification-toggle" id="notifyFajrToggle" type="button" aria-pressed="true"></button>
           </div>
-          <div class="settings-item">
+          <div class="settings-row">
             <span id="notifyDhuhrLabel">Dhuhr</span>
-            <button class="app-switch app-switch--notification" id="notifyDhuhrToggle" type="button" aria-pressed="true"></button>
+            <button class="toggle notification-toggle" id="notifyDhuhrToggle" type="button" aria-pressed="true"></button>
           </div>
-          <div class="settings-item">
+          <div class="settings-row">
             <span id="notifyAsrLabel">Asr</span>
-            <button class="app-switch app-switch--notification" id="notifyAsrToggle" type="button" aria-pressed="true"></button>
+            <button class="toggle notification-toggle" id="notifyAsrToggle" type="button" aria-pressed="true"></button>
           </div>
-          <div class="settings-item">
+          <div class="settings-row">
             <span id="notifyMaghribLabel">Maghrib</span>
-            <button class="app-switch app-switch--notification" id="notifyMaghribToggle" type="button" aria-pressed="true"></button>
+            <button class="toggle notification-toggle" id="notifyMaghribToggle" type="button" aria-pressed="true"></button>
           </div>
-          <div class="settings-item">
+          <div class="settings-row">
             <span id="notifyIshaLabel">Isha</span>
-            <button class="app-switch app-switch--notification" id="notifyIshaToggle" type="button" aria-pressed="true"></button>
+            <button class="toggle notification-toggle" id="notifyIshaToggle" type="button" aria-pressed="true"></button>
           </div>
         </div>
-        <div class="settings-card settings-card-spaced liquid-glass">
-          <button class="action-button" id="notificationPrimaryActionBtn" type="button">Enable prayer reminders</button>
-          <button class="action-button" id="notificationSecondaryActionBtn" type="button" hidden>Turn off reminders</button>
+        <div class="settings-list liquid-glass" style="margin-top:12px;">
+          <button class="settings-action-button" id="notificationPrimaryActionBtn" type="button">Enable prayer reminders</button>
+          <button class="settings-action-button" id="notificationSecondaryActionBtn" type="button" hidden>Turn off reminders</button>
         </div>
       </div>
     </section>

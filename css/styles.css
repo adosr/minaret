@@ -1,244 +1,337 @@
-/* ========== TOKENS ========== */
 :root {
-  color-scheme: light dark;
+	color-scheme: light dark;
+		
+	--radius-xxl:  44px; 
+	--radius-xl:  36px; 
+	--radius-lg: 32px; 
+	--radius-md: 28px; 
+	--radius-sm: 24px; 
+	--radius-xs: 20px; 
+	--radius-xxs: 16px; 
+	--radius-tab: 9999px;
+	--radius-circle: 50%; 
+	
+	--blur-main: 36px;
+	--blur-tab: 1.4px;
+	
+	--saturation: 150%;
+	--saturation-tab: 180%;
+	
+	--tab-hit: 0;
+	
+	--accent-right-inset: 100%;
+	--accent-left: 0px;
+	
+    --statusbar-fade-height: calc(env(safe-area-inset-top) + 80px);
+    --tabbar-fade-height: calc(env(safe-area-inset-bottom) + 80px);
+	
+	--fade-height: 28px;
+	--header-pad-x: 24px;
+	--header-top-pad: 20px;
+	--header-bottom-pad: 18px;
+	
+	--font-ui:
+		-apple-system,
+		BlinkMacSystemFont,
+		"SF Pro Text",
+		"SF Pro Display",
+		"Segoe UI",
+		Roboto,
+		"Helvetica Neue",
+		Arial,
+		sans-serif;
 
-  --radius-xxs: 16px;
-  --radius-sm: 24px;
-  --radius-md: 28px;
-  --radius-tab: 9999px;
-  --radius-circle: 50%;
+	--font-ui-ar:
+		-apple-system,
+		BlinkMacSystemFont,
+		"SF Arabic",
+		"Segoe UI",
+		Roboto,
+		"Noto Sans Arabic",
+		"Helvetica Neue",
+		Arial,
+		sans-serif;
+		
+	--light-statusbar-fade-bg-gradient:
+	linear-gradient(
+	  to bottom,
+	  rgba(242,242,246,0.96) 0%,
+	  rgba(242,242,246,0.82) 20%,
+	  rgba(242,242,246,0.55) 45%,
+	  rgba(242,242,246,0.18) 75%,
+	  rgba(242,242,246,0.00) 100%
+	);
 
-  --blur-main: 36px;
-  --blur-tab: 1.4px;
-  --saturation: 150%;
-  --saturation-tab: 180%;
-  --tab-hit: 0;
+	--light-tabbar-fade-bg-gradient:
+	linear-gradient(
+	  to top,
+	  rgba(242,242,246,1.00) 0%,
+	  rgba(242,242,246,0.92) 25%,
+	  rgba(242,242,246,0.65) 55%,
+	  rgba(242,242,246,0.25) 80%,
+	  rgba(242,242,246,0.00) 100%
+	);
+	
+	--light-statusbar-fade-bg: rgba(242, 242, 246, 0.60);
+	--light-tabbar-fade-bg: rgba(242, 242, 246, 0.60);
 
-  --header-pad-x: 24px;
-  --header-top-pad: 20px;
-  --header-bottom-pad: 18px;
+	--light-bg-gradient-start: #F2F2F6;
+	--light-bg-gradient-end: #E1E1EA;
+	--light-text-primary: #000000;
+	--light-text-secondary: #8A8A8E;
+	--light-surface-start: #ffffff;
+    --light-surface-end: #ffffff;
+	--light-nav-inactive: #000000;
+	--light-nav-active: #0088FE;
+	--light-tabbar-bg: rgba(255, 255, 255, 0.63);
+	--light-tabbar-soft-border: rgba(0, 0, 0, 0.12);
+	--light-tabbar-text-inactive: #191919;
+	--light-tabbar-pill-bg: #EBEBEB;
+	--light-tabbar-text-active: #007EF5;
+	--light-card-bg: #FFFFFF;
+	--light-card-text: #000000;
+	--light-outer-card-bg: #F2F2F6;
+	--light-outer-card-text: #000000;
+	--light-inner-card-bg: #FFFFFF;
+	--light-inner-card-text: #000000;
+	--light-small-button-bg: #EEEEEF;
+	--light-small-button-text: #0088FE;
+	--light-large-button-bg: #0088FE;
+	--light-large-button-text: #FFFFFF;
+    --light-prayer-row-border-bottom-bg: #e7e7e7;
+	--light-glass-border: color-mix(in srgb, var(--light-text-primary) 8%, transparent);
+	--light-glass-highlight: color-mix(in srgb, #FFFFFF 65%, transparent);
+	--light-shadow-1: 0 10px 30px rgba(76, 92, 122, 0.10);
+	--light-shadow-2: 0 22px 44px rgba(76, 92, 122, 0.10);
+	--light-shadow-3: inset 0 1px 0 rgba(255,255,255,0.45);
+	--light-accent: var(--light-nav-active);
+	--light-glass-bg: color-mix(in srgb, var(--light-card-bg) 94%, transparent);
+	--light-glass-bg-strong: color-mix(in srgb, var(--light-card-bg) 98%, transparent);
+	--light-tab-bar-box-shadow:
+		inset 0 0 0 1px color-mix(in srgb, var(--light-text-primary) 7%, transparent),
+		0 6px 18px rgba(0,0,0,0.08);
+	--light-glass-reflex-dark: 1;
+	--light-glass-reflex-light: 1;
+	--light-progress-track-stroke: rgba(127, 127, 127, 0.14);
+	--light-prayer-icon-box-bg: rgba(255,255,255,0.55);
+	--light-header-fade: 
+		linear-gradient(
+		to bottom,
+		rgba(242, 242, 246, 1) 0%,
+		rgba(242, 242, 246, 0.92) 35%,
+		rgba(242, 242, 246, 0.72) 55%,
+		rgba(242, 242, 246, 0.38) 75%,
+		rgba(242, 242, 246, 0) 100%
+		);
+	--light-soft-border: rgba(255,255,255,0.75);
 
-  --accent-right-inset: 100%;
-  --accent-left: 0px;
+	--light-soft-shadow-1: rgba(0, 0, 0, 0.035);
+	--light-soft-shadow-2: rgba(0, 0, 0, 0.025);
+	
+	--light-inner-top: rgba(255,255,255,0.05);
+	--light-inner-bottom: rgba(255,255,255,0.015);
+	
+	--light-tabbar-shadow-inset-1: rgba(255,255,255,0.22);
+	--light-tabbar-shadow-inset-2: rgba(0,0,0,0.04);
 
-  --font-ui:
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Text",
-    "SF Pro Display",
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
+	--light-soft-before-1: rgba(255,255,255,0.80);
+	--light-soft-before-2: rgba(255,255,255,0.38);
+	--light-soft-before-3: rgba(255,255,255,0.10);
+	--light-soft-before-4: rgba(255,255,255,0.00);
 
-  --font-ui-ar:
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Arabic",
-    "Segoe UI",
-    Roboto,
-    "Noto Sans Arabic",
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
+	--light-soft-before-shadow-top: rgba(255,255,255,0.95);
+	--light-soft-before-shadow-left: rgba(255,255,255,0.55);
+	--light-soft-before-shadow-bottom: rgba(255,255,255,0.20);
 
-  /* Light scheme */
-  --light-bg-gradient-start: #f2f2f6;
-  --light-bg-gradient-end: #e1e1ea;
-  --light-text-primary: #000000;
-  --light-text-secondary: #8a8a8e;
-  --light-surface-start: #ffffff;
-  --light-surface-end: #ffffff;
-  --light-nav-inactive: #000000;
-  --light-nav-active: #0088fe;
-  --light-tabbar-bg: rgba(255, 255, 255, 0.63);
-  --light-tabbar-soft-border: rgba(0, 0, 0, 0.12);
-  --light-tabbar-text-inactive: #191919;
-  --light-tabbar-pill-bg: #ebebeb;
-  --light-tabbar-text-active: #007ef5;
-  --light-card-bg: #ffffff;
-  --light-card-text: #000000;
-  --light-outer-card-bg: #f2f2f6;
-  --light-outer-card-text: #000000;
-  --light-inner-card-bg: #ffffff;
-  --light-inner-card-text: #000000;
-  --light-small-button-bg: #eeeef1;
-  --light-small-button-text: #0088fe;
-  --light-large-button-bg: #0088fe;
-  --light-large-button-text: #ffffff;
-  --light-prayer-row-border-bottom-bg: #e7e7e7;
-  --light-glass-border: color-mix(in srgb, var(--light-text-primary) 8%, transparent);
-  --light-glass-highlight: color-mix(in srgb, #ffffff 65%, transparent);
-  --light-glass-bg: color-mix(in srgb, var(--light-card-bg) 94%, transparent);
-  --light-glass-bg-strong: color-mix(in srgb, var(--light-card-bg) 98%, transparent);
-  --light-shadow-1: 0 10px 30px rgba(76, 92, 122, 0.1);
-  --light-shadow-2: 0 22px 44px rgba(76, 92, 122, 0.1);
-  --light-shadow-3: inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  --light-glass-reflex-dark: 1;
-  --light-glass-reflex-light: 1;
-  --light-progress-track-stroke: rgba(127, 127, 127, 0.14);
-  --light-prayer-icon-box-bg: rgba(255, 255, 255, 0.55);
-  --light-soft-border: rgba(255, 255, 255, 0.75);
-  --light-soft-shadow-1: rgba(0, 0, 0, 0.035);
-  --light-soft-shadow-2: rgba(0, 0, 0, 0.025);
-  --light-inner-top: rgba(255, 255, 255, 0.05);
-  --light-inner-bottom: rgba(255, 255, 255, 0.015);
-  --light-tabbar-shadow-inset-1: rgba(255, 255, 255, 0.22);
-  --light-tabbar-shadow-inset-2: rgba(0, 0, 0, 0.04);
-  --light-soft-before-1: rgba(255, 255, 255, 0.8);
-  --light-soft-before-2: rgba(255, 255, 255, 0.38);
-  --light-soft-before-3: rgba(255, 255, 255, 0.1);
-  --light-soft-before-4: rgba(255, 255, 255, 0);
-  --light-soft-before-shadow-top: rgba(255, 255, 255, 0.95);
-  --light-soft-before-shadow-left: rgba(255, 255, 255, 0.55);
-  --light-soft-before-shadow-bottom: rgba(255, 255, 255, 0.2);
-  --light-soft-after-1: rgba(255, 255, 255, 0.5);
-  --light-soft-after-2: rgba(255, 255, 255, 0.18);
-  --light-soft-after-3: rgba(255, 255, 255, 0);
-  --light-switch-track: rgba(120, 120, 128, 0.16);
-  --light-switch-track-border: rgba(60, 60, 67, 0.12);
-  --light-switch-track-hover: rgba(120, 120, 128, 0.22);
-  --light-switch-track-active: #34c759;
-  --light-switch-thumb: #ffffff;
-  --light-switch-thumb-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.15),
-    0 1px 1px rgba(0, 0, 0, 0.08),
-    inset 0 0.5px 0 rgba(255, 255, 255, 0.9);
+	--light-soft-after-1: rgba(255,255,255,0.50);
+	--light-soft-after-2: rgba(255,255,255,0.18);
+	--light-soft-after-3: rgba(255,255,255,0.00);
+	
+	--dark-statusbar-fade-bg-gradient:
+	linear-gradient(
+	  to bottom,
+	  rgba(0,0,0,0.94) 0%,
+	  rgba(0,0,0,0.78) 20%,
+	  rgba(0,0,0,0.50) 45%,
+	  rgba(0,0,0,0.20) 75%,
+	  rgba(0,0,0,0.00) 100%
+	);
 
-  /* Dark scheme */
-  --dark-bg-gradient-start: #000000;
-  --dark-bg-gradient-end: #000000;
-  --dark-text-primary: #ffffff;
-  --dark-text-secondary: #8d8d93;
-  --dark-surface-start: #1c1c1e;
-  --dark-surface-end: #1c1c1e;
-  --dark-nav-inactive: #ffffff;
-  --dark-nav-active: #0091ff;
-  --dark-tabbar-bg: rgba(28, 28, 30, 0.78);
-  --dark-tabbar-soft-border: rgba(255, 255, 255, 0.1);
-  --dark-tabbar-text-inactive: #f3f3f2;
-  --dark-tabbar-pill-bg: #343434;
-  --dark-tabbar-text-active: #1aabff;
-  --dark-card-bg: #1c1c1e;
-  --dark-card-text: #ffffff;
-  --dark-outer-card-bg: #1c1c1e;
-  --dark-outer-card-text: #ffffff;
-  --dark-inner-card-bg: #2c2c2e;
-  --dark-inner-card-text: #ffffff;
-  --dark-small-button-bg: #1c1c1e;
-  --dark-small-button-text: #0091ff;
-  --dark-large-button-bg: #0091ff;
-  --dark-large-button-text: #ffffff;
-  --dark-prayer-row-border-bottom-bg: #383838;
-  --dark-glass-border: color-mix(in srgb, var(--dark-text-primary) 10%, transparent);
-  --dark-glass-highlight: color-mix(in srgb, #ffffff 18%, transparent);
-  --dark-glass-bg: color-mix(in srgb, var(--dark-card-bg) 92%, transparent);
-  --dark-glass-bg-strong: color-mix(in srgb, var(--dark-card-bg) 96%, transparent);
-  --dark-shadow-1: 0 10px 30px rgba(0, 0, 0, 0.36);
-  --dark-shadow-2: 0 22px 48px rgba(0, 0, 0, 0.28);
-  --dark-shadow-3: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  --dark-glass-reflex-dark: 2;
-  --dark-glass-reflex-light: 0.3;
-  --dark-progress-track-stroke: rgba(255, 255, 255, 0.08);
-  --dark-prayer-icon-box-bg: rgba(255, 255, 255, 0.14);
-  --dark-soft-border: rgba(255, 255, 255, 0.07);
-  --dark-soft-shadow-1: rgba(0, 0, 0, 0.4);
-  --dark-soft-shadow-2: rgba(0, 0, 0, 0.58);
-  --dark-inner-top: rgba(255, 255, 255, 0.035);
-  --dark-inner-bottom: rgba(255, 255, 255, 0.01);
-  --dark-tabbar-shadow-inset-1: rgba(255, 255, 255, 0.06);
-  --dark-tabbar-shadow-inset-2: rgba(0, 0, 0, 0.32);
-  --dark-soft-before-1: rgba(255, 255, 255, 0.1);
-  --dark-soft-before-2: rgba(255, 255, 255, 0.055);
-  --dark-soft-before-3: rgba(255, 255, 255, 0.022);
-  --dark-soft-before-4: rgba(255, 255, 255, 0);
-  --dark-soft-before-shadow-top: rgba(255, 255, 255, 0.04);
-  --dark-soft-before-shadow-left: rgba(255, 255, 255, 0);
-  --dark-soft-before-shadow-bottom: rgba(0, 0, 0, 0.32);
-  --dark-soft-after-1: rgba(255, 255, 255, 0.035);
-  --dark-soft-after-2: rgba(255, 255, 255, 0.012);
-  --dark-soft-after-3: rgba(255, 255, 255, 0);
-  --dark-switch-track: rgba(120, 120, 128, 0.3);
-  --dark-switch-track-border: rgba(255, 255, 255, 0.08);
-  --dark-switch-track-hover: rgba(120, 120, 128, 0.36);
-  --dark-switch-track-active: #30d158;
-  --dark-switch-thumb: #ffffff;
-  --dark-switch-thumb-shadow:
-    0 3px 10px rgba(0, 0, 0, 0.4),
-    0 1px 1px rgba(0, 0, 0, 0.22),
-    inset 0 0.5px 0 rgba(255, 255, 255, 0.18);
+	--dark-tabbar-fade-bg-gradient:
+	linear-gradient(
+	  to top,
+	  rgba(0,0,0,1.00) 0%,
+	  rgba(0,0,0,0.92) 25%,
+	  rgba(0,0,0,0.65) 55%,
+	  rgba(0,0,0,0.25) 80%,
+	  rgba(0,0,0,0.00) 100%
+	);
 
-  /* Active theme mapping */
-  --bg-gradient-start: var(--light-bg-gradient-start);
-  --bg-gradient-end: var(--light-bg-gradient-end);
-  --text-primary: var(--light-text-primary);
-  --text-secondary: var(--light-text-secondary);
-  --surface-start: var(--light-surface-start);
-  --surface-end: var(--light-surface-end);
-  --nav-inactive: var(--light-nav-inactive);
-  --nav-active: var(--light-nav-active);
-  --tabbar-bg: var(--light-tabbar-bg);
-  --tabbar-soft-border: var(--light-tabbar-soft-border);
-  --tabbar-text-inactive: var(--light-tabbar-text-inactive);
-  --tabbar-pill-bg: var(--light-tabbar-pill-bg);
-  --tabbar-text-active: var(--light-tabbar-text-active);
-  --card-bg: var(--light-card-bg);
-  --card-text: var(--light-card-text);
-  --outer-card-bg: var(--light-outer-card-bg);
-  --outer-card-text: var(--light-outer-card-text);
-  --inner-card-bg: var(--light-inner-card-bg);
-  --inner-card-text: var(--light-inner-card-text);
-  --small-button-bg: var(--light-small-button-bg);
-  --small-button-text: var(--light-small-button-text);
-  --large-button-bg: var(--light-large-button-bg);
-  --large-button-text: var(--light-large-button-text);
-  --prayer-row-border-bottom-bg: var(--light-prayer-row-border-bottom-bg);
-  --glass-bg: var(--light-glass-bg);
-  --glass-bg-strong: var(--light-glass-bg-strong);
-  --glass-border: var(--light-glass-border);
-  --glass-highlight: var(--light-glass-highlight);
-  --accent: var(--light-nav-active);
-  --shadow-1: var(--light-shadow-1);
-  --shadow-2: var(--light-shadow-2);
-  --shadow-3: var(--light-shadow-3);
-  --glass-reflex-dark: var(--light-glass-reflex-dark);
-  --glass-reflex-light: var(--light-glass-reflex-light);
-  --progress-track-stroke: var(--light-progress-track-stroke);
-  --prayer-icon-box-bg: var(--light-prayer-icon-box-bg);
-  --soft-border: var(--light-soft-border);
-  --soft-shadow-1: var(--light-soft-shadow-1);
-  --soft-shadow-2: var(--light-soft-shadow-2);
-  --inner-top: var(--light-inner-top);
-  --inner-bottom: var(--light-inner-bottom);
-  --tabbar-shadow-inset-1: var(--light-tabbar-shadow-inset-1);
-  --tabbar-shadow-inset-2: var(--light-tabbar-shadow-inset-2);
-  --soft-before-1: var(--light-soft-before-1);
-  --soft-before-2: var(--light-soft-before-2);
-  --soft-before-3: var(--light-soft-before-3);
-  --soft-before-4: var(--light-soft-before-4);
-  --soft-before-shadow-top: var(--light-soft-before-shadow-top);
-  --soft-before-shadow-left: var(--light-soft-before-shadow-left);
-  --soft-before-shadow-bottom: var(--light-soft-before-shadow-bottom);
-  --soft-after-1: var(--light-soft-after-1);
-  --soft-after-2: var(--light-soft-after-2);
-  --soft-after-3: var(--light-soft-after-3);
-  --switch-track: var(--light-switch-track);
-  --switch-track-border: var(--light-switch-track-border);
-  --switch-track-hover: var(--light-switch-track-hover);
-  --switch-track-active: var(--light-switch-track-active);
-  --switch-thumb: var(--light-switch-thumb);
-  --switch-thumb-shadow: var(--light-switch-thumb-shadow);
+	--dark-statusbar-fade-bg: rgba(0, 0, 0, 0.60);
+	--dark-tabbar-fade-bg: rgba(0, 0, 0, 0.60);
+
+	--dark-bg-gradient-start: #000000;
+	--dark-bg-gradient-end: #000000;
+	--dark-text-primary: #FFFFFF;
+	--dark-text-secondary: #8D8D93;
+	--dark-surface-start: #1c1c1e; 
+    --dark-surface-end: #1c1c1e; 
+	--dark-nav-inactive: #FFFFFF;
+	--dark-nav-active: #0091FF;
+	--dark-tabbar-bg: rgba(28, 28, 30, 0.78);
+	--dark-tabbar-soft-border: rgba(255, 255, 255, 0.10);
+	--dark-tabbar-text-inactive: #F3F3F2;
+	--dark-tabbar-pill-bg: #343434;
+	--dark-tabbar-text-active: #1AABFF;
+	--dark-card-bg: #1C1C1E;
+	--dark-card-text: #FFFFFF;
+	--dark-outer-card-bg: #1C1C1E;
+	--dark-outer-card-text: #FFFFFF;
+	--dark-inner-card-bg: #2C2C2E;
+	--dark-inner-card-text: #FFFFFF;
+	--dark-small-button-bg: #1C1C1E;
+	--dark-small-button-text: #0091FF;
+	--dark-large-button-bg: #0091FF;
+	--dark-large-button-text: #FFFFFF;
+    --dark-prayer-row-border-bottom-bg: #383838;
+	--dark-glass-border: color-mix(in srgb, var(--dark-text-primary) 10%, transparent);
+	--dark-glass-highlight: color-mix(in srgb, #FFFFFF 18%, transparent);
+    --dark-shadow-1: 0 10px 30px rgba(0,0,0,0.36);
+    --dark-shadow-2: 0 22px 48px rgba(0,0,0,0.28);
+    --dark-shadow-3: inset 0 1px 0 rgba(255,255,255,0.10);
+	--dark-accent: var(--dark-nav-active);
+    --dark-glass-bg: color-mix(in srgb, var(--dark-card-bg) 92%, transparent);
+    --dark-glass-bg-strong: color-mix(in srgb, var(--dark-card-bg) 96%, transparent);
+    --dark-tab-bar-box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.06),
+      0 8px 22px rgba(0,0,0,0.30);
+    --dark-glass-reflex-dark: 2;
+    --dark-glass-reflex-light: 0.3;
+	--dark-progress-track-stroke: rgba(255, 255, 255, 0.08);
+    --dark-prayer-icon-box-bg: rgba(255, 255, 255, 0.14);
+	--dark-header-fade: 
+		linear-gradient(
+		to bottom,
+		rgba(0, 0, 0, 1) 0%,
+		rgba(0, 0, 0, 0.92) 35%,
+		rgba(0, 0, 0, 0.72) 55%,
+		rgba(0, 0, 0, 0.38) 75%,
+		rgba(0, 0, 0, 0) 100%
+		);
+	--dark-soft-border: rgba(255,255,255,0.07);
+
+	--dark-soft-shadow-1: rgba(0,0,0,0.40);
+	--dark-soft-shadow-2: rgba(0,0,0,0.58);
+	
+	--dark-inner-top: rgba(255,255,255,0.035);
+	--dark-inner-bottom: rgba(255,255,255,0.01);
+	
+	--dark-tabbar-shadow-inset-1: rgba(255,255,255,0.06);
+	--dark-tabbar-shadow-inset-2: rgba(0,0,0,0.32);
+
+	--dark-soft-before-1: rgba(255,255,255,0.10);
+	--dark-soft-before-2: rgba(255,255,255,0.055);
+	--dark-soft-before-3: rgba(255,255,255,0.022);
+	--dark-soft-before-4: rgba(255,255,255,0.00);
+
+	--dark-soft-before-shadow-top: rgba(255,255,255,0.04);
+	--dark-soft-before-shadow-left: rgba(255,255,255,0.00);
+	--dark-soft-before-shadow-bottom: rgba(0,0,0,0.32);
+
+	--dark-soft-after-1: rgba(255,255,255,0.035);
+	--dark-soft-after-2: rgba(255,255,255,0.012);
+	--dark-soft-after-3: rgba(255,255,255,0.00);
+		
+	/* END OF COLOR SCHEME SETTINGS */\
+	
+	--statusbar-fade-bg: var(--light-statusbar-fade-bg);
+	--tabbar-fade-bg: var(--light-tabbar-fade-bg);
+	--statusbar-fade-bg-gradient: var(--light-statusbar-fade-bg-gradient);
+	--tabbar-fade-bg-gradient: var(--light-tabbar-fade-bg-gradient);
+	--bg-gradient-start: var(--light-bg-gradient-start);
+	--bg-gradient-end: var(--light-bg-gradient-end);
+	--text-primary: var(--light-text-primary);
+	--text-secondary: var(--light-text-secondary);
+	--surface-start: var(--light-surface-start);
+	--surface-end: var(--light-surface-end);
+	--nav-inactive: var(--light-nav-inactive);
+	--nav-active: var(--light-nav-active);
+	--tabbar-bg: var(--light-tabbar-bg);
+    --tabbar-soft-border: var(--light-tabbar-soft-border);
+	--tabbar-text-inactive: var(--light-tabbar-text-inactive);
+	--tabbar-pill-bg: var(--light-tabbar-pill-bg);
+	--tabbar-text-active: var(--light-tabbar-text-active);
+	--card-bg: var(--light-card-bg);
+	--card-text: var(--light-card-text);
+	--outer-card-bg: var(--light-outer-card-bg);
+	--outer-card-text: var(--light-outer-card-text);
+	--inner-card-bg: var(--light-inner-card-bg);
+	--inner-card-text: var(--light-inner-card-text);
+	--small-button-bg: var(--light-small-button-bg);
+	--small-button-text: var(--light-small-button-text);
+	--large-button-bg: var(--light-large-button-bg);
+	--large-button-text: var(--light-large-button-text);
+	
+	--prayer-row-border-bottom-bg: var(--light-prayer-row-border-bottom-bg);
+	
+	--glass-bg: var(--light-glass-bg);
+	--glass-bg-strong: var(--light-glass-bg-strong);
+	--glass-border: var(--light-glass-border);
+	--glass-highlight: var(--light-glass-highlight);
+
+	--accent: var(--light-nav-active);
+	--shadow-1: var(--light-shadow-1);
+	--shadow-2: var(--light-shadow-2);
+	--shadow-3: var(--light-shadow-3);
+
+	--glass-reflex-dark: var(--light-glass-reflex-dark);
+	--glass-reflex-light: var(--light-glass-reflex-light);
+
+	--tab-bar-box-shadow: var(--light-tab-bar-box-shadow);
+	
+	--progress-track-stroke: var(--light-progress-track-stroke);
+	
+	--prayer-icon-box-bg: var(--light-prayer-icon-box-bg);
+	
+	--header-fade: var(--light-header-fade);
+	
+	--soft-border: var(--light-soft-border);
+
+	--soft-shadow-1: var(--light-soft-shadow-1);
+	--soft-shadow-2: var(--light-soft-shadow-2);
+	
+	--inner-top: var(--light-inner-top);
+	--inner-bottom: var(--light-inner-top);
+	
+	--tabbar-shadow-inset-1: var(--light-tabbar-shadow-inset-1);
+	--tabbar-shadow-inset-2: var(--light-tabbar-shadow-inset-2);
+
+	--soft-before-1: var(--light-soft-before-1);
+	--soft-before-2: var(--light-soft-before-2);
+	--soft-before-3: var(--light-soft-before-3);
+	--soft-before-4: var(--light-soft-before-4);
+
+	--soft-before-shadow-top: var(--light-soft-before-shadow-top);
+	--soft-before-shadow-left: var(--light-soft-before-shadow-left);
+	--soft-before-shadow-bottom: var(--light-soft-before-shadow-bottom);
+
+	--soft-after-1: var(--light-soft-after-1);
+	--soft-after-2: var(--light-soft-after-2);
+	--soft-after-3: var(--light-soft-after-3);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg-gradient-start: var(--dark-bg-gradient-start);
-    --bg-gradient-end: var(--dark-bg-gradient-end);
+:root {
+	--statusbar-fade-bg: var(--dark-statusbar-fade--bg);
+	--tabbar-fade-bg: var(--dark-tabbar-fade-bg);
+	--statusbar-fade-bg-gradient: var(--dark-statusbar-fade-bg-gradient);
+	--tabbar-fade-bg-gradient: var(--dark-tabbar-fade-bg-gradient);
+	--bg-gradient-start: var(--dark-bg-gradient-start);
+	--bg-gradient-end: var(--dark-bg-gradient-end);
     --text-primary: var(--dark-text-primary);
     --text-secondary: var(--dark-text-secondary);
-    --surface-start: var(--dark-surface-start);
-    --surface-end: var(--dark-surface-end);
+	--surface-start: var(--dark-surface-start);
+	--surface-end: var(--dark-surface-end);
     --nav-inactive: var(--dark-nav-inactive);
     --nav-active: var(--dark-nav-active);
     --tabbar-bg: var(--dark-tabbar-bg);
@@ -256,53 +349,62 @@
     --small-button-text: var(--dark-small-button-text);
     --large-button-bg: var(--dark-large-button-bg);
     --large-button-text: var(--dark-large-button-text);
-    --prayer-row-border-bottom-bg: var(--dark-prayer-row-border-bottom-bg);
-    --glass-bg: var(--dark-glass-bg);
-    --glass-bg-strong: var(--dark-glass-bg-strong);
-    --glass-border: var(--dark-glass-border);
-    --glass-highlight: var(--dark-glass-highlight);
+	
+	--prayer-row-border-bottom-bg: var(--dark-prayer-row-border-bottom-bg);
+
+	--glass-bg: var(--dark-glass-bg);
+	--glass-bg-strong: var(--dark-glass-bg-strong);
+	--glass-border: var(--dark-glass-border);
+	--glass-highlight: var(--dark-glass-highlight);
+	
     --accent: var(--dark-nav-active);
-    --shadow-1: var(--dark-shadow-1);
-    --shadow-2: var(--dark-shadow-2);
-    --shadow-3: var(--dark-shadow-3);
-    --glass-reflex-dark: var(--dark-glass-reflex-dark);
-    --glass-reflex-light: var(--dark-glass-reflex-light);
-    --progress-track-stroke: var(--dark-progress-track-stroke);
-    --prayer-icon-box-bg: var(--dark-prayer-icon-box-bg);
+	--shadow-1: var(--dark-shadow-1);
+	--shadow-2: var(--dark-shadow-2);
+	--shadow-3: var(--dark-shadow-3);
+	
+	--glass-reflex-dark: var(--dark-glass-reflex-dark);
+	--glass-reflex-light: var(--dark-glass-reflex-light);
+	
+    --tab-bar-box-shadow: var(--dark-tab-bar-box-shadow);
+	
+	--progress-track-stroke: var(--dark-progress-track-stroke);
+	
+	--prayer-icon-box-bg: var(--dark-prayer-icon-box-bg);
+	
+	--header-fade: var(--dark-header-fade);
+	
     --soft-border: var(--dark-soft-border);
-    --soft-shadow-1: var(--dark-soft-shadow-1);
-    --soft-shadow-2: var(--dark-soft-shadow-2);
-    --inner-top: var(--dark-inner-top);
-    --inner-bottom: var(--dark-inner-bottom);
-    --tabbar-shadow-inset-1: var(--dark-tabbar-shadow-inset-1);
-    --tabbar-shadow-inset-2: var(--dark-tabbar-shadow-inset-2);
-    --soft-before-1: var(--dark-soft-before-1);
-    --soft-before-2: var(--dark-soft-before-2);
-    --soft-before-3: var(--dark-soft-before-3);
-    --soft-before-4: var(--dark-soft-before-4);
-    --soft-before-shadow-top: var(--dark-soft-before-shadow-top);
-    --soft-before-shadow-left: var(--dark-soft-before-shadow-left);
-    --soft-before-shadow-bottom: var(--dark-soft-before-shadow-bottom);
-    --soft-after-1: var(--dark-soft-after-1);
-    --soft-after-2: var(--dark-soft-after-2);
-    --soft-after-3: var(--dark-soft-after-3);
-    --switch-track: var(--dark-switch-track);
-    --switch-track-border: var(--dark-switch-track-border);
-    --switch-track-hover: var(--dark-switch-track-hover);
-    --switch-track-active: var(--dark-switch-track-active);
-    --switch-thumb: var(--dark-switch-thumb);
-    --switch-thumb-shadow: var(--dark-switch-thumb-shadow);
-  }
+	
+	--soft-shadow-1: var(--dark-soft-shadow-1);
+	--soft-shadow-2: var(--dark-soft-shadow-2);
+	
+	--inner-top: var(--dark-inner-top);
+	--inner-bottom: var(--dark-inner-top);
+	
+	--tabbar-shadow-inset-1: var(--dark-tabbar-shadow-inset-1);
+	--tabbar-shadow-inset-2: var(--dark-tabbar-shadow-inset-2);
+
+	--soft-before-1: var(--dark-soft-before-1);
+	--soft-before-2: var(--dark-soft-before-2);
+	--soft-before-3: var(--dark-soft-before-3);
+	--soft-before-4: var(--dark-soft-before-4);
+
+	--soft-before-shadow-top: var(--dark-soft-before-shadow-top);
+	--soft-before-shadow-left: var(--dark-soft-before-shadow-left);
+	--soft-before-shadow-bottom: var(--dark-soft-before-shadow-bottom);
+
+	--soft-after-1: var(--dark-soft-after-1);
+	--soft-after-2: var(--dark-soft-after-2);
+	--soft-after-3: var(--dark-soft-after-3);
+}
 }
 
-/* ========== RESET & BASE ========== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* ========== DOCUMENT ========== */
 html {
   height: 100%;
   min-height: 100%;
@@ -345,7 +447,73 @@ html[dir="rtl"] body,
   font-family: var(--font-ui-ar);
 }
 
-/* ========== APP SHELL ========== */
+.top-blur-sticky {
+  position: sticky;
+  isolation: isolate;
+  overflow: hidden;
+
+  /* 🔥 هذا السر */
+  top: 0;
+
+  /* يغطي حتى شريط الحالة */
+  height: calc(92px + env(safe-area-inset-top));
+  margin-top: calc(env(safe-area-inset-top) * -1);
+
+  pointer-events: none;
+  z-index: 100;
+
+  /* fade */
+  background-color: rgba(137,137,137,0.5);
+
+  /* blur */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.statusbar-fade {
+  position: relative;
+  inset: 0;
+  width: min(100%, 480px);
+  transform: translateX(-50%);
+  /* top: calc(var(--statusbar-fade-height) * -1); */
+  height: var(--statusbar-fade-height);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.statusbar-fade::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  height: 150%;
+  /* background: var(--statusbar-fade-bg); */
+  background: #ffff00;
+  backdrop-filter: blur(var(--blur-tab));
+  -webkit-backdrop-filter: blur(var(--blur-tab));
+}
+
+.tabbar-fade {
+  position: relative;
+  left: 50%;
+  width: min(100%, 480px);
+  transform: translateX(-50%);
+  bottom: 0;
+  height: var(--tabbar-fade-height);
+  pointer-events: none;
+  z-index: 100;
+  background: var(--tabbar-fade-bg-gradient);
+}
+
+.app-bg {
+  position: absolute;
+  inset: 0 0 calc(env(safe-area-inset-bottom) * -1) 0;
+  pointer-events: none;
+  background: var(--bg-gradient-start);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
 .app-shell {
   position: relative;
   width: 100%;
@@ -353,7 +521,6 @@ html[dir="rtl"] body,
   margin: 0 auto;
 }
 
-/* ========== SURFACES ========== */
 .ios-soft {
   position: relative;
   background: linear-gradient(
@@ -479,7 +646,15 @@ html[dir="rtl"] body,
   isolation: isolate;
 }
 
-.action-button {
+.liquid-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-main)) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(var(--blur-main)) saturate(var(--saturation));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-3), var(--shadow-1);
+}
+
+.settings-action-button {
   width: 100%;
   padding: 16px 20px;
   background: none;
@@ -490,8 +665,7 @@ html[dir="rtl"] body,
   cursor: pointer;
 }
 
-/* ========== HEADER ========== */
-.app-header {
+header {
   position: relative;
   padding:
     calc(env(safe-area-inset-top, 0px) + var(--header-top-pad))
@@ -504,14 +678,14 @@ html[dir="rtl"] body,
  /* z-index: 200; */
 }
 
-.app-header .header-left p {
+.header-left p {
   color: var(--text-secondary);
   font-size: 17px;
   font-weight: 500;
   margin-bottom: 6px;
 }
 
-.app-header .header-right .date {
+.header-right .date {
   font-size: 15px;
   font-weight: 700;
   color: var(--accent);
@@ -519,7 +693,7 @@ html[dir="rtl"] body,
   text-transform: uppercase;
 }
 
-.app-main {
+main {
   flex: 1;
   padding: 0 20px calc(120px + env(safe-area-inset-bottom, 0px));
 }
@@ -536,8 +710,7 @@ html[dir="rtl"] body,
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ========== PAGE HERO ========== */
-.page-hero {
+.hero-card {
   margin-top: 20px;
   padding: 0;
   position: relative;
@@ -547,7 +720,7 @@ html[dir="rtl"] body,
   box-shadow: none;
 }
 
-.page-hero-grid {
+.hero-prayers {
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
@@ -597,7 +770,7 @@ html[dir="rtl"] body,
   min-height: 136px;
 }
 
-.prayer-focus-.app-main {
+.prayer-focus-main {
   min-width: 0;
 }
 
@@ -693,7 +866,6 @@ html[dir="rtl"] body,
   font-variant-numeric: tabular-nums;
 }
 
-/* ========== PRAYER LIST ========== */
 .prayer-list {
   margin-top: 16pt;
   display: flex;
@@ -730,14 +902,14 @@ html[dir="rtl"] body,
   color: var(--text-secondary);
 }
 
-.prayer-card {
+.grouped-prayers {
   padding: 0;
   overflow: hidden;
   border-radius: var(--radius-md);
   display: block;
 }
 
-.prayer-card .prayer-row {
+.grouped-prayers .prayer-row {
   position: relative;
   display: flex;
   align-items: center;
@@ -747,7 +919,7 @@ html[dir="rtl"] body,
   transition: background-color 0.25s ease;
 }
 
-.prayer-card .prayer-row::after {
+.grouped-prayers .prayer-row::after {
   content: "";
   position: absolute;
   left: 68px;
@@ -758,11 +930,11 @@ html[dir="rtl"] body,
   pointer-events: none;
 }
 
-.prayer-card .prayer-row:last-child::after {
+.grouped-prayers .prayer-row:last-child::after {
   display: none;
 }
 
-.prayer-card .prayer-row.active {
+.grouped-prayers .prayer-row.active {
   height: 64px;
   margin: 5px;
   padding: 16px 15px;
@@ -786,38 +958,37 @@ html[dir="rtl"] body,
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
 }
 
-.prayer-card .prayer-row.active .prayer-icon-box {
+.grouped-prayers .prayer-row.active .prayer-icon-box {
   background: var(--accent);
   color: white;
 }
 
-.prayer-card .prayer-row.active .prayer-time-val {
+.grouped-prayers .prayer-row.active .prayer-time-val {
   color: var(--text-primary);
 }
 
-.prayer-card .prayer-info {
+.grouped-prayers .prayer-info {
   min-width: 0;
 }
 
-.prayer-card .prayer-name,
-.prayer-card .prayer-time-val {
+.grouped-prayers .prayer-name,
+.grouped-prayers .prayer-time-val {
   font-size: 17px;
 }
 
-.prayer-card .prayer-time-val {
+.grouped-prayers .prayer-time-val {
   white-space: nowrap;
 }
 
 @media (prefers-color-scheme: dark) {
-  .prayer-card .prayer-row::after {
+  .grouped-prayers .prayer-row::after {
 	background: rgba(255,255,255,0.10);
   }
 }
 
-/* ========== SETTINGS ========== */
-.settings-group { margin-top: 20px; }
+.settings-section { margin-top: 20px; }
 
-.settings-group-title {
+.settings-header {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-secondary);
@@ -825,16 +996,12 @@ html[dir="rtl"] body,
   margin: 0 0 8px 16px;
 }
 
-.settings-card {
+.settings-list {
   border-radius: var(--radius-md);
   overflow: hidden;
 }
 
-.settings-card-spaced {
-  margin-top: 12px;
-}
-
-.settings-item {
+.settings-row {
   padding: 16px 20px;
   display: flex;
   justify-content: space-between;
@@ -843,14 +1010,14 @@ html[dir="rtl"] body,
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
 }
 
-.settings-item:last-child { border-bottom: none; }
+.settings-row:last-child { border-bottom: none; }
 
-.settings-item span:first-child {
+.settings-row span:first-child {
   font-size: 17px;
   font-weight: 500;
 }
 
-.settings-item-value {
+.settings-value {
   color: var(--text-secondary);
   font-size: 17px;
   display: flex;
@@ -858,90 +1025,32 @@ html[dir="rtl"] body,
   gap: 8px;
 }
 
-.app-switch {
-  position: relative;
+.toggle {
   width: 51px;
   height: 31px;
-  padding: 0;
-  border: 1px solid var(--switch-track-border);
-  border-radius: var(--radius-tab);
-  background: var(--switch-track);
-  box-shadow:
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.08),
-    inset 0 1px 1.5px rgba(0, 0, 0, 0.06);
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  outline: none;
-  transition:
-    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 180ms ease;
+  background: rgba(120, 120, 128, 0.20);
+  border-radius: var(--radius-xxs);
+  position: relative;
+  transition: background 0.3s;
 }
 
-.app-switch::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0));
-  pointer-events: none;
-  opacity: 0.75;
-}
+.toggle.on { background: var(--text-primary); }
 
-.app-switch::after {
+.toggle::after {
   content: "";
   position: absolute;
-  top: 1px;
-  left: 1px;
+  top: 2px;
+  left: 2px;
   width: 27px;
   height: 27px;
+  background: white;
   border-radius: var(--radius-circle);
-  background: var(--switch-thumb);
-  box-shadow: var(--switch-thumb-shadow);
-  transition:
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
-    width 180ms ease,
-    box-shadow 180ms ease;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.app-switch:hover:not(:disabled) {
-  background: var(--switch-track-hover);
-}
+.toggle.on::after { transform: translateX(20px); }
 
-.app-switch:active:not(:disabled)::after {
-  width: 30px;
-}
-
-.app-switch.on {
-  border-color: transparent;
-  background: var(--switch-track-active);
-  box-shadow:
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.08),
-    0 0 0 0.5px color-mix(in srgb, var(--switch-track-active) 78%, transparent);
-}
-
-.app-switch.on:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--switch-track-active) 88%, white 12%);
-}
-
-.app-switch.on::after {
-  transform: translateX(20px);
-}
-
-.app-switch.on:active:not(:disabled)::after {
-  width: 30px;
-  transform: translateX(17px);
-}
-
-.app-switch:focus-visible {
-  box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.08);
-}
-
-/* ========== CALENDAR ========== */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -966,7 +1075,7 @@ html[dir="rtl"] body,
   font-weight: 700;
 }
 
-.calendar-day..app-header {
+.calendar-day.header {
   background: none;
   color: var(--text-secondary);
   font-size: 11px;
@@ -982,7 +1091,6 @@ html[dir="rtl"] body,
 }
 */
 
-/* ========== TAB BAR ========== */
 .tabbar-capsule {
   position: fixed;
   isolation: isolate;
@@ -1015,8 +1123,8 @@ html[dir="rtl"] body,
   z-index: 201;
   border: 0.5px solid var(--tabbar-soft-border);
   box-shadow:
-    inset 0 1px 0 var(--tabbar-shadow-inset-1),
-    inset 0 -1px 0 var(--tabbar-shadow-inset-2);
+    inset 0 1px 0 rgba(--tabbar-shadow-inset-1),
+    inset 0 -1px 0 rgba(--tabbar-shadow-inset-2);
   transform: translateZ(0);
 }
 
@@ -1180,7 +1288,6 @@ button:active {
   background: transparent;
 }
 
-/* ========== LOCATION CARD ========== */
 .manual-location-card {
   margin: 16px 20px;
   padding: 20px;
@@ -1253,7 +1360,7 @@ body.ui-loading #manualLocationCard {
 
 body.ui-loading .tab-btn,
 body.ui-loading .manual-location-button,
-body.ui-loading .action-button {
+body.ui-loading .settings-action-button {
   pointer-events: none;
 }
 
@@ -1508,13 +1615,13 @@ body.ui-loading .tab-visual-accent::after {
 
 /* Keep cards and groups visually stable while loading */
 body.ui-loading .prayer-focus,
-body.ui-loading .prayer-card,
+body.ui-loading .grouped-prayers,
 body.ui-loading .tabbar-capsule {
   overflow: hidden;
 }
 
 @media (max-width: 390px) {
-  .page-hero-grid { grid-template-columns: 1fr; }
+  .hero-prayers { grid-template-columns: 1fr; }
 
   .prayer-focus.next {
 	grid-template-columns: minmax(0, 1fr) 110px;
@@ -1546,57 +1653,38 @@ body.ui-loading .tabbar-capsule {
 }
 
 
-.settings-item--multiline {
+.settings-row-multiline {
   align-items: flex-start;
   gap: 14px;
 }
 
-.settings-item-value--block {
+.settings-value-block {
   display: block;
   text-align: end;
   line-height: 1.4;
   max-width: 62%;
 }
 
-.app-switch--notification {
-  flex: 0 0 auto;
+.notification-toggle {
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
-.app-switch--notification:disabled {
+.notification-toggle:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-.action-button[hidden] {
+.settings-action-button[hidden] {
   display: none;
 }
 
-.action-button:disabled {
+.settings-action-button:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
 
-.admin-input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent);
-  border-radius: 12px;
-  color: inherit;
-  background: transparent;
-  font: inherit;
-}
-
-.admin-input::placeholder {
-  color: var(--text-secondary);
-}
-
-.admin-input:focus {
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  outline: none;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent);
-}
-
-/* ========== ADMIN PAGE ========== */
 .admin-shell {
   min-height: 100svh;
 }
@@ -1642,16 +1730,16 @@ body.ui-loading .tabbar-capsule {
   gap: 12px;
 }
 
-.admin-actions-card .action-button + .action-button {
+.admin-actions-card .settings-action-button + .settings-action-button {
   margin-top: 12px;
 }
 
-.action-button-secondary {
+.settings-action-button-secondary {
   background: var(--small-button-bg);
   color: var(--small-button-text);
 }
 
-.admin-feedback-card .settings-item-value {
+.admin-feedback-card .settings-value {
   transition: color 160ms ease;
 }
 
