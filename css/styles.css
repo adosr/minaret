@@ -873,7 +873,7 @@ main {
   padding: 16px 15px;
   border-radius: calc(var(--radius-md) - 5px);
   background: color-mix(in srgb, var(--glass-bg-strong) 80%, var(--accent) 20%);
-  border: 1px solid color-mix(in srgb, var(--glass-border) 62%, var(--accent) 38%);
+  border: 1px solid color-mix(in srgb, var(--light-glass-border) 62%, var(--accent) 38%);
   overflow: hidden;
   box-shadow:
 	inset 0 0 0 1px color-mix(in srgb, rgba(255,255,255,1) calc(var(--light-glass-reflex-light) * 10%), transparent),
