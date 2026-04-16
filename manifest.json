@@ -27,5 +27,19 @@
   "display": "standalone",
   "scope": "/",
   "theme_color": "#F2F2F6",
+  "shortcuts": [
+    {
+      "name": "What are the prayer times for today?",
+      "short_name": "Daily",
+      "description": "View the prayer times for today",
+      "url": "/minaret/#daily"
+    },
+    {
+      "name": "What are the prayer times for a month?",
+      "short_name": "Monthly",
+      "description": "View the prayer times for a month",
+      "url": "/minaret/#monthly"
+    }
+  ],
   "description": "Prayer Times PWA"
 }
