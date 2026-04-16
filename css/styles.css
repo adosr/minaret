@@ -447,73 +447,6 @@ html[dir="rtl"] body,
   font-family: var(--font-ui-ar);
 }
 
-.top-blur-sticky {
-  position: sticky;
-  isolation: isolate;
-  overflow: hidden;
-
-  /* 🔥 هذا السر */
-  top: 0;
-
-  /* يغطي حتى شريط الحالة */
-  height: calc(92px + env(safe-area-inset-top));
-  margin-top: calc(env(safe-area-inset-top) * -1);
-
-  pointer-events: none;
-  z-index: 100;
-
-  /* fade */
-  background-color: rgba(137,137,137,0.5);
-
-  /* blur */
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.statusbar-fade {
-  position: relative;
-  inset: 0;
-  width: min(100%, 480px);
-  transform: translateX(-50%);
-  /* top: calc(var(--statusbar-fade-height) * -1); */
-  height: var(--statusbar-fade-height);
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 100;
-}
-
-.statusbar-fade::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  height: 150%;
-  /* background: var(--statusbar-fade-bg); */
-  background: #ffff00;
-  backdrop-filter: blur(var(--blur-tab));
-  -webkit-backdrop-filter: blur(var(--blur-tab));
-}
-
-.tabbar-fade {
-  position: relative;
-  left: 50%;
-  width: min(100%, 480px);
-  transform: translateX(-50%);
-  bottom: 0;
-  height: var(--tabbar-fade-height);
-  pointer-events: none;
-  z-index: 100;
-  background: var(--tabbar-fade-bg-gradient);
-}
-
-.app-bg {
-  position: absolute;
-  inset: 0 0 calc(env(safe-area-inset-bottom) * -1) 0;
-  pointer-events: none;
-  background: var(--bg-gradient-start);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-}
-
 .app-shell {
   position: relative;
   width: 100%;
@@ -565,10 +498,8 @@ html[dir="rtl"] body,
 .ios-soft::after {
   content: "";
   position: absolute;
-  left: 4%;
-  right: 4%;
-  top: 1%;
-  height: 42%;
+  inset: 0;
+  height: 22%;
   border-radius: inherit;
   pointer-events: none;
 
