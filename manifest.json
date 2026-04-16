@@ -29,16 +29,18 @@
   "theme_color": "#F2F2F6",
   "shortcuts": [
     {
-      "name": "What are the prayer times for today?",
+      "name": "Today's prayer times",
       "short_name": "Daily",
       "description": "View the prayer times for today",
-      "url": "./minaret/#daily"
+      "url": "./minaret/#daily",
+	  "icons": [{ "src": "./img/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "What are the prayer times for a month?",
+      "name": "Monthly prayer times",
       "short_name": "Monthly",
       "description": "View the prayer times for a month",
-      "url": "./minaret/#monthly"
+      "url": "./minaret/#monthly",
+	  "icons": [{ "src": "./img/icon-192.png", "sizes": "192x192" }]
     }
   ],
   "description": "Prayer Times PWA"
