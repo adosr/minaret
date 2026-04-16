@@ -84,7 +84,7 @@ self.addEventListener("fetch", (event) => {
 
   // لا نتدخل في هذه الملفات حتى لا نعقد تحديثاتها
   if (
-    url.pathname.endsWith("./manifest.json") ||
+    url.pathname.endsWith("/manifest.json") ||
     url.pathname.includes("startup-") ||
     url.pathname.includes("icon-")
   ) {
@@ -219,15 +219,23 @@ async function networkFirst(request, cacheName, fallbackUrl = null) {
 
     return fresh;
   } catch {
-    const cached = await cache.match(request);
+    const cached = await cache.match(request, { ignoreSearch: true });
     if (cached) return cached;
 
     if (fallbackUrl) {
-      const fallback = await caches.match(fallbackUrl);
+      const fallback =
+        (await cache.match("./index.html")) ||
+        (await cache.match("./")) ||
+        (await caches.match("./index.html")) ||
+        (await caches.match("./"));
+
       if (fallback) return fallback;
     }
 
-    throw new Error("Network request failed and no cache available.");
+    return new Response("Offline", {
+      status: 503,
+      statusText: "Offline"
+    });
   }
 }
 
