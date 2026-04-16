@@ -1,48 +1,50 @@
-const CACHE_VERSION = "Minaret-V2";
+const CACHE_VERSION = "Minaret-V3";
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const IMAGE_CACHE = `${CACHE_VERSION}-images`;
 
 const APP_SHELL = [
-  "/",
-  "/index.html",
-  "/css/styles.css",
-  "/js/app.js",
-  "/js/core/app-config.js",
-  "/js/core/app-state.js",
-  "/js/core/bootstrap.js",
-  "/js/core/notifications.js",
-  "/js/components/bottom-tabs.js",
-  "/js/components/progress-dial.js",
-  "/js/components/minaret-prayers-list.js",
-  "/js/components/skeleton.js",
-  "/js/pages/minaret-daily-page.js",
-  "/js/pages/minaret-monthly-page.js",
-  "/js/pages/minaret-settings-page.js",
-  "/js/utils/storage.js",
-  "/js/utils/location.js",
-  "/js/utils/language.js",
-  "/js/utils/dom.js",
-  "/js/utils/ui.js",
-  "/js/utils/format.js",
-  "/packages/shared/minaret-prayer-engine.js",
-  "/packages/shared/minaret-prayer-constants.js",
-  "/packages/shared/minaret-prayer-types.js",
-  "/packages/shared/time.js",
-  "/packages/shared/validation.js",
-  "/packages/shared/ids.js",
-  "/packages/core/app-config.js",
-  "/packages/core/feature-flags.js",
-  "/packages/core/ui-tokens.js",
-  "/packages/core/state-schema.js",
-  "/locales/ar.json",
-  "/locales/en.json",
-  "/img/icon-180.png",
-  "/img/icon-192.png",
-  "/img/icon-512.png",
-  "/img/icon-512-maskable.png",
-  "/img/startup-1290x2796.png",
-  "/favicon.ico"
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./service-worker.js",
+  "./css/styles.css",
+  "./js/app.js",
+  "./js/core/app-config.js",
+  "./js/core/app-state.js",
+  "./js/core/bootstrap.js",
+  "./js/core/notifications.js",
+  "./js/components/bottom-tabs.js",
+  "./js/components/progress-dial.js",
+  "./js/components/minaret-prayers-list.js",
+  "./js/components/skeleton.js",
+  "./js/pages/minaret-daily-page.js",
+  "./js/pages/minaret-monthly-page.js",
+  "./js/pages/minaret-settings-page.js",
+  "./js/utils/storage.js",
+  "./js/utils/location.js",
+  "./js/utils/language.js",
+  "./js/utils/dom.js",
+  "./js/utils/ui.js",
+  "./js/utils/format.js",
+  "./packages/shared/minaret-prayer-engine.js",
+  "./packages/shared/minaret-prayer-constants.js",
+  "./packages/shared/minaret-prayer-types.js",
+  "./packages/shared/time.js",
+  "./packages/shared/validation.js",
+  "./packages/shared/ids.js",
+  "./packages/core/app-config.js",
+  "./packages/core/feature-flags.js",
+  "./packages/core/ui-tokens.js",
+  "./packages/core/state-schema.js",
+  "./locales/ar.json",
+  "./locales/en.json",
+  "./img/icon-180.png",
+  "./img/icon-192.png",
+  "./img/icon-512.png",
+  "./img/icon-512-maskable.png",
+  "./img/startup-1290x2796.png",
+  "./favicon.ico"
 ];
 
 self.addEventListener("install", (event) => {
@@ -82,9 +84,9 @@ self.addEventListener("fetch", (event) => {
 
   // لا نتدخل في هذه الملفات حتى لا نعقد تحديثاتها
   if (
-    url.pathname.endsWith("/manifest.json") ||
-    url.pathname.includes("startup-image") ||
-    url.pathname.includes("apple-touch")
+    url.pathname.endsWith("./manifest.json") ||
+    url.pathname.includes("startup-") ||
+    url.pathname.includes("icon-")
   ) {
     return;
   }
@@ -95,7 +97,7 @@ self.addEventListener("fetch", (event) => {
     event.request.destination === "document" ||
     url.pathname.endsWith(".html")
   ) {
-    event.respondWith(networkFirst(event.request, SHELL_CACHE, "/index.html"));
+    event.respondWith(networkFirst(event.request, SHELL_CACHE, "./index.html"));
     return;
   }
 
@@ -140,7 +142,7 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
-  const targetUrl = event.notification?.data?.url || "/";
+  const targetUrl = event.notification?.data?.url || "./";
 
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
@@ -168,10 +170,10 @@ function normalizeNotificationPayload(event) {
     renotify: false,
     requireInteraction: false,
     lang: "en",
-    icon: "/img/icon-192.png",
-    badge: "/img/icon-180.png",
+    icon: "./img/icon-192.png",
+    badge: "./img/icon-180.png",
     data: {
-      url: "/"
+      url: "./"
     }
   };
 
