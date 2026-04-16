@@ -478,6 +478,8 @@ html[dir="rtl"] body,
   -webkit-backdrop-filter: blur(2px) saturate(var(--saturation));
 }
 
+/*
+
 .ios-soft::before {
   content: "";
   position: absolute;
@@ -517,6 +519,8 @@ html[dir="rtl"] body,
 
   filter: blur(1px);
 }
+
+*/
 
 .ios-soft-tabbar {
   position: relative;
