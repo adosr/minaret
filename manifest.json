@@ -3,42 +3,42 @@
   "name": "Minaret Prayer Times",
   "icons": [
     {
-      "src": "/img/icon-192.png",
+      "src": "./img/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/img/icon-512.png",
+      "src": "./img/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/img/icon-512-maskable.png",
+      "src": "./img/icon-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
   ],
-  "id": "/minaret",
-  "start_url": "/minaret",
+  "id": "./minaret",
+  "start_url": "./minaret",
   "background_color": "#F2F2F6",
   "display": "standalone",
-  "scope": "/",
+  "scope": "./",
   "theme_color": "#F2F2F6",
   "shortcuts": [
     {
       "name": "What are the prayer times for today?",
       "short_name": "Daily",
       "description": "View the prayer times for today",
-      "url": "/minaret/#daily"
+      "url": "./minaret/#daily"
     },
     {
       "name": "What are the prayer times for a month?",
       "short_name": "Monthly",
       "description": "View the prayer times for a month",
-      "url": "/minaret/#monthly"
+      "url": "./minaret/#monthly"
     }
   ],
   "description": "Prayer Times PWA"
