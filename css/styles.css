@@ -1,5 +1,10 @@
 :root {
 	color-scheme: light dark;
+	
+    --z-index-tabbar: 200;
+	--z-index-tabbar-active: 300;
+	--z-index-tabbar-base: 400;
+	--z-index-tabbar-accent: 500;
 		
 	--radius-xxl:  44px; 
 	--radius-xl:  36px; 
@@ -606,7 +611,6 @@ header {
   justify-content: space-between;
   align-items: flex-end;
   gap: 16px;
- /* z-index: 200; */
 }
 
 .header-left p {
@@ -1042,7 +1046,7 @@ main {
   user-select: none;
   transform-origin: center center;
   will-change: transform;
-  z-index: 200;
+  z-index: var(--z-index-tabbar);
 }
 
 .tabbar-capsule::before {
@@ -1051,7 +1055,6 @@ main {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  z-index: 201;
   border: 0.5px solid var(--tabbar-soft-border);
   box-shadow:
     inset 0 1px 0 rgba(--tabbar-shadow-inset-1),
@@ -1066,7 +1069,7 @@ main {
   height: calc(100% - 8px);
   border-radius: calc(var(--radius-tab) - 4px);
   background-color: color-mix(in srgb, rgba(187,187,188,1) 25%, transparent);
-  z-index: 203;
+  z-index: var(--z-index-tabbar-active);
   pointer-events: none;
   mix-blend-mode: luminosity;
   transform-origin: center center;
@@ -1149,12 +1152,12 @@ main {
 
 .tab-visual-base {
   color: var(--text-primary);
-  z-index: 205;
+  z-index: var(--z-index-tabbar-base);
 }
 
 .tab-visual-accent {
   color: var(--accent);
-  z-index: 206;
+  z-index: var(--z-index-tabbar-accent);
   pointer-events: none;
   clip-path: inset(0 var(--accent-right-inset) 0 var(--accent-left));
   -webkit-clip-path: inset(0 var(--accent-right-inset) 0 var(--accent-left));
@@ -1162,7 +1165,6 @@ main {
 
 .tab-btn {
   position: relative;
-  z-index: 204;
   flex: 1;
   height: 100%;
   border: 0;
