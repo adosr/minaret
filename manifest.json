@@ -21,25 +21,25 @@
       "purpose": "maskable"
     }
   ],
-  "id": "./minaret",
-  "start_url": "./minaret",
+  "id": "/minaret/",
+  "start_url": "/minaret/",
   "background_color": "#F2F2F6",
   "display": "standalone",
-  "scope": "./",
+  "scope": "/",
   "theme_color": "#F2F2F6",
   "shortcuts": [
     {
       "name": "Today's prayer times",
       "short_name": "Daily",
       "description": "View the prayer times for today",
-      "url": "./minaret/#daily",
+      "url": "/minaret/#daily",
 	  "icons": [{ "src": "./img/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Monthly prayer times",
       "short_name": "Monthly",
       "description": "View the prayer times for a month",
-      "url": "./minaret/#monthly",
+      "url": "/minaret/#monthly",
 	  "icons": [{ "src": "./img/icon-192.png", "sizes": "192x192" }]
     }
   ],
