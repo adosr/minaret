@@ -815,6 +815,11 @@ main {
   pointer-events: none;
 }
 
+html[dir="rtl"] .grouped-prayers .prayer-row::after {
+  left: 16px;
+  right: 68px;
+}
+
 .grouped-prayers .prayer-row:last-child::after {
   display: none;
 }
