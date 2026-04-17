@@ -124,6 +124,25 @@
 	--light-soft-after-1: rgba(255,255,255,0.50);
 	--light-soft-after-2: rgba(255,255,255,0.18);
 	--light-soft-after-3: rgba(255,255,255,0.00);
+	
+	--light-tabbar-box-shadow:
+		linear-gradient(
+		135deg, 
+		rgba(0, 0, 0, 0) 0%, 
+		rgba(0, 0, 0, 0.5) 25%, 
+		rgba(0, 0, 0, 0.25) 40%, 
+		rgba(0, 0, 0, 0) 50%, 
+		rgba(0, 0, 0, 0.25) 75%, 
+		rgba(0, 0, 0, 0.25) 90%, 
+		rgba(0, 0, 0, 0) 100%) border-box border-box;	
+		
+	--light-tabbar-mask:
+	    linear-gradient(
+		rgb(255, 255, 255) 0px, 
+		rgb(255, 255, 255) 0px) content-box exclude, 
+		linear-gradient(
+		rgb(255, 255, 255) 0px, 
+		rgb(255, 255, 255) 0px);
 
 	--dark-bg-gradient-start: #000000;
 	--dark-bg-gradient-end: #000000;
@@ -196,6 +215,25 @@
 	--dark-soft-after-1: rgba(255,255,255,0.035);
 	--dark-soft-after-2: rgba(255,255,255,0.012);
 	--dark-soft-after-3: rgba(255,255,255,0.00);
+	
+	--dark-tabbar-box-shadow:
+		linear-gradient(
+		135deg, 
+		rgba(255, 255, 255, 0) 0%, 
+		rgba(255, 255, 255, 0.5) 25%, 
+		rgba(255, 255, 255, 0.25) 40%, 
+		rgba(255, 255, 255, 0) 50%, 
+		rgba(255, 255, 255, 0.25) 75%, 
+		rgba(255, 255, 255, 0.25) 90%, 
+		rgba(255, 255, 255, 0) 100%) border-box border-box;	
+		
+	--dark-tabbar-mask:
+	    linear-gradient(
+		rgb(0, 0, 0) 0px, 
+		rgb(0, 0, 0) 0px) content-box exclude, 
+		linear-gradient(
+		rgb(0, 0, 0) 0px, 
+		rgb(0, 0, 0) 0px);
 		
 	/* END OF COLOR SCHEME SETTINGS */\
 	
@@ -273,6 +311,10 @@
 	--soft-after-1: var(--light-soft-after-1);
 	--soft-after-2: var(--light-soft-after-2);
 	--soft-after-3: var(--light-soft-after-3);
+	
+	--tabbar-box-shadow: var(--light-tabbar-box-shadow);	
+	--tabbar-mask: var(--light-tabbar-mask);
+	
 }
 
 @media (prefers-color-scheme: dark) {
@@ -351,6 +393,9 @@
 	--soft-after-1: var(--dark-soft-after-1);
 	--soft-after-2: var(--dark-soft-after-2);
 	--soft-after-3: var(--dark-soft-after-3);
+	
+	--tabbar-box-shadow: var(--dark-tabbar-box-shadow);	
+	--tabbar-mask: var(--dark-tabbar-mask);
 }
 }
 
@@ -959,20 +1004,12 @@ main {
 	border-radius:inherit;
 	padding:0.6px;
 	inset:0;  
-	background:
-		linear-gradient(
-		135deg, 
-		rgba(255, 255, 255, 0) 0%, 
-		rgba(255, 255, 255, 0.5) 25%, 
-		rgba(255, 255, 255, 0.25) 40%, 
-		rgba(255, 255, 255, 0) 50%, 
-		rgba(255, 255, 255, 0.25) 75%, 
-		rgba(255, 255, 255, 0.25) 90%, 
-		rgba(255, 255, 255, 0) 100%) border-box border-box;
-	mask:linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px) content-box exclude, linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px);
+	background: var(--tabbar-box-shadow);
+	mask:var(--tabbar-mask);
 	z-index: var(--z-index-tabbar);
 }  
 
+/*
 .tabbar-capsule .glow{
 	content:'';
 	position:absolute;
@@ -984,6 +1021,8 @@ main {
 	border-width:0;
 	box-shadow:rgba(255, 255, 255, 0.1) 0px 30px 60px -20px inset, rgba(255, 255, 255, 0.2) 0px 18px 36px -18px inset;
 }
+*/
+
 
 .tab-active-pill {
   position: absolute;
