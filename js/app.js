@@ -1,5 +1,4 @@
 import { bootstrapApp } from "./core/bootstrap.js";
-import { initLiquidGlass } from "./liquid-glass.js";
 
 function applyHashRoute() {
   const hash = window.location.hash.toLowerCase();
@@ -18,7 +17,6 @@ bootstrapApp()
     if (window.location.hash) {
       applyHashRoute();
     }
-    initLiquidGlass();
   })
   .catch((error) => {
     console.error("Bootstrap failed:", error);
