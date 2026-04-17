@@ -990,7 +990,6 @@ main {
   gap: 10px;
   background: var(--tabbar-bg);
   border-radius: var(--radius-tab);
-  box-shadow: var(--tabbar-box-shadow);
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
   touch-action: pan-y;
   user-select: none;
@@ -1025,12 +1024,13 @@ main {
 	border-radius:inherit;
 	padding:0.5px;
 	inset:0;  
-	background: var(--tabbar-border-bg);
-	mask:var(--tabbar-border-mask);
+    box-shadow: var(--tabbar-box-shadow);
 	z-index: var(--z-index-tabbar);
 }  
 
 /*
+	background: var(--tabbar-border-bg);
+	mask:var(--tabbar-border-mask);
 .tabbar-capsule .glow{
 	content:'';
 	position:absolute;
