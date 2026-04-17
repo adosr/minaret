@@ -461,6 +461,7 @@ html[dir="rtl"] body,
 
 .ios-soft {
   position: relative;
+  isolation: isolate;
   background: linear-gradient(
     180deg,
     var(--surface-start) 0%,
@@ -958,137 +959,6 @@ main {
 }
 */
 
-.ios-soft-tabbar {
-  position: relative;
-  background: var(--tabbar-bg);
-  
-  box-shadow:
-    inset 0 1px 0 var(--inner-top),
-    inset 0 -1px 0 var(--inner-bottom),
-    0 2px 6px var(--soft-shadow-1),
-    0 6px 16px var(--soft-shadow-2);
-
-  border: none;
-  
-  backdrop-filter: blur(var(--blur-tab)) saturate(var(--saturation-tab));
-  -webkit-backdrop-filter: blur(var(--blur-tab)) saturate(var(--saturation-tab));
-}
-
-.ios-soft-tabbar::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-
-  background:
-    linear-gradient(
-      180deg,
-      var(--soft-before-1) 0%,
-      var(--soft-before-2) 18%,
-      var(--soft-before-3) 42%,
-      var(--soft-before-4) 70%
-    );
-
-  box-shadow:
-    inset 0 1px 1px var(--soft-before-shadow-top),
-    inset 1px 0 0 var(--soft-before-shadow-left),
-    inset 0 -1px 0 var(--soft-before-shadow-bottom);
-	
-  mix-blend-mode: lighten;
-}
-
-.ios-soft-tabbar::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-
-  background: linear-gradient(
-    180deg,
-    var(--soft-after-1) 0%,
-    var(--soft-after-2) 55%,
-    var(--soft-after-3) 100%
-  );
-
-  filter: blur(1px);
-  
-  mix-blend-mode: soft-light;
-}
-
-.ios-soft,
-.ios-soft-tabbar {
-  isolation: isolate;
-}
-
-
-.ios-tabbar {
-  position: fixed;
-  right: 16px;
-  left: 16px;
-  bottom: 16px;
-  height: 48px;
-  border-radius: 9999px;
-  background: rgba(255,255,255,0.02);
-	z-index: 203;
-	isolation: isolate;
-	overflow: hidden;
-}
-
-.ios-tabbar::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	backdrop-filter: blur(2px) saturate(140%);
-	-webkit-backdrop-filter: blur(2px) saturate(140%);
-	z-index: 201;
-}
-
-.ios-tabbar::after {
-	content: '';
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	backdrop-filter: url(#glass-distort);
-	-webkit-backdrop-filter: url(#glass-distort);
-	z-index: 202;
-}
-
-.ios-tabbar .border{
-	content:'';
-	position:absolute;
-	border-radius:inherit;
-	z-index:204;
-	padding:0.6px;
-	inset:0;  
-	background:
-		linear-gradient(
-		135deg, 
-		rgba(255, 255, 255, 0) 0%, 
-		rgba(255, 255, 255, 0.5) 25%, 
-		rgba(255, 255, 255, 0.25) 40%, 
-		rgba(255, 255, 255, 0) 50%, 
-		rgba(255, 255, 255, 0.25) 75%, 
-		rgba(255, 255, 255, 0.25) 90%, 
-		rgba(255, 255, 255, 0) 100%) border-box border-box;
-	mask:linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px) content-box exclude, linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px);
-}  
-
-.ios-tabbar .glow{
-	content:'';
-	position:absolute;
-	left:0;
-	top:0;
-	width:100%;
-	height:100%;
-	border-radius:inherit;
-	border-width:0;
-	z-index:203;
-	box-shadow:rgba(255, 255, 255, 0.1) 0px 30px 60px -20px inset, rgba(255, 255, 255, 0.2) 0px 18px 36px -18px inset;
-}
-
 .tabbar-capsule {
   position: fixed;
   isolation: isolate;
@@ -1103,6 +973,7 @@ main {
   align-items: center;
   justify-content: space-evenly;
   gap: 10px;
+  background: rgba(255,255,255,0.02);
   border-radius: var(--radius-tab);
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
   touch-action: pan-y;
@@ -1118,11 +989,49 @@ main {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  border: 0.5px solid var(--tabbar-soft-border);
-  box-shadow:
-    inset 0 1px 0 var(--tabbar-shadow-inset-1),
-    inset 0 -1px 0 var(--tabbar-shadow-inset-2);
+  backdrop-filter: blur(2px) saturate(140%);
+  -webkit-backdrop-filter: blur(2px) saturate(140%);
   transform: translateZ(0);
+}
+
+.tabbar-capsule::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	backdrop-filter: url(#glass-distort);
+	-webkit-backdrop-filter: url(#glass-distort);
+}
+
+.tabbar-capsule .border{
+	content:'';
+	position:absolute;
+	border-radius:inherit;
+	padding:0.6px;
+	inset:0;  
+	background:
+		linear-gradient(
+		135deg, 
+		rgba(255, 255, 255, 0) 0%, 
+		rgba(255, 255, 255, 0.5) 25%, 
+		rgba(255, 255, 255, 0.25) 40%, 
+		rgba(255, 255, 255, 0) 50%, 
+		rgba(255, 255, 255, 0.25) 75%, 
+		rgba(255, 255, 255, 0.25) 90%, 
+		rgba(255, 255, 255, 0) 100%) border-box border-box;
+	mask:linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px) content-box exclude, linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px);
+}  
+
+.tabbar-capsule .glow{
+	content:'';
+	position:absolute;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+	border-radius:inherit;
+	border-width:0;
+	box-shadow:rgba(255, 255, 255, 0.1) 0px 30px 60px -20px inset, rgba(255, 255, 255, 0.2) 0px 18px 36px -18px inset;
 }
 
 .tab-active-pill {
