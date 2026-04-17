@@ -1023,12 +1023,6 @@ main {
 */
 
 .ios-tabbar {
-	position: fixed;
-	right: 16px;
-	left: 16px;
-	bottom: 16px;
-	height: 48px;
-	border-radius: 9999px;
 	background: rgba(255,255,255,0.02);
 	z-index: 0;
 	isolation: isolate;
