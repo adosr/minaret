@@ -125,7 +125,7 @@
 	--light-soft-after-2: rgba(255,255,255,0.18);
 	--light-soft-after-3: rgba(255,255,255,0.00);
 	
-	--light-tabbar-box-shadow:
+	--light-tabbar-border-bg:
 		linear-gradient(
 		135deg, 
 		rgba(0, 0, 0, 0) 0%, 
@@ -136,13 +136,22 @@
 		rgba(0, 0, 0, 0.25) 90%, 
 		rgba(0, 0, 0, 0) 100%) border-box border-box;	
 		
-	--light-tabbar-mask:
+	--light-tabbar-border-mask:
 	    linear-gradient(
 		rgb(255, 255, 255) 0px, 
 		rgb(255, 255, 255) 0px) content-box exclude, 
 		linear-gradient(
 		rgb(255, 255, 255) 0px, 
 		rgb(255, 255, 255) 0px);
+		
+	--light-tabbar-box-shadow:
+		inset -1px -2px 1px -2px rgba(255,255,255,1),
+		inset 1px 2px 1px -2px rgba(255,255,255,1),
+		inset -2px 0px 1px -2px rgba(255,255,255,0.3),
+		inset 2px -1px 1px -2px rgba(255,255,255,0.1),
+		inset 0px 0px 0px 2px rgba(0, 0, 0, 0.01),
+		0px 0px 15px -10px rgba(0,0,0,1),
+		0px 0px 5px 0px rgba(255,255,255,0.9);
 
 	--dark-bg-gradient-start: #000000;
 	--dark-bg-gradient-end: #000000;
@@ -152,7 +161,7 @@
     --dark-surface-end: #1c1c1e; 
 	--dark-nav-inactive: #FFFFFF;
 	--dark-nav-active: #0091FF;
-	--dark-tabbar-bg: rgba(28, 28, 30, 0.78);
+	--dark-tabbar-bg: rgba(28, 28, 30, 0.6);
 	--dark-tabbar-soft-border: rgba(255, 255, 255, 0.10);
 	--dark-tabbar-text-inactive: #F3F3F2;
 	--dark-tabbar-pill-bg: #343434;
@@ -216,7 +225,7 @@
 	--dark-soft-after-2: rgba(255,255,255,0.012);
 	--dark-soft-after-3: rgba(255,255,255,0.00);
 	
-	--dark-tabbar-box-shadow:
+	--dark-tabbar-border-bg:
 		linear-gradient(
 		135deg, 
 		rgba(255, 255, 255, 0) 0%, 
@@ -227,13 +236,22 @@
 		rgba(255, 255, 255, 0.25) 90%, 
 		rgba(255, 255, 255, 0) 100%) border-box border-box;	
 		
-	--dark-tabbar-mask:
+	--dark-tabbar-border-mask:
 	    linear-gradient(
 		rgb(0, 0, 0) 0px, 
 		rgb(0, 0, 0) 0px) content-box exclude, 
 		linear-gradient(
 		rgb(0, 0, 0) 0px, 
 		rgb(0, 0, 0) 0px);
+		
+	--dark-tabbar-box-shadow:
+		inset -1px -2px 1px -2px rgba(255,255,255,1),
+		inset 1px 2px 1px -2px rgba(255,255,255,1),
+		inset -2px 0px 1px -2px rgba(255,255,255,0.3),
+		inset 2px -1px 1px -2px rgba(255,255,255,0.1),
+		inset 0px 0px 0px 2px rgba(0, 0, 0, 0.01),
+		0px 0px 15px -10px rgba(255,255,255,1),
+		0px 0px 5px 0px rgba(0,0,0,0.9);
 		
 	/* END OF COLOR SCHEME SETTINGS */\
 	
@@ -312,8 +330,9 @@
 	--soft-after-2: var(--light-soft-after-2);
 	--soft-after-3: var(--light-soft-after-3);
 	
-	--tabbar-box-shadow: var(--light-tabbar-box-shadow);	
-	--tabbar-mask: var(--light-tabbar-mask);
+	--tabbar-border-bg: var(--light-tabbar-border-bg);	
+	--tabbar-border-mask: var(--light-tabbar-border-mask);
+	--tabbar-box-shadow: var(--light-tabbar-box-shadow);
 	
 }
 
@@ -394,8 +413,9 @@
 	--soft-after-2: var(--dark-soft-after-2);
 	--soft-after-3: var(--dark-soft-after-3);
 	
-	--tabbar-box-shadow: var(--dark-tabbar-box-shadow);	
-	--tabbar-mask: var(--dark-tabbar-mask);
+	--tabbar-border-bg: var(--dark-tabbar-border-bg);	
+	--tabbar-border-mask: var(--dark-tabbar-border-mask);
+	--tabbar-box-shadow: var(--dark-tabbar-box-shadow);
 }
 }
 
@@ -970,6 +990,7 @@ main {
   gap: 10px;
   background: var(--tabbar-bg);
   border-radius: var(--radius-tab);
+  box-shadow: var(--tabbar-box-shadow);
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
   touch-action: pan-y;
   user-select: none;
@@ -1002,10 +1023,10 @@ main {
 	content:'';
 	position:absolute;
 	border-radius:inherit;
-	padding:0.6px;
+	padding:0.5px;
 	inset:0;  
-	background: var(--tabbar-box-shadow);
-	mask:var(--tabbar-mask);
+	background: var(--tabbar-border-bg);
+	mask:var(--tabbar-border-mask);
 	z-index: var(--z-index-tabbar);
 }  
 
@@ -1022,7 +1043,6 @@ main {
 	box-shadow:rgba(255, 255, 255, 0.1) 0px 30px 60px -20px inset, rgba(255, 255, 255, 0.2) 0px 18px 36px -18px inset;
 }
 */
-
 
 .tab-active-pill {
   position: absolute;
