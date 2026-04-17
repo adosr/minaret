@@ -2,6 +2,8 @@
 	color-scheme: light dark;
 	
     --z-index-tabbar: 200;
+	--z-index-tabbar-before: 198;
+	--z-index-tabbar-after: 199;
 	--z-index-tabbar-active: 300;
 	--z-index-tabbar-base: 400;
 	--z-index-tabbar-accent: 500;
@@ -992,6 +994,7 @@ main {
   backdrop-filter: blur(2px) saturate(140%);
   -webkit-backdrop-filter: blur(2px) saturate(140%);
   transform: translateZ(0);
+   z-index: var(--z-index-tabbar-before);
 }
 
 .tabbar-capsule::after {
@@ -1001,6 +1004,7 @@ main {
 	border-radius: inherit;
 	backdrop-filter: url(#glass-distort);
 	-webkit-backdrop-filter: url(#glass-distort);
+	 z-index: var(--z-index-tabbar-after);
 }
 
 .tabbar-capsule .border{
