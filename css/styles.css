@@ -501,7 +501,6 @@ html[dir="rtl"] body,
   padding:0.5px;
   inset:0;  
   box-shadow: var(--tabbar-box-shadow);
-  z-index: var(--z-index-tabbar);
 }
 
 .liquid-glass {
@@ -806,8 +805,7 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   border-radius:inherit;
   padding:0.5px;
   inset:0;  
-  box-shadow: var(--tabbar-box-shadow);
-  z-index: var(--z-index-tabbar);
+  box-shadow: var(--prayer-active-box-shadow);
 }
 
 .prayer-row:has(+ .prayer-row.active)::after {
