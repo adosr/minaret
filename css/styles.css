@@ -811,6 +811,10 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   z-index: var(--z-index-tabbar);
 }
 
+.prayer-row:has(+ .prayer-row.active)::after {
+  display: none;
+}
+
 .grouped-prayers .prayer-row.active::after {
   display: none;
 }
