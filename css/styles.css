@@ -824,7 +824,11 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   background: color-mix(in srgb, var(--glass-bg-strong) 80%, var(--accent) 20%);
   border: 1px solid color-mix(in srgb, var(--light-glass-border) 62%, var(--accent) 38%);
   overflow: hidden;
-  box-shadow:
+  box-shadow: var(--tabbar-box-shadow);
+  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
+}
+
+/*
 	inset 0 0 0 1px color-mix(in srgb, rgba(255,255,255,1) calc(var(--light-glass-reflex-light) * 10%), transparent),
 	inset 1.8px 3px 0px -2px color-mix(in srgb, rgba(255,255,255,1) calc(var(--light-glass-reflex-light) * 90%), transparent),
 	inset -2px -2px 0px -2px color-mix(in srgb, rgba(255,255,255,1) calc(var(--light-glass-reflex-light) * 80%), transparent),
@@ -835,8 +839,7 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
 	inset 2px -6.5px 1px -4px color-mix(in srgb, rgba(188,187,187,1) calc(var(--light-glass-reflex-dark) * 10%), transparent),
 	0px 1px 5px 0px color-mix(in srgb, rgba(188,187,187,1) calc(var(--light-glass-reflex-dark) * 10%), transparent),
 	0px 6px 16px 0px color-mix(in srgb, rgba(188,187,187,1) calc(var(--light-glass-reflex-dark) * 8%), transparent);
-  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
-}
+*/
 
 .grouped-prayers .prayer-row.active .prayer-icon-box {
   background: var(--accent);
