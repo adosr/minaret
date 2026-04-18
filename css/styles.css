@@ -474,6 +474,7 @@ html[dir="rtl"] body,
   margin: 0 auto;
 }
 
+/*
 .ios-soft {
   position: relative;
   isolation: isolate;
@@ -493,8 +494,15 @@ html[dir="rtl"] body,
   backdrop-filter: blur(2px) saturate(var(--saturation));
   -webkit-backdrop-filter: blur(2px) saturate(var(--saturation));
 }
+*/
 
-/*
+.ios-soft {
+  position: relative;
+  isolation: isolate;
+  background: var(--tabbar-bg);
+  border-radius: var(--radius-md);
+  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
+}
 
 .ios-soft::before {
   content: "";
@@ -502,41 +510,29 @@ html[dir="rtl"] body,
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-
-  background:
-    linear-gradient(
-      180deg,
-      var(--soft-before-1) 0%,
-      var(--soft-before-2) 18%,
-      var(--soft-before-3) 42%,
-      var(--soft-before-4) 70%
-    );
-
-  box-shadow:
-    inset 0 1px 1px var(--soft-before-shadow-top),
-    inset 1px 0 0 var(--soft-before-shadow-left),
-    inset 0 -1px 0 var(--soft-before-shadow-bottom);
+  backdrop-filter: blur(2px) saturate(140%);
+  -webkit-backdrop-filter: blur(2px) saturate(140%);
+  transform: translateZ(0);
 }
 
 .ios-soft::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  height: 22%;
-  border-radius: inherit;
-  pointer-events: none;
-
-  background: linear-gradient(
-    180deg,
-    var(--soft-after-1) 0%,
-    var(--soft-after-2) 55%,
-    var(--soft-after-3) 100%
-  );
-
-  filter: blur(1px);
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	backdrop-filter: url(#glass-distort);
+	-webkit-backdrop-filter: url(#glass-distort);
 }
 
-*/
+.ios-soft .border{
+	content:'';
+	position:absolute;
+	border-radius:inherit;
+	padding:0.5px;
+	inset:0;  
+    box-shadow: var(--tabbar-box-shadow);
+	z-index: var(--z-index-tabbar);
+}  
 
 .liquid-glass {
   background: var(--glass-bg);
@@ -1033,21 +1029,6 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
 	z-index: var(--z-index-tabbar);
 }  
 
-/*
-	background: var(--tabbar-border-bg);
-	mask:var(--tabbar-border-mask);
-.tabbar-capsule .glow{
-	content:'';
-	position:absolute;
-	left:0;
-	top:0;
-	width:100%;
-	height:100%;
-	border-radius:inherit;
-	border-width:0;
-	box-shadow:rgba(255, 255, 255, 0.1) 0px 30px 60px -20px inset, rgba(255, 255, 255, 0.2) 0px 18px 36px -18px inset;
-}
-*/
 
 .tab-active-pill {
   position: absolute;
