@@ -486,28 +486,6 @@ html[dir="rtl"] body,
   margin: 0 auto;
 }
 
-/*
-.ios-soft {
-  position: relative;
-  isolation: isolate;
-  background: linear-gradient(
-    180deg,
-    var(--surface-start) 0%,
-    var(--surface-end) 100%
-  );
-  
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.05),
-    inset 0 -1px 0 rgba(255,255,255,0.015),
-    0 1px 2px var(--soft-shadow-1),
-    0 8px 24px var(--soft-shadow-2);
-
-  border: 1px solid var(--soft-border);
-  backdrop-filter: blur(2px) saturate(var(--saturation));
-  -webkit-backdrop-filter: blur(2px) saturate(var(--saturation));
-}
-*/
-
 .ios-soft {
   position: relative;
   isolation: isolate;
@@ -517,30 +495,14 @@ html[dir="rtl"] body,
 }
 
 .ios-soft::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  transform: translateZ(0);
+  content:'';
+  position:absolute;
+  border-radius:inherit;
+  padding:0.5px;
+  inset:0;  
+  box-shadow: var(--tabbar-box-shadow);
+  z-index: var(--z-index-tabbar);
 }
-
-.ios-soft::after {
-	content: '';
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-}
-
-.ios-soft .border{
-	content:'';
-	position:absolute;
-	border-radius:inherit;
-	padding:0.5px;
-	inset:0;  
-    box-shadow: var(--tabbar-box-shadow);
-	z-index: var(--z-index-tabbar);
-}  
 
 .liquid-glass {
   background: var(--glass-bg);
@@ -833,10 +795,20 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   margin: 5px;
   padding: 16px 15px;
   border-radius: calc(var(--radius-md) - 5px);
-  background: color-mix(in srgb, var(--glass-bg-strong) 80%, var(--accent) 20%);
+  background: var(--tabbar-bg);
+  /*background: color-mix(in srgb, var(--glass-bg-strong) 80%, var(--accent) 20%);*/
   overflow: hidden;
-  box-shadow: var(--prayer-active-box-shadow);
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
+}
+
+.grouped-prayers .prayer-row.active::before {
+  content:'';
+  position:absolute;
+  border-radius:inherit;
+  padding:0.5px;
+  inset:0;  
+  box-shadow: var(--tabbar-box-shadow);
+  z-index: var(--z-index-tabbar);
 }
 
 .grouped-prayers .prayer-row.active::after {
