@@ -791,7 +791,7 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
 
 .grouped-prayers .prayer-row.active {
   height: 64px;
-  margin: 0 5px;
+  margin: 2px 5px;
   padding: 16px 15px;
   border-radius: calc(var(--radius-md) - 5px);
   background: color-mix(in srgb, var(--glass-bg-strong) 80%, var(--accent) 20%);
