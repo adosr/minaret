@@ -510,8 +510,6 @@ html[dir="rtl"] body,
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  backdrop-filter: blur(2px) saturate(140%);
-  -webkit-backdrop-filter: blur(2px) saturate(140%);
   transform: translateZ(0);
 }
 
@@ -520,8 +518,6 @@ html[dir="rtl"] body,
 	position: absolute;
 	inset: 0;
 	border-radius: inherit;
-	backdrop-filter: url(#glass-distort);
-	-webkit-backdrop-filter: url(#glass-distort);
 }
 
 .ios-soft .border{
