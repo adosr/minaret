@@ -795,8 +795,7 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   margin: 5px;
   padding: 16px 15px;
   border-radius: calc(var(--radius-md) - 5px);
-  background: var(--tabbar-bg);
-  /*background: color-mix(in srgb, var(--glass-bg-strong) 80%, var(--accent) 20%);*/
+  background: color-mix(in srgb, var(--glass-bg-strong) 80%, var(--accent) 20%);
   overflow: hidden;
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
 }
