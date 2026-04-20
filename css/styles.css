@@ -799,6 +799,14 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
 }
 
+.grouped-prayers .prayer-row.active:first-child {
+  margin-top: 5px;
+}
+
+.grouped-prayers .prayer-row.active:last-child {
+  margin-bottom: 5px;
+}
+
 .grouped-prayers .prayer-row.active::before {
   content:'';
   position:absolute;
