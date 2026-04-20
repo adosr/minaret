@@ -800,11 +800,11 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
 }
 
 .grouped-prayers .prayer-row.active:first-child {
-  margin-top: 5px;
+  margin-top: 4px;
 }
 
 .grouped-prayers .prayer-row.active:last-child {
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .grouped-prayers .prayer-row.active::before {
