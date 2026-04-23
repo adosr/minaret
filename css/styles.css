@@ -1389,6 +1389,7 @@ body.ui-loading #countdownValue {
 /* Prayer rows */
 body.ui-loading .prayer-icon-box {
   position: relative;
+  background-color: transparent;
   color: transparent !important;
 }
 
