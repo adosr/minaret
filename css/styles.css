@@ -1356,6 +1356,7 @@ body.ui-loading #progressDial::before {
   border-radius: 50%;
   background:
     radial-gradient(circle at center, transparent 52%, var(--skeleton-base) 53%, var(--skeleton-base) 60%, transparent 61%);
+	animation: skeleton-shimmer 1.25s linear infinite;
   pointer-events: none;
 }
 
@@ -1389,8 +1390,6 @@ body.ui-loading #countdownValue {
 /* Prayer rows */
 body.ui-loading .prayer-icon-box {
   position: relative;
-  background-color: transparent;
-  color: transparent !important;
 }
 
 body.ui-loading .prayer-icon-box svg {
@@ -1400,10 +1399,9 @@ body.ui-loading .prayer-icon-box svg {
 body.ui-loading .prayer-icon-box::before {
   content: "";
   position: absolute;
-  inset: 6px;
+  inset: 0;
   border-radius: 50%;
   background: var(--skeleton-sheen);
-  background-size: 200% 100%;
   animation: skeleton-shimmer 1.25s linear infinite;
   pointer-events: none;
 }
