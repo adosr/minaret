@@ -799,21 +799,13 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
 }
 
-.grouped-prayers .prayer-row.active:first-child {
-  margin-top: 4px;
-}
-
-.grouped-prayers .prayer-row.active:last-child {
-  margin-bottom: 4px;
-}
-
 .grouped-prayers .prayer-row.active::before {
   content:'';
   position:absolute;
   border-radius:inherit;
   padding:0.5px;
   inset:0;  
-  box-shadow: var(--tabbar-box-shadow);
+  box-shadow: var(--prayer-active-box-shadow);
 }
 
 .prayer-row:has(+ .prayer-row.active)::after {
@@ -1367,6 +1359,7 @@ body.ui-loading #progressDial::before {
   pointer-events: none;
 }
 
+/*
 body.ui-loading #progressDial .progress-center {
   box-shadow: none;
   border-color: transparent;
@@ -1383,13 +1376,14 @@ body.ui-loading #progressDial .progress-center::before {
   animation: skeleton-shimmer 1.25s linear infinite;
   pointer-events: none;
 }
+*/
 
 body.ui-loading #countdownValue {
   display: inline-block;
-  min-width: 76px;
-  min-height: 17px;
-  --skeleton-w: 76px;
-  --skeleton-h: 15px;
+  min-width: 73px;
+  min-height: 14px;
+  --skeleton-w: 73px;
+  --skeleton-h: 14px;
 }
 
 /* Prayer rows */
