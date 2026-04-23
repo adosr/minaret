@@ -1378,6 +1378,10 @@ body.ui-loading #progressDial .progress-center::before {
 }
 */
 
+body.ui-loading #progressDial .progress-center {
+  opacity: 0;
+}
+
 body.ui-loading #countdownValue {
   display: inline-block;
   min-width: 73px;
