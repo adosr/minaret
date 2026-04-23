@@ -799,13 +799,21 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1), box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
 }
 
+.grouped-prayers .prayer-row.active:first-child {
+  margin-top: 4px;
+}
+
+.grouped-prayers .prayer-row.active:last-child {
+  margin-bottom: 4px;
+}
+
 .grouped-prayers .prayer-row.active::before {
   content:'';
   position:absolute;
   border-radius:inherit;
   padding:0.5px;
   inset:0;  
-  box-shadow: var(--prayer-active-box-shadow);
+  box-shadow: var(--tabbar-box-shadow);
 }
 
 .prayer-row:has(+ .prayer-row.active)::after {
