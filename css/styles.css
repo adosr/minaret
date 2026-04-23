@@ -1368,10 +1368,9 @@ body.ui-loading #progressDial::before {
 }
 
 body.ui-loading #progressDial .progress-center {
-  position: relative;
   box-shadow: none;
   border-color: transparent;
-  overflow: hidden;
+  background-color: transparent;
 }
 
 body.ui-loading #progressDial .progress-center::before {
