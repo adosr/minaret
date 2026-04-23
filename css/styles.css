@@ -914,6 +914,10 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   grid-template-columns: 1fr;
   gap: 10px;
   margin-top: 10px;
+  padding: 10px;
+  border-radius: calc(var(--radius-lg) + 2px);
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--glass-border) 88%, transparent);
 }
 
 .calendar-day {
@@ -922,7 +926,7 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   text-align: inherit;
   font: inherit;
   color: inherit;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.045);
 }
 
 .calendar-day--entry {
@@ -932,7 +936,8 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   gap: 0;
   padding: 14px;
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(255, 255, 255, 0.055);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--glass-border) 82%, transparent);
 }
 
 .calendar-day-summary {
@@ -1014,24 +1019,12 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
 }
 
 .monthly-day-details {
-  display: grid;
-  grid-template-rows: 0fr;
+  display: block;
+  max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: grid-template-rows 0.28s ease, opacity 0.2s ease, margin-top 0.28s ease;
+  transition: max-height 0.28s ease, opacity 0.2s ease, margin-top 0.28s ease;
   margin-top: 0;
-}
-
-.monthly-day-details > * {
-  min-height: 0;
-}
-
-.monthly-day-date {
-  display: block;
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 10px;
 }
 
 .monthly-day-prayers {
@@ -1058,7 +1051,7 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
 }
 
 .calendar-day--entry.selected .monthly-day-details {
-  grid-template-rows: 1fr;
+  max-height: 420px;
   opacity: 1;
   margin-top: 12px;
 }

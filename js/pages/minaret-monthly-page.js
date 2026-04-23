@@ -78,10 +78,9 @@ export function renderMinaretMonthlyPage({ state, refs }) {
           </span>
         </span>
 
-        <span class="monthly-day-details" aria-hidden="true">
-          <span class="monthly-day-date">${formatDisplayDate(date, state.lang)}</span>
-          <span class="monthly-day-prayers">${prayerDetails}</span>
-        </span>
+        <div class="monthly-day-details" aria-hidden="true">
+          <div class="monthly-day-prayers">${prayerDetails}</div>
+        </div>
       </button>
     `);
   }
@@ -89,8 +88,7 @@ export function renderMinaretMonthlyPage({ state, refs }) {
   refs.monthlyCalendarGrid.innerHTML = rows.join("");
   refs.monthlyCalendarGrid.dataset.view = "list";
 
-  const defaultSelectedDay = monthDays.find((entry) => entry.isToday)?.day || 1;
-  setExpandedDay(refs.monthlyCalendarGrid, defaultSelectedDay);
+  setExpandedDay(refs.monthlyCalendarGrid, null);
 
   refs.monthlyCalendarGrid.querySelectorAll("[data-day]").forEach((button) => {
     button.addEventListener("click", () => {
