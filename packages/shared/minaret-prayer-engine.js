@@ -18,11 +18,13 @@ export function prayerTimes({
     throw new Error("latitude/longitude are required");
   }
 
+  const calculationDate = normalizeCalculationDate(date, tzOffsetMinutes != null);
+
   const tzHours = tzOffsetMinutes == null
-    ? (-date.getTimezoneOffset() / 60) + ((adjustments.timezoneMinutes || 0) / 60)
+    ? (-calculationDate.getTimezoneOffset() / 60) + ((adjustments.timezoneMinutes || 0) / 60)
     : (tzOffsetMinutes / 60);
 
-  const jd = julian(date) - longitude / 360;
+  const jd = julian(calculationDate) - longitude / 360;
   const solar = solarPosition(jd);
   const noon = 12 + tzHours - longitude / 15 - solar.eqTime;
 
@@ -67,6 +69,25 @@ export function formatTime(hourValue) {
   const h = String(Math.floor(total / 60)).padStart(2, "0");
   const m = String(total % 60).padStart(2, "0");
   return `${h}:${m}`;
+}
+
+
+function normalizeCalculationDate(date, useUtcComponents = false) {
+  if (useUtcComponents) {
+    return new Date(Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      12, 0, 0, 0
+    ));
+  }
+
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    12, 0, 0, 0
+  );
 }
 
 function julian(date) {
