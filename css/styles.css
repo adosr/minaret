@@ -1446,6 +1446,7 @@ body.ui-loading .tab-label {
 
 body.ui-loading .tab-stack {
   position: relative;
+  z-index: var(--z-index-tabbar-accent);
 }
 
 body.ui-loading .tab-stack::before {
