@@ -1359,13 +1359,13 @@ body.ui-loading #progressDial::before {
   pointer-events: none;
 }
 
-/*
 body.ui-loading #progressDial .progress-center {
   box-shadow: none;
   border-color: transparent;
   background-color: transparent;
 }
 
+/*
 body.ui-loading #progressDial .progress-center::before {
   content: "";
   position: absolute;
@@ -1377,10 +1377,6 @@ body.ui-loading #progressDial .progress-center::before {
   pointer-events: none;
 }
 */
-
-body.ui-loading #progressDial .progress-center {
-  opacity: 0;
-}
 
 body.ui-loading #countdownValue {
   display: inline-block;
