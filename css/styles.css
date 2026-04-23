@@ -911,34 +911,138 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+  grid-template-columns: 1fr;
+  gap: 10px;
   margin-top: 10px;
 }
 
 .calendar-day {
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  font-weight: 500;
-  border-radius: var(--radius-xxs);
+  border: 0;
+  width: 100%;
+  text-align: inherit;
+  font: inherit;
+  color: inherit;
   background: rgba(255, 255, 255, 0.03);
 }
 
-.calendar-day.today {
-  background: var(--accent);
-  color: white;
-  font-weight: 700;
+.calendar-day--entry {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.035);
 }
 
-.calendar-day.header {
-  background: none;
+.calendar-day--entry.today {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 42%, transparent);
+}
+
+.calendar-day--entry.selected {
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 60%, transparent),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.calendar-day-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.calendar-day-number {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.calendar-day-weekday {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.calendar-day-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  min-width: 0;
+}
+
+.calendar-prayer-block {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.calendar-prayer-label {
   color: var(--text-secondary);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
+}
+
+.calendar-prayer-value {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar-prayer-time {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.monthly-detail-heading-row {
+  align-items: flex-start;
+}
+
+.monthly-detail-summary {
+  text-align: end;
+  line-height: 1.5;
+}
+
+@media (max-width: 420px) {
+  .calendar-day--entry {
+    grid-template-columns: 64px minmax(0, 1fr);
+    padding: 12px;
+  }
+
+  .calendar-day-columns {
+    gap: 8px;
+  }
+
+  .calendar-day-number {
+    font-size: 22px;
+  }
+
+  .calendar-prayer-value {
+    font-size: 14px;
+  }
+
+  .calendar-prayer-time {
+    font-size: 11px;
+  }
+}
+
+html[dir="rtl"] .calendar-day-badge {
+  align-items: flex-end;
+}
+
+html[dir="rtl"] .monthly-detail-summary {
+  text-align: start;
 }
 
 /*

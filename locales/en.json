@@ -38,7 +38,7 @@
   "monthly_highlights": "Upcoming Highlights",
   "monthly_overview": "Monthly Overview",
   "app_title_short": "Prayer",
-  "monthly_subtitle": "Current month overview",
+  "monthly_subtitle": "Tap any day to view the full prayer times.",
   "location_unavailable": "Unable to determine location",
   "manual_location_title": "Location access needed",
   "manual_location_message": "Please allow location access to load prayer times for your current area.",
@@ -68,4 +68,6 @@
   "notifications_allow_system_action": "Allow iPhone notifications",
   "notifications_status_system_allowed": "iPhone notifications are already allowed. Enable Minaret reminders when you are ready.",
   "notifications_settings_help_message": "To turn iPhone notifications back on: open Settings > Notifications > Minaret, allow notifications, then return to the app."
+,
+  "monthly_day_details": "Day Details"
 }

@@ -38,7 +38,7 @@
   "monthly_highlights": "أهم التواريخ",
   "monthly_overview": "نظرة شهرية",
   "app_title_short": "الصلاة",
-  "monthly_subtitle": "نظرة عامة على الشهر الحالي",
+  "monthly_subtitle": "اضغط على أي يوم لعرض جميع المواقيت.",
   "location_unavailable": "تعذر تحديد الموقع",
   "manual_location_title": "نحتاج إلى الوصول للموقع",
   "manual_location_message": "يرجى السماح بالوصول إلى الموقع لتحميل مواقيت الصلاة لمنطقتك الحالية.",
@@ -68,4 +68,6 @@
   "notifications_allow_system_action": "السماح بإشعارات iPhone",
   "notifications_status_system_allowed": "إشعارات iPhone مفعلة بالفعل. فعّل تنبيهات منارة عندما تكون جاهزاً.",
   "notifications_settings_help_message": "لإعادة تفعيل إشعارات iPhone: افتح الإعدادات > الإشعارات > منارة، ثم فعّل السماح بالإشعارات وارجع إلى التطبيق."
+,
+  "monthly_day_details": "تفاصيل اليوم"
 }
