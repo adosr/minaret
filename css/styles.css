@@ -926,13 +926,21 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
 }
 
 .calendar-day--entry {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.calendar-day-summary {
   display: grid;
   grid-template-columns: 78px minmax(0, 1fr);
   gap: 12px;
   align-items: center;
-  padding: 14px;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.035);
+  min-width: 0;
 }
 
 .calendar-day--entry.today {
@@ -1005,6 +1013,56 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
   white-space: nowrap;
 }
 
+.monthly-day-details {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  overflow: hidden;
+  transition: grid-template-rows 0.28s ease, opacity 0.2s ease, margin-top 0.28s ease;
+  margin-top: 0;
+}
+
+.monthly-day-details > * {
+  min-height: 0;
+}
+
+.monthly-day-date {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.monthly-day-prayers {
+  display: grid;
+  gap: 2px;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--glass-border) 88%, transparent);
+}
+
+.monthly-prayer-detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.calendar-day--entry.selected .calendar-day-columns {
+  display: none;
+}
+
+.calendar-day--entry.selected .calendar-day-summary {
+  grid-template-columns: 1fr;
+}
+
+.calendar-day--entry.selected .monthly-day-details {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 12px;
+}
+
 .monthly-detail-heading-row {
   align-items: flex-start;
 }
@@ -1016,8 +1074,11 @@ html[dir="rtl"] .grouped-prayers .prayer-row::after {
 
 @media (max-width: 420px) {
   .calendar-day--entry {
-    grid-template-columns: 64px minmax(0, 1fr);
     padding: 12px;
+  }
+
+  .calendar-day-summary {
+    grid-template-columns: 64px minmax(0, 1fr);
   }
 
   .calendar-day-columns {

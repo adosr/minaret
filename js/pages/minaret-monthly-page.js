@@ -20,6 +20,12 @@ export function renderMinaretMonthlyPage({ state, refs }) {
     "Tap any day to view the full prayer times."
   );
 
+  if (refs.monthlyHighlightsLabel) refs.monthlyHighlightsLabel.hidden = true;
+  if (refs.monthlyHighlights) {
+    refs.monthlyHighlights.hidden = true;
+    refs.monthlyHighlights.innerHTML = "";
+  }
+
   const rows = [];
   const monthDays = [];
 
@@ -34,6 +40,12 @@ export function renderMinaretMonthlyPage({ state, refs }) {
 
     const prayerState = getPrayerStateForDate(state, times.minutes, date, nowMinutes);
     const isToday = day === today.getDate();
+    const prayerDetails = MINARET_PRAYER_KEYS.map((key) => `
+      <div class="monthly-prayer-detail-row">
+        <span>${state.t(key, key)}</span>
+        <span class="settings-value">${formatDisplayTime(minutesToDate(times.minutes[key]), state.lang)}</span>
+      </div>
+    `).join("");
 
     monthDays.push({ day, date, times, prayerState, isToday });
 
@@ -42,25 +54,33 @@ export function renderMinaretMonthlyPage({ state, refs }) {
         class="calendar-day calendar-day--entry${isToday ? " today" : ""}"
         type="button"
         data-day="${day}"
-        aria-pressed="false"
+        data-expanded="false"
+        aria-expanded="false"
       >
-        <span class="calendar-day-badge">
-          <span class="calendar-day-number">${day}</span>
-          <span class="calendar-day-weekday">${formatWeekday(date, state.lang)}</span>
+        <span class="calendar-day-summary">
+          <span class="calendar-day-badge">
+            <span class="calendar-day-number">${day}</span>
+            <span class="calendar-day-weekday">${formatWeekday(date, state.lang)}</span>
+          </span>
+
+          <span class="calendar-day-columns">
+            <span class="calendar-prayer-block">
+              <span class="calendar-prayer-label">${state.t("current_prayer", "Current")}</span>
+              <span class="calendar-prayer-value">${prayerState.currentLabel}</span>
+              <span class="calendar-prayer-time">${formatDisplayTime(prayerState.startDate, state.lang)}</span>
+            </span>
+
+            <span class="calendar-prayer-block">
+              <span class="calendar-prayer-label">${state.t("next_prayer", "Next")}</span>
+              <span class="calendar-prayer-value">${prayerState.nextLabel}</span>
+              <span class="calendar-prayer-time">${formatDisplayTime(prayerState.nextDate, state.lang)}</span>
+            </span>
+          </span>
         </span>
 
-        <span class="calendar-day-columns">
-          <span class="calendar-prayer-block">
-            <span class="calendar-prayer-label">${state.t("current_prayer", "Current")}</span>
-            <span class="calendar-prayer-value">${prayerState.currentLabel}</span>
-            <span class="calendar-prayer-time">${formatDisplayTime(prayerState.startDate, state.lang)}</span>
-          </span>
-
-          <span class="calendar-prayer-block">
-            <span class="calendar-prayer-label">${state.t("next_prayer", "Next")}</span>
-            <span class="calendar-prayer-value">${prayerState.nextLabel}</span>
-            <span class="calendar-prayer-time">${formatDisplayTime(prayerState.nextDate, state.lang)}</span>
-          </span>
+        <span class="monthly-day-details" aria-hidden="true">
+          <span class="monthly-day-date">${formatDisplayDate(date, state.lang)}</span>
+          <span class="monthly-day-prayers">${prayerDetails}</span>
         </span>
       </button>
     `);
@@ -70,42 +90,27 @@ export function renderMinaretMonthlyPage({ state, refs }) {
   refs.monthlyCalendarGrid.dataset.view = "list";
 
   const defaultSelectedDay = monthDays.find((entry) => entry.isToday)?.day || 1;
-  updateSelectedDayDetails({ state, refs, monthDays, selectedDay: defaultSelectedDay });
+  setExpandedDay(refs.monthlyCalendarGrid, defaultSelectedDay);
 
   refs.monthlyCalendarGrid.querySelectorAll("[data-day]").forEach((button) => {
     button.addEventListener("click", () => {
       const selectedDay = Number(button.dataset.day);
-      updateSelectedDayDetails({ state, refs, monthDays, selectedDay });
+      const isExpanded = button.dataset.expanded === "true";
+      setExpandedDay(refs.monthlyCalendarGrid, isExpanded ? null : selectedDay);
     });
   });
 }
 
-function updateSelectedDayDetails({ state, refs, monthDays, selectedDay }) {
-  const selected = monthDays.find((entry) => entry.day === selectedDay) || monthDays[0];
-  if (!selected) return;
-
-  refs.monthlyCalendarGrid.querySelectorAll("[data-day]").forEach((button) => {
-    const isSelected = Number(button.dataset.day) === selected.day;
+function setExpandedDay(container, selectedDay) {
+  container.querySelectorAll("[data-day]").forEach((button) => {
+    const isSelected = selectedDay !== null && Number(button.dataset.day) === selectedDay;
     button.classList.toggle("selected", isSelected);
-    button.setAttribute("aria-pressed", String(isSelected));
-  });
+    button.dataset.expanded = String(isSelected);
+    button.setAttribute("aria-expanded", String(isSelected));
 
-  refs.monthlyHighlightsLabel.textContent = state.t("monthly_day_details", "Day Details");
-  refs.monthlyHighlights.innerHTML = `
-    <div class="settings-row settings-row-multiline monthly-detail-heading-row">
-      <span>${formatDisplayDate(selected.date, state.lang)}</span>
-      <div class="settings-value settings-value-block monthly-detail-summary">
-        ${state.t("current_prayer", "Current")}: ${selected.prayerState.currentLabel} · ${formatDisplayTime(selected.prayerState.startDate, state.lang)}<br>
-        ${state.t("next_prayer", "Next")}: ${selected.prayerState.nextLabel} · ${formatDisplayTime(selected.prayerState.nextDate, state.lang)}
-      </div>
-    </div>
-    ${MINARET_PRAYER_KEYS.map((key) => `
-      <div class="settings-row">
-        <span>${state.t(key, key)}</span>
-        <span class="settings-value">${formatDisplayTime(minutesToDate(selected.times.minutes[key]), state.lang)}</span>
-      </div>
-    `).join("")}
-  `;
+    const details = button.querySelector(".monthly-day-details");
+    if (details) details.setAttribute("aria-hidden", String(!isSelected));
+  });
 }
 
 function formatWeekday(date, lang) {
